@@ -1,5 +1,7 @@
 import { create } from "zustand"
 
+export type ButtonAction = "up" | "down" | "left" | "right" | "confirm"
+
 export type DeviceScreen =
   | "BOOT_SCREEN"
   | "GENERATE_SEED"
@@ -29,6 +31,8 @@ interface DeviceState {
   seedPhrase: string | null
   encryptionKey: CryptoKey | null
   lastActivity: number
+  buttonAction: ButtonAction | null
+  buttonSeq: number
 
   setScreen: (screen: DeviceScreen) => void
   setSetupComplete: (complete: boolean) => void
@@ -39,6 +43,7 @@ interface DeviceState {
   setSeedPhrase: (phrase: string | null) => void
   setEncryptionKey: (key: CryptoKey | null) => void
   touchActivity: () => void
+  pressButton: (action: ButtonAction) => void
   wipeDevice: () => void
 }
 
@@ -51,6 +56,8 @@ const initialState = {
   seedPhrase: null as string | null,
   encryptionKey: null as CryptoKey | null,
   lastActivity: Date.now(),
+  buttonAction: null as ButtonAction | null,
+  buttonSeq: 0,
 }
 
 export const useDeviceStore = create<DeviceState>()((set) => ({
@@ -66,5 +73,11 @@ export const useDeviceStore = create<DeviceState>()((set) => ({
   setSeedPhrase: (seedPhrase) => set({ seedPhrase }),
   setEncryptionKey: (encryptionKey) => set({ encryptionKey }),
   touchActivity: () => set({ lastActivity: Date.now() }),
+  pressButton: (action) =>
+    set((state) => ({
+      buttonAction: action,
+      buttonSeq: state.buttonSeq + 1,
+      lastActivity: Date.now(),
+    })),
   wipeDevice: () => set({ ...initialState, lastActivity: Date.now() }),
 }))

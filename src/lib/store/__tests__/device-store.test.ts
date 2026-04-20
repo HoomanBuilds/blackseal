@@ -12,6 +12,8 @@ describe("device-store", () => {
       seedPhrase: null,
       encryptionKey: null,
       lastActivity: Date.now(),
+      buttonAction: null,
+      buttonSeq: 0,
     })
   })
 
@@ -49,5 +51,29 @@ describe("device-store", () => {
     expect(useDeviceStore.getState().screen).toBe("BOOT_SCREEN")
     expect(useDeviceStore.getState().setupComplete).toBe(false)
     expect(useDeviceStore.getState().failedAttempts).toBe(0)
+  })
+
+  it("dispatches button presses with incrementing sequence", () => {
+    const s = useDeviceStore.getState()
+    expect(s.buttonAction).toBeNull()
+    expect(s.buttonSeq).toBe(0)
+
+    useDeviceStore.getState().pressButton("up")
+    const s2 = useDeviceStore.getState()
+    expect(s2.buttonAction).toBe("up")
+    expect(s2.buttonSeq).toBe(1)
+
+    useDeviceStore.getState().pressButton("confirm")
+    const s3 = useDeviceStore.getState()
+    expect(s3.buttonAction).toBe("confirm")
+    expect(s3.buttonSeq).toBe(2)
+  })
+
+  it("resets button state on wipe", () => {
+    useDeviceStore.getState().pressButton("down")
+    useDeviceStore.getState().wipeDevice()
+    const s = useDeviceStore.getState()
+    expect(s.buttonAction).toBeNull()
+    expect(s.buttonSeq).toBe(0)
   })
 })

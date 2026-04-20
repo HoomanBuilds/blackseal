@@ -2,13 +2,8 @@
 
 import { useDeviceStore } from "@/lib/store/device-store"
 import { BootScreen } from "./BootScreen"
-import type { ButtonAction } from "@/components/device/Buttons"
 
-interface ScreenRouterProps {
-  onButtonPress: ButtonAction | null
-}
-
-export function ScreenRouter({ onButtonPress }: ScreenRouterProps) {
+export function ScreenRouter() {
   const screen = useDeviceStore((s) => s.screen)
 
   switch (screen) {

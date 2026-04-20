@@ -1,16 +1,20 @@
 "use client"
 
-import { useCallback, useEffect } from "react"
+import { useEffect } from "react"
+import { useDeviceStore, type ButtonAction } from "@/lib/store/device-store"
 
-export type ButtonAction = "up" | "down" | "left" | "right" | "confirm"
-
-interface ButtonsProps {
-  onPress: (action: ButtonAction) => void
+const dpadIcons: Record<string, string> = {
+  up: "\u25B2",
+  down: "\u25BC",
+  left: "\u25C0",
+  right: "\u25B6",
 }
 
-export function Buttons({ onPress }: ButtonsProps) {
-  const handleKeyDown = useCallback(
-    (e: KeyboardEvent) => {
+export function Buttons() {
+  const pressButton = useDeviceStore((s) => s.pressButton)
+
+  useEffect(() => {
+    function handleKeyDown(e: KeyboardEvent) {
       const keyMap: Record<string, ButtonAction> = {
         ArrowUp: "up",
         ArrowDown: "down",
@@ -21,47 +25,66 @@ export function Buttons({ onPress }: ButtonsProps) {
       const action = keyMap[e.key]
       if (action) {
         e.preventDefault()
-        onPress(action)
+        pressButton(action)
       }
-    },
-    [onPress]
-  )
-
-  useEffect(() => {
+    }
     window.addEventListener("keydown", handleKeyDown)
     return () => window.removeEventListener("keydown", handleKeyDown)
-  }, [handleKeyDown])
-
-  const buttonClass =
-    "w-10 h-10 rounded-full bg-zinc-700 border border-zinc-600 shadow-lg active:shadow-inner active:bg-zinc-800 hover:bg-zinc-600 transition-all duration-100 flex items-center justify-center text-zinc-300 text-sm select-none cursor-pointer"
+  }, [pressButton])
 
   return (
-    <div className="flex flex-col items-center gap-1 mt-4">
-      <div className="grid grid-cols-3 gap-1 w-fit">
+    <div className="flex flex-col items-center" style={{ marginTop: 16, gap: 4 }}>
+      {/* D-pad cluster */}
+      <div
+        className="grid w-fit"
+        style={{
+          gridTemplateColumns: "repeat(3, 36px)",
+          gridTemplateRows: "repeat(3, 36px)",
+          gap: 3,
+        }}
+      >
         <div />
-        <button className={buttonClass} onClick={() => onPress("up")}>
-          ▲
-        </button>
+        <DpadButton action="up" />
         <div />
-        <button className={buttonClass} onClick={() => onPress("left")}>
-          ◄
-        </button>
+        <DpadButton action="left" />
+        {/* Center nub */}
+        <div className="flex items-center justify-center">
+          <div
+            style={{
+              width: 14,
+              height: 14,
+              borderRadius: "50%",
+              background: "radial-gradient(circle at 40% 40%, #2a2a2e, #18181c)",
+              boxShadow: "inset 0 1px 2px rgba(0,0,0,0.6), 0 0.5px 0 rgba(255,255,255,0.03)",
+            }}
+          />
+        </div>
+        <DpadButton action="right" />
         <div />
-        <button className={buttonClass} onClick={() => onPress("right")}>
-          ►
-        </button>
-        <div />
-        <button className={buttonClass} onClick={() => onPress("down")}>
-          ▼
-        </button>
+        <DpadButton action="down" />
         <div />
       </div>
+
+      {/* Confirm button */}
       <button
-        className="mt-2 w-16 h-10 rounded-full bg-zinc-600 border border-zinc-500 shadow-lg active:shadow-inner active:bg-zinc-700 hover:bg-zinc-500 transition-all duration-100 text-zinc-200 text-xs font-medium select-none cursor-pointer"
-        onClick={() => onPress("confirm")}
+        className="hw-btn hw-btn-confirm flex items-center justify-center"
+        style={{ marginTop: 8 }}
+        onClick={() => pressButton("confirm")}
       >
-        ● OK
+        <span className="hw-btn-label">OK</span>
       </button>
     </div>
+  )
+}
+
+function DpadButton({ action }: { action: "up" | "down" | "left" | "right" }) {
+  const pressButton = useDeviceStore((s) => s.pressButton)
+  return (
+    <button
+      className="hw-btn hw-btn-dpad flex items-center justify-center"
+      onClick={() => pressButton(action)}
+    >
+      <span className="hw-btn-icon">{dpadIcons[action]}</span>
+    </button>
   )
 }
