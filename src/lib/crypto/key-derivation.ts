@@ -4,7 +4,7 @@ const SALT = new TextEncoder().encode("blackseal")
 export async function deriveEncryptionKey(seed: Uint8Array): Promise<CryptoKey> {
   const keyMaterial = await crypto.subtle.importKey(
     "raw",
-    seed,
+    seed as BufferSource,
     "PBKDF2",
     false,
     ["deriveKey"]
