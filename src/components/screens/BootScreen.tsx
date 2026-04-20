@@ -28,13 +28,19 @@ export function BootScreen() {
 
   return (
     <div className="flex flex-col items-center justify-center h-full">
-      <div className="text-base font-bold tracking-wider">BLACK SEAL</div>
-      <div className="text-[10px] mt-1 opacity-50">Offline Vault</div>
-      <div className="mt-4 text-[10px]">
+      <div style={{ fontSize: 16, fontWeight: "bold", letterSpacing: "0.15em" }}>
+        BLACK SEAL
+      </div>
+      <div className="oled-text-dim" style={{ fontSize: 11, marginTop: 4 }}>
+        Offline Vault
+      </div>
+      <div style={{ fontSize: 12, marginTop: 14 }}>
         [{"\u2588".repeat(barWidth)}
         {"\u2591".repeat(17 - barWidth)}]
       </div>
-      <div className="mt-1 text-[10px] opacity-40">v1.0.0</div>
+      <div className="oled-text-dim" style={{ fontSize: 10, marginTop: 4 }}>
+        v1.0.0
+      </div>
     </div>
   )
 }

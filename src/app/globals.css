@@ -129,26 +129,276 @@
   }
 }
 
-/* OLED Screen Effects */
-.oled-screen {
+/* ========================================
+   OLED DISPLAY EFFECTS
+   SSD1306-style pixel matrix rendering
+   ======================================== */
+
+.oled-viewport {
+  background: #000000;
   image-rendering: pixelated;
-  box-shadow: inset 0 0 30px rgba(0, 255, 65, 0.05);
+  position: relative;
 }
 
-.oled-screen .text-\[\#00ff41\] {
-  text-shadow: 0 0 4px rgba(0, 255, 65, 0.6), 0 0 8px rgba(0, 255, 65, 0.3);
+.oled-viewport::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    repeating-linear-gradient(
+      to right,
+      transparent 0px,
+      transparent 1.4px,
+      rgba(0, 0, 0, 0.35) 1.4px,
+      rgba(0, 0, 0, 0.35) 2px
+    ),
+    repeating-linear-gradient(
+      to bottom,
+      transparent 0px,
+      transparent 1.4px,
+      rgba(0, 0, 0, 0.35) 1.4px,
+      rgba(0, 0, 0, 0.35) 2px
+    );
+  pointer-events: none;
+  z-index: 20;
 }
 
-.oled-scanlines {
-  background: repeating-linear-gradient(
-    0deg,
-    rgba(0, 0, 0, 0.15) 0px,
-    rgba(0, 0, 0, 0.15) 1px,
-    transparent 1px,
-    transparent 3px
+.oled-viewport::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    ellipse at center,
+    transparent 60%,
+    rgba(0, 0, 0, 0.3) 100%
   );
+  pointer-events: none;
+  z-index: 21;
 }
 
-.device-shell {
-  filter: drop-shadow(0 20px 40px rgba(0, 0, 0, 0.5));
+.oled-text {
+  font-family: var(--font-oled), "Share Tech Mono", monospace;
+  color: #00ff41;
+  text-shadow:
+    0 0 2px rgba(0, 255, 65, 0.8),
+    0 0 6px rgba(0, 255, 65, 0.4),
+    0 0 12px rgba(0, 255, 65, 0.15);
+  -webkit-font-smoothing: none;
+  -moz-osx-font-smoothing: unset;
+  font-smooth: never;
+}
+
+.oled-text-dim {
+  color: #00993a;
+  text-shadow:
+    0 0 2px rgba(0, 153, 58, 0.5),
+    0 0 4px rgba(0, 153, 58, 0.2);
+}
+
+/* ========================================
+   DEVICE SHELL
+   Realistic hardware enclosure
+   ======================================== */
+
+.device-shell-outer {
+  filter: drop-shadow(0 25px 50px rgba(0, 0, 0, 0.7))
+    drop-shadow(0 8px 16px rgba(0, 0, 0, 0.4));
+}
+
+.device-body {
+  background:
+    linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.03) 0%,
+      transparent 50%,
+      rgba(0, 0, 0, 0.05) 100%
+    ),
+    linear-gradient(to bottom, #2a2a2e 0%, #1e1e22 50%, #1a1a1e 100%);
+  position: relative;
+}
+
+.device-body::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background:
+    repeating-linear-gradient(
+      90deg,
+      transparent 0px,
+      transparent 2px,
+      rgba(255, 255, 255, 0.008) 2px,
+      rgba(255, 255, 255, 0.008) 4px
+    );
+  pointer-events: none;
+}
+
+.screw-hole {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 40% 40%, #3a3a3e, #0a0a0c);
+  box-shadow:
+    inset 0 1px 2px rgba(0, 0, 0, 0.8),
+    0 0.5px 0 rgba(255, 255, 255, 0.05);
+  position: relative;
+}
+
+.screw-hole::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotate(30deg);
+  width: 5px;
+  height: 1px;
+  background: #0a0a0c;
+  box-shadow: 0 0 0.5px rgba(0, 0, 0, 0.5);
+}
+
+.screen-bezel {
+  background: linear-gradient(to bottom, #0c0c0e, #080808);
+  box-shadow:
+    inset 0 2px 4px rgba(0, 0, 0, 0.8),
+    inset 0 -1px 2px rgba(0, 0, 0, 0.4),
+    0 1px 0 rgba(255, 255, 255, 0.03);
+  border: 1px solid #0a0a0a;
+}
+
+.usb-port {
+  width: 28px;
+  height: 9px;
+  border-radius: 2.5px;
+  background: linear-gradient(to bottom, #111113, #0a0a0c);
+  box-shadow:
+    inset 0 1px 3px rgba(0, 0, 0, 0.9),
+    inset 0 -0.5px 1px rgba(255, 255, 255, 0.03),
+    0 0.5px 0 rgba(255, 255, 255, 0.04);
+  position: relative;
+}
+
+.usb-port::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 16px;
+  height: 4px;
+  border-radius: 1px;
+  background: #050506;
+  box-shadow: inset 0 0.5px 1px rgba(0, 0, 0, 0.5);
+}
+
+.device-label {
+  font-family: var(--font-geist-sans), system-ui, sans-serif;
+  letter-spacing: 0.25em;
+  font-size: 9px;
+  font-weight: 500;
+  text-transform: uppercase;
+  color: #404048;
+  text-shadow: 0 -0.5px 0 rgba(0, 0, 0, 0.3);
+  user-select: none;
+}
+
+/* ========================================
+   TACTILE BUTTONS
+   Micro-switch / rubber dome appearance
+   ======================================== */
+
+.hw-btn {
+  position: relative;
+  border: none;
+  cursor: pointer;
+  user-select: none;
+  outline: none;
+  transition: transform 0.06s ease-out;
+}
+
+.hw-btn-dpad {
+  width: 36px;
+  height: 36px;
+  border-radius: 3px;
+  background: linear-gradient(to bottom, #3a3a40, #2c2c32);
+  box-shadow:
+    0 3px 0 #18181c,
+    0 4px 2px rgba(0, 0, 0, 0.5),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.2);
+}
+
+.hw-btn-dpad:active {
+  transform: translateY(2px);
+  box-shadow:
+    0 1px 0 #18181c,
+    0 1px 1px rgba(0, 0, 0, 0.3),
+    inset 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.hw-btn-confirm {
+  width: 56px;
+  height: 36px;
+  border-radius: 4px;
+  background: linear-gradient(to bottom, #404048, #34343c);
+  box-shadow:
+    0 3px 0 #1a1a1e,
+    0 4px 2px rgba(0, 0, 0, 0.5),
+    inset 0 1px 0 rgba(255, 255, 255, 0.07),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.2);
+}
+
+.hw-btn-confirm:active {
+  transform: translateY(2px);
+  box-shadow:
+    0 1px 0 #1a1a1e,
+    0 1px 1px rgba(0, 0, 0, 0.3),
+    inset 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.hw-btn-icon {
+  color: #606068;
+  font-size: 10px;
+  pointer-events: none;
+  text-shadow: 0 -0.5px 0 rgba(0, 0, 0, 0.3);
+}
+
+.hw-btn-label {
+  font-family: var(--font-geist-sans), system-ui, sans-serif;
+  font-size: 8px;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: #505058;
+  pointer-events: none;
+  text-shadow: 0 -0.5px 0 rgba(0, 0, 0, 0.3);
+}
+
+/* ========================================
+   PAGE BACKGROUND
+   Subtle desk surface
+   ======================================== */
+
+.desk-surface {
+  background-color: #0e0e10;
+  background-image:
+    radial-gradient(
+      ellipse 800px 600px at 50% 40%,
+      rgba(30, 30, 35, 0.6),
+      transparent
+    ),
+    repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 1px,
+      rgba(255, 255, 255, 0.005) 1px,
+      rgba(255, 255, 255, 0.005) 2px
+    ),
+    repeating-linear-gradient(
+      90deg,
+      transparent,
+      transparent 1px,
+      rgba(255, 255, 255, 0.005) 1px,
+      rgba(255, 255, 255, 0.005) 2px
+    );
+  background-size: 100% 100%, 3px 3px, 3px 3px;
 }

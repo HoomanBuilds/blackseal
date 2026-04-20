@@ -1,30 +1,80 @@
 "use client"
 
 import { OledScreen } from "./OledScreen"
-import { Buttons, type ButtonAction } from "./Buttons"
+import { Buttons } from "./Buttons"
 
 interface DeviceShellProps {
-  onButtonPress: (action: ButtonAction) => void
   children: React.ReactNode
 }
 
-export function DeviceShell({ onButtonPress, children }: DeviceShellProps) {
+export function DeviceShell({ children }: DeviceShellProps) {
   return (
-    <div className="device-shell" style={{ perspective: "1000px" }}>
-      <div className="relative w-[400px] bg-gradient-to-b from-zinc-800 to-zinc-900 rounded-3xl p-8 shadow-2xl border border-zinc-700/50" style={{ transform: "rotateX(1deg)" }}>
-        <div className="absolute top-3 left-1/2 -translate-x-1/2 w-2 h-2 rounded-full bg-zinc-600" />
+    <div className="device-shell-outer" style={{ perspective: 1200 }}>
+      <div
+        className="device-body relative"
+        style={{
+          width: 400,
+          borderRadius: 16,
+          padding: "28px 28px 20px",
+          transform: "rotateX(1.5deg)",
+          border: "1px solid rgba(255,255,255,0.04)",
+        }}
+      >
+        {/* Top edge highlight */}
+        <div
+          className="absolute top-0 left-4 right-4 h-px"
+          style={{ background: "linear-gradient(to right, transparent, rgba(255,255,255,0.06), transparent)" }}
+        />
 
-        <div className="bg-zinc-950 rounded-lg p-3 border border-zinc-700/30 shadow-inner">
+        {/* Screw holes */}
+        <div className="screw-hole absolute" style={{ top: 10, left: 10 }} />
+        <div className="screw-hole absolute" style={{ top: 10, right: 10 }} />
+        <div className="screw-hole absolute" style={{ bottom: 10, left: 10 }} />
+        <div className="screw-hole absolute" style={{ bottom: 10, right: 10 }} />
+
+        {/* Status LED */}
+        <div className="absolute" style={{ top: 14, left: "50%", transform: "translateX(-50%)" }}>
+          <div
+            style={{
+              width: 4,
+              height: 4,
+              borderRadius: "50%",
+              background: "radial-gradient(circle at 40% 40%, #00ff41, #0a5a0a)",
+              boxShadow: "0 0 4px rgba(0, 255, 65, 0.4), 0 0 8px rgba(0, 255, 65, 0.15)",
+            }}
+          />
+        </div>
+
+        {/* Screen bezel + OLED */}
+        <div
+          className="screen-bezel"
+          style={{
+            borderRadius: 6,
+            padding: "10px 12px",
+            marginTop: 8,
+          }}
+        >
           <OledScreen>{children}</OledScreen>
         </div>
 
-        <Buttons onPress={onButtonPress} />
+        {/* Buttons */}
+        <Buttons />
 
-        <div className="mt-4 text-center">
-          <span className="text-zinc-500 text-[10px] tracking-[0.3em] font-medium uppercase">
-            Black Seal v1.0
-          </span>
+        {/* Device label */}
+        <div className="text-center" style={{ marginTop: 12 }}>
+          <span className="device-label">Black Seal</span>
         </div>
+
+        {/* USB-C port */}
+        <div className="flex justify-center" style={{ marginTop: 10 }}>
+          <div className="usb-port" />
+        </div>
+
+        {/* Bottom edge shadow */}
+        <div
+          className="absolute bottom-0 left-6 right-6 h-px"
+          style={{ background: "linear-gradient(to right, transparent, rgba(0,0,0,0.3), transparent)" }}
+        />
       </div>
     </div>
   )

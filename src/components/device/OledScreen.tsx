@@ -6,9 +6,31 @@ interface OledScreenProps {
 
 export function OledScreen({ children }: OledScreenProps) {
   return (
-    <div className="oled-screen relative w-[336px] h-[128px] bg-black rounded-sm overflow-hidden font-mono">
-      <div className="oled-scanlines absolute inset-0 pointer-events-none z-10" />
-      <div className="relative z-0 p-2 text-[#00ff41] text-xs leading-4 h-full">
+    <div className="oled-viewport relative overflow-hidden" style={{
+      width: 336,
+      height: 168,
+      borderRadius: 2,
+    }}>
+      {/* Phosphor glow ambient light on the bezel edge */}
+      <div
+        className="absolute pointer-events-none z-30"
+        style={{
+          inset: -1,
+          borderRadius: 2,
+          boxShadow: "inset 0 0 20px rgba(0, 255, 65, 0.03)",
+        }}
+      />
+
+      {/* Content area */}
+      <div
+        className="oled-text relative z-10 h-full"
+        style={{
+          padding: "8px 10px",
+          fontSize: 14,
+          lineHeight: "18px",
+          letterSpacing: "0.5px",
+        }}
+      >
         {children}
       </div>
     </div>
