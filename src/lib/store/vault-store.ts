@@ -28,8 +28,11 @@ export interface Vault {
 interface VaultState {
   vault: Vault | null
   setVault: (vault: Vault) => void
+  initVault: (backupEnabled: boolean) => void
   addPassword: (entry: PasswordEntry) => void
+  deletePassword: (id: string) => void
   addNote: (entry: NoteEntry) => void
+  deleteNote: (id: string) => void
   clearVault: () => void
 }
 
@@ -37,6 +40,19 @@ export const useVaultStore = create<VaultState>()((set) => ({
   vault: null,
 
   setVault: (vault) => set({ vault }),
+
+  initVault: (backupEnabled) =>
+    set({
+      vault: {
+        passwords: [],
+        notes: [],
+        metadata: {
+          version: 1,
+          lastModified: Date.now(),
+          backupEnabled,
+        },
+      },
+    }),
 
   addPassword: (entry) =>
     set((state) => {
@@ -54,6 +70,22 @@ export const useVaultStore = create<VaultState>()((set) => ({
       }
     }),
 
+  deletePassword: (id) =>
+    set((state) => {
+      if (!state.vault) return state
+      return {
+        vault: {
+          ...state.vault,
+          passwords: state.vault.passwords.filter((p) => p.id !== id),
+          metadata: {
+            ...state.vault.metadata,
+            lastModified: Date.now(),
+            version: state.vault.metadata.version + 1,
+          },
+        },
+      }
+    }),
+
   addNote: (entry) =>
     set((state) => {
       if (!state.vault) return state
@@ -61,6 +93,22 @@ export const useVaultStore = create<VaultState>()((set) => ({
         vault: {
           ...state.vault,
           notes: [...state.vault.notes, entry],
+          metadata: {
+            ...state.vault.metadata,
+            lastModified: Date.now(),
+            version: state.vault.metadata.version + 1,
+          },
+        },
+      }
+    }),
+
+  deleteNote: (id) =>
+    set((state) => {
+      if (!state.vault) return state
+      return {
+        vault: {
+          ...state.vault,
+          notes: state.vault.notes.filter((n) => n.id !== id),
           metadata: {
             ...state.vault.metadata,
             lastModified: Date.now(),

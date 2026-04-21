@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react"
 import { useDeviceStore } from "@/lib/store/device-store"
+import { useVaultStore } from "@/lib/store/vault-store"
 
 export function BackupChoice() {
   const setScreen = useDeviceStore((s) => s.setScreen)
@@ -9,6 +10,7 @@ export function BackupChoice() {
   const setSetupComplete = useDeviceStore((s) => s.setSetupComplete)
   const buttonAction = useDeviceStore((s) => s.buttonAction)
   const buttonSeq = useDeviceStore((s) => s.buttonSeq)
+  const initVault = useVaultStore((s) => s.initVault)
 
   const [selected, setSelected] = useState(0)
   const prevSeq = useRef(0)
@@ -20,13 +22,15 @@ export function BackupChoice() {
     if (buttonAction === "up" || buttonAction === "down") {
       setSelected((s) => (s === 0 ? 1 : 0))
     } else if (buttonAction === "confirm") {
-      setBackupEnabled(selected === 0)
+      const enabled = selected === 0
+      setBackupEnabled(enabled)
       setSetupComplete(true)
+      initVault(enabled)
       localStorage.setItem("bs_setup", "true")
-      localStorage.setItem("bs_backup", selected === 0 ? "true" : "false")
+      localStorage.setItem("bs_backup", enabled ? "true" : "false")
       setScreen("MAIN_MENU")
     }
-  }, [buttonAction, buttonSeq, selected, setBackupEnabled, setSetupComplete, setScreen])
+  }, [buttonAction, buttonSeq, selected, setBackupEnabled, setSetupComplete, initVault, setScreen])
 
   const options = ["Yes, Enable Backup", "No, Local Only"]
 

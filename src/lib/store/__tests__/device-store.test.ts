@@ -14,6 +14,8 @@ describe("device-store", () => {
       lastActivity: Date.now(),
       buttonAction: null,
       buttonSeq: 0,
+      selectedPasswordId: null,
+      selectedNoteId: null,
     })
   })
 

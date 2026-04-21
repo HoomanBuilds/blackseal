@@ -33,6 +33,8 @@ interface DeviceState {
   lastActivity: number
   buttonAction: ButtonAction | null
   buttonSeq: number
+  selectedPasswordId: string | null
+  selectedNoteId: string | null
 
   setScreen: (screen: DeviceScreen) => void
   setSetupComplete: (complete: boolean) => void
@@ -42,6 +44,8 @@ interface DeviceState {
   setBackupEnabled: (enabled: boolean) => void
   setSeedPhrase: (phrase: string | null) => void
   setEncryptionKey: (key: CryptoKey | null) => void
+  setSelectedPasswordId: (id: string | null) => void
+  setSelectedNoteId: (id: string | null) => void
   touchActivity: () => void
   pressButton: (action: ButtonAction) => void
   wipeDevice: () => void
@@ -58,6 +62,8 @@ const initialState = {
   lastActivity: Date.now(),
   buttonAction: null as ButtonAction | null,
   buttonSeq: 0,
+  selectedPasswordId: null as string | null,
+  selectedNoteId: null as string | null,
 }
 
 export const useDeviceStore = create<DeviceState>()((set) => ({
@@ -72,6 +78,8 @@ export const useDeviceStore = create<DeviceState>()((set) => ({
   setBackupEnabled: (backupEnabled) => set({ backupEnabled }),
   setSeedPhrase: (seedPhrase) => set({ seedPhrase }),
   setEncryptionKey: (encryptionKey) => set({ encryptionKey }),
+  setSelectedPasswordId: (selectedPasswordId) => set({ selectedPasswordId }),
+  setSelectedNoteId: (selectedNoteId) => set({ selectedNoteId }),
   touchActivity: () => set({ lastActivity: Date.now() }),
   pressButton: (action) =>
     set((state) => ({
