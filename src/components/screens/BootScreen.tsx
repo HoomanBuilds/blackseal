@@ -6,15 +6,25 @@ import { useDeviceStore } from "@/lib/store/device-store"
 export function BootScreen() {
   const [progress, setProgress] = useState(0)
   const setScreen = useDeviceStore((s) => s.setScreen)
-  const setupComplete = useDeviceStore((s) => s.setupComplete)
+  const setSetupComplete = useDeviceStore((s) => s.setSetupComplete)
+  const setBackupEnabled = useDeviceStore((s) => s.setBackupEnabled)
+  const setLocked = useDeviceStore((s) => s.setLocked)
 
   useEffect(() => {
+    // Rehydrate persisted setup state so refreshes route correctly
+    const hasPinHash = !!localStorage.getItem("bs_pin_hash")
+    const hasSeed = !!localStorage.getItem("bs_seed_ct")
+    const isSetup = hasPinHash && hasSeed
+    setSetupComplete(isSetup)
+    setBackupEnabled(localStorage.getItem("bs_backup") === "true")
+    if (isSetup) setLocked(true)
+
     const interval = setInterval(() => {
       setProgress((p) => {
         if (p >= 100) {
           clearInterval(interval)
           setTimeout(() => {
-            setScreen(setupComplete ? "PIN_UNLOCK" : "GENERATE_SEED")
+            setScreen(isSetup ? "PIN_UNLOCK" : "GENERATE_SEED")
           }, 300)
           return 100
         }
@@ -22,7 +32,7 @@ export function BootScreen() {
       })
     }, 60)
     return () => clearInterval(interval)
-  }, [setScreen, setupComplete])
+  }, [setScreen, setSetupComplete, setBackupEnabled, setLocked])
 
   const barWidth = Math.floor((progress / 100) * 17)
 

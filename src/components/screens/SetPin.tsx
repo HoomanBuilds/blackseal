@@ -3,22 +3,44 @@
 import { useState, useCallback } from "react"
 import { useDeviceStore } from "@/lib/store/device-store"
 import { PinPad } from "@/components/device/PinPad"
+import { deriveKeyFromPin, deriveEncryptionKey, derivePinWrappingKey } from "@/lib/crypto/key-derivation"
+import { mnemonicToSeed } from "@/lib/crypto/bip39"
+import { encrypt } from "@/lib/crypto/encryption"
+
+const PIN_SALT = "bs_pin_salt_v1"
 
 export function SetPin() {
   const setScreen = useDeviceStore((s) => s.setScreen)
+  const seedPhrase = useDeviceStore((s) => s.seedPhrase)
+  const setEncryptionKey = useDeviceStore((s) => s.setEncryptionKey)
+
   const [step, setStep] = useState<"enter" | "confirm">("enter")
   const [firstPin, setFirstPin] = useState("")
   const [error, setError] = useState(false)
 
   const handleSubmit = useCallback(
-    (pin: string) => {
+    async (pin: string) => {
       if (step === "enter") {
         setFirstPin(pin)
         setStep("confirm")
         setError(false)
       } else {
-        if (pin === firstPin) {
-          localStorage.setItem("bs_pin", pin)
+        if (pin === firstPin && seedPhrase) {
+          // Hash PIN for verification
+          const pinHash = await deriveKeyFromPin(pin, PIN_SALT)
+          localStorage.setItem("bs_pin_hash", pinHash)
+
+          // Derive vault encryption key from the seed, keep in memory
+          const seed = await mnemonicToSeed(seedPhrase)
+          const vaultKey = await deriveEncryptionKey(seed)
+          setEncryptionKey(vaultKey)
+
+          // Wrap the seed with a PIN-derived key so we can recover it on unlock
+          const wrappingKey = await derivePinWrappingKey(pin)
+          const { ciphertext, iv } = await encrypt(seedPhrase, wrappingKey)
+          localStorage.setItem("bs_seed_ct", ciphertext)
+          localStorage.setItem("bs_seed_iv", iv)
+
           setScreen("BACKUP_CHOICE")
         } else {
           setError(true)
@@ -27,7 +49,7 @@ export function SetPin() {
         }
       }
     },
-    [step, firstPin, setScreen]
+    [step, firstPin, seedPhrase, setEncryptionKey, setScreen]
   )
 
   return (

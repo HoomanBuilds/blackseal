@@ -3,20 +3,27 @@
 import { useCallback, useState } from "react"
 import { useDeviceStore } from "@/lib/store/device-store"
 import { PinPad } from "@/components/device/PinPad"
+import { deriveKeyFromPin, derivePinWrappingKey } from "@/lib/crypto/key-derivation"
+import { decrypt, encrypt } from "@/lib/crypto/encryption"
+
+const PIN_SALT = "bs_pin_salt_v1"
 
 type Step = "current" | "new" | "confirm"
 
 export function ChangePin() {
   const setScreen = useDeviceStore((s) => s.setScreen)
   const [step, setStep] = useState<Step>("current")
+  const [currentPin, setCurrentPin] = useState("")
   const [newPin, setNewPin] = useState("")
   const [error, setError] = useState<string | null>(null)
 
   const handleSubmit = useCallback(
-    (pin: string) => {
+    async (pin: string) => {
       if (step === "current") {
-        const storedPin = localStorage.getItem("bs_pin")
-        if (pin === storedPin) {
+        const storedHash = localStorage.getItem("bs_pin_hash")
+        const attemptHash = await deriveKeyFromPin(pin, PIN_SALT)
+        if (storedHash && attemptHash === storedHash) {
+          setCurrentPin(pin)
           setStep("new")
           setError(null)
         } else {
@@ -28,8 +35,30 @@ export function ChangePin() {
         setError(null)
       } else {
         if (pin === newPin) {
-          localStorage.setItem("bs_pin", pin)
-          setScreen("SETTINGS")
+          const seedCt = localStorage.getItem("bs_seed_ct")
+          const seedIv = localStorage.getItem("bs_seed_iv")
+          if (!seedCt || !seedIv) {
+            setError("Vault corrupted.")
+            return
+          }
+          try {
+            const oldWrap = await derivePinWrappingKey(currentPin)
+            const seedPhrase = await decrypt(seedCt, seedIv, oldWrap)
+
+            const newHash = await deriveKeyFromPin(pin, PIN_SALT)
+            const newWrap = await derivePinWrappingKey(pin)
+            const { ciphertext, iv } = await encrypt(seedPhrase, newWrap)
+
+            localStorage.setItem("bs_pin_hash", newHash)
+            localStorage.setItem("bs_seed_ct", ciphertext)
+            localStorage.setItem("bs_seed_iv", iv)
+            setScreen("SETTINGS")
+          } catch {
+            setError("Failed to re-wrap seed.")
+            setStep("current")
+            setCurrentPin("")
+            setNewPin("")
+          }
         } else {
           setError("PINs didn't match.")
           setStep("new")
@@ -37,7 +66,7 @@ export function ChangePin() {
         }
       }
     },
-    [step, newPin, setScreen]
+    [step, currentPin, newPin, setScreen]
   )
 
   const label =
