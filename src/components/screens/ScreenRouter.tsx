@@ -11,6 +11,9 @@ import { MainMenu } from "./MainMenu"
 import { PasswordList } from "./PasswordList"
 import { PasswordEntry } from "./PasswordEntry"
 import { AddPassword } from "./AddPassword"
+import { NoteList } from "./NoteList"
+import { NoteView } from "./NoteView"
+import { AddNote } from "./AddNote"
 
 export function ScreenRouter() {
   const screen = useDeviceStore((s) => s.screen)
@@ -36,6 +39,12 @@ export function ScreenRouter() {
       return <PasswordEntry />
     case "ADD_PASSWORD":
       return <AddPassword />
+    case "NOTE_LIST":
+      return <NoteList />
+    case "NOTE_VIEW":
+      return <NoteView />
+    case "ADD_NOTE":
+      return <AddNote />
     default:
       return (
         <div className="flex flex-col items-center justify-center h-full">
