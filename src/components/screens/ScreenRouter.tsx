@@ -6,6 +6,8 @@ import { GenerateSeed } from "./GenerateSeed"
 import { VerifySeed } from "./VerifySeed"
 import { SetPin } from "./SetPin"
 import { PinUnlock } from "./PinUnlock"
+import { BackupChoice } from "./BackupChoice"
+import { MainMenu } from "./MainMenu"
 
 export function ScreenRouter() {
   const screen = useDeviceStore((s) => s.screen)
@@ -21,6 +23,10 @@ export function ScreenRouter() {
       return <SetPin />
     case "PIN_UNLOCK":
       return <PinUnlock />
+    case "BACKUP_CHOICE":
+      return <BackupChoice />
+    case "MAIN_MENU":
+      return <MainMenu />
     default:
       return (
         <div className="flex flex-col items-center justify-center h-full">
