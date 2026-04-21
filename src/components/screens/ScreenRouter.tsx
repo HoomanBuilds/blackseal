@@ -8,6 +8,9 @@ import { SetPin } from "./SetPin"
 import { PinUnlock } from "./PinUnlock"
 import { BackupChoice } from "./BackupChoice"
 import { MainMenu } from "./MainMenu"
+import { PasswordList } from "./PasswordList"
+import { PasswordEntry } from "./PasswordEntry"
+import { AddPassword } from "./AddPassword"
 
 export function ScreenRouter() {
   const screen = useDeviceStore((s) => s.screen)
@@ -27,6 +30,12 @@ export function ScreenRouter() {
       return <BackupChoice />
     case "MAIN_MENU":
       return <MainMenu />
+    case "PASSWORD_LIST":
+      return <PasswordList />
+    case "PASSWORD_ENTRY":
+      return <PasswordEntry />
+    case "ADD_PASSWORD":
+      return <AddPassword />
     default:
       return (
         <div className="flex flex-col items-center justify-center h-full">
