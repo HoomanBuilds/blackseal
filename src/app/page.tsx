@@ -2,8 +2,11 @@
 
 import { DeviceShell } from "@/components/device/DeviceShell"
 import { ScreenRouter } from "@/components/screens/ScreenRouter"
+import { useAutoLock } from "@/lib/hooks/useAutoLock"
 
 export default function Home() {
+  useAutoLock()
+
   return (
     <main className="min-h-screen desk-surface flex items-center justify-center gap-12 p-8">
       <DeviceShell>

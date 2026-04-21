@@ -14,6 +14,10 @@ import { AddPassword } from "./AddPassword"
 import { NoteList } from "./NoteList"
 import { NoteView } from "./NoteView"
 import { AddNote } from "./AddNote"
+import { Settings } from "./Settings"
+import { ChangePin } from "./ChangePin"
+import { WipeDevice } from "./WipeDevice"
+import { WipeAnimation } from "./WipeAnimation"
 
 export function ScreenRouter() {
   const screen = useDeviceStore((s) => s.screen)
@@ -45,6 +49,14 @@ export function ScreenRouter() {
       return <NoteView />
     case "ADD_NOTE":
       return <AddNote />
+    case "SETTINGS":
+      return <Settings />
+    case "CHANGE_PIN":
+      return <ChangePin />
+    case "WIPE_DEVICE":
+      return <WipeDevice />
+    case "WIPE_ANIMATION":
+      return <WipeAnimation />
     default:
       return (
         <div className="flex flex-col items-center justify-center h-full">
