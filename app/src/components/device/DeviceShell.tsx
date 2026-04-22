@@ -1,5 +1,7 @@
 "use client"
 
+import { useDeviceStore } from "@/lib/store/device-store"
+import { useConnectionStore } from "@/lib/store/connection-store"
 import { OledScreen } from "./OledScreen"
 import { Buttons } from "./Buttons"
 
@@ -8,6 +10,17 @@ interface DeviceShellProps {
 }
 
 export function DeviceShell({ children }: DeviceShellProps) {
+  const isLocked = useDeviceStore((s) => s.isLocked)
+  const screen = useDeviceStore((s) => s.screen)
+  const isTransferring = useConnectionStore((s) => s.isTransferring)
+
+  const ledClass = isTransferring
+    ? "status-led is-transfer"
+    : isLocked || screen === "PIN_UNLOCK"
+    ? "status-led is-locked"
+    : screen === "WIPE_ANIMATION"
+    ? "status-led is-danger"
+    : "status-led"
   return (
     <div className="device-shell-outer" style={{ perspective: 1200 }}>
       <div
@@ -34,15 +47,7 @@ export function DeviceShell({ children }: DeviceShellProps) {
 
         {/* Status LED */}
         <div className="absolute" style={{ top: 14, left: "50%", transform: "translateX(-50%)" }}>
-          <div
-            style={{
-              width: 4,
-              height: 4,
-              borderRadius: "50%",
-              background: "radial-gradient(circle at 40% 40%, #00ff41, #0a5a0a)",
-              boxShadow: "0 0 4px rgba(0, 255, 65, 0.4), 0 0 8px rgba(0, 255, 65, 0.15)",
-            }}
-          />
+          <div className={ledClass} />
         </div>
 
         {/* Screen bezel + OLED */}

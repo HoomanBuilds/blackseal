@@ -216,6 +216,11 @@
     ),
     linear-gradient(to bottom, #2a2a2e 0%, #1e1e22 50%, #1a1a1e 100%);
   position: relative;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.06),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.3),
+    inset 1px 0 0 rgba(255, 255, 255, 0.03),
+    inset -1px 0 0 rgba(0, 0, 0, 0.15);
 }
 
 .device-body::before {
@@ -225,11 +230,18 @@
   border-radius: inherit;
   background:
     repeating-linear-gradient(
+      135deg,
+      transparent 0px,
+      transparent 1px,
+      rgba(255, 255, 255, 0.015) 1px,
+      rgba(255, 255, 255, 0.015) 2px
+    ),
+    repeating-linear-gradient(
       90deg,
       transparent 0px,
       transparent 2px,
-      rgba(255, 255, 255, 0.008) 2px,
-      rgba(255, 255, 255, 0.008) 4px
+      rgba(255, 255, 255, 0.01) 2px,
+      rgba(255, 255, 255, 0.01) 4px
     );
   pointer-events: none;
 }
@@ -246,15 +258,15 @@
 }
 
 .screw-hole::after {
-  content: "";
+  content: "+";
   position: absolute;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%) rotate(30deg);
-  width: 5px;
-  height: 1px;
-  background: #0a0a0c;
-  box-shadow: 0 0 0.5px rgba(0, 0, 0, 0.5);
+  transform: translate(-50%, -50%) rotate(25deg);
+  font-size: 6px;
+  line-height: 1;
+  color: #0a0a0c;
+  text-shadow: 0 0 0.5px rgba(0, 0, 0, 0.5);
 }
 
 .screen-bezel {
@@ -262,7 +274,9 @@
   box-shadow:
     inset 0 2px 4px rgba(0, 0, 0, 0.8),
     inset 0 -1px 2px rgba(0, 0, 0, 0.4),
-    0 1px 0 rgba(255, 255, 255, 0.03);
+    0 1px 0 rgba(255, 255, 255, 0.03),
+    0 0 30px rgba(0, 255, 65, 0.04),
+    0 0 60px rgba(0, 255, 65, 0.02);
   border: 1px solid #0a0a0a;
 }
 
@@ -282,6 +296,42 @@
   97% { opacity: 0.92; }
   98% { opacity: 1; }
   99% { opacity: 0.95; }
+}
+
+.oled-interference {
+  background: linear-gradient(
+    to bottom,
+    transparent 0%,
+    rgba(0, 255, 65, 0.015) 48%,
+    rgba(0, 255, 65, 0.03) 50%,
+    rgba(0, 255, 65, 0.015) 52%,
+    transparent 100%
+  );
+  animation: interference-roll 10s linear infinite;
+  opacity: 0.5;
+}
+
+@keyframes interference-roll {
+  0% { transform: translateY(-100%); }
+  100% { transform: translateY(200%); }
+}
+
+.oled-screen-enter {
+  animation: oled-draw 0.12s ease-out;
+}
+
+@keyframes oled-draw {
+  0% { opacity: 0; clip-path: inset(0 0 100% 0); }
+  100% { opacity: 1; clip-path: inset(0 0 0 0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .oled-scanlines,
+  .oled-interference { animation: none; }
+  .oled-screen-enter { animation: none; }
+  .console-dot.is-pulse { animation: none; }
+  .console-ticker span { animation: none; }
+  .console-meter__fill { animation: none; }
 }
 
 .usb-port {
@@ -309,6 +359,40 @@
   box-shadow: inset 0 0.5px 1px rgba(0, 0, 0, 0.5);
 }
 
+.status-led {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 40% 40%, #00ff41, #0a5a0a);
+  box-shadow: 0 0 4px rgba(0, 255, 65, 0.4), 0 0 8px rgba(0, 255, 65, 0.15);
+}
+
+.status-led.is-locked {
+  animation: led-pulse 2s ease-in-out infinite;
+}
+
+.status-led.is-transfer {
+  background: radial-gradient(circle at 40% 40%, #ff9a3c, #5a3a0a);
+  box-shadow: 0 0 4px rgba(255, 154, 60, 0.5), 0 0 8px rgba(255, 154, 60, 0.2);
+  animation: led-flash 0.4s ease-in-out infinite;
+}
+
+.status-led.is-danger {
+  background: radial-gradient(circle at 40% 40%, #ff4444, #5a0a0a);
+  box-shadow: 0 0 4px rgba(255, 68, 68, 0.5), 0 0 8px rgba(255, 68, 68, 0.2);
+  animation: led-flash 0.3s ease-in-out infinite;
+}
+
+@keyframes led-pulse {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 1; }
+}
+
+@keyframes led-flash {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.2; }
+}
+
 .device-label {
   font-family: var(--font-geist-sans), system-ui, sans-serif;
   letter-spacing: 0.25em;
@@ -331,7 +415,8 @@
   cursor: pointer;
   user-select: none;
   outline: none;
-  transition: transform 0.06s ease-out;
+  transition: transform 0.04s cubic-bezier(0.2, 0, 0.7, 1),
+              box-shadow 0.04s ease-out;
 }
 
 .hw-btn-dpad {
@@ -347,10 +432,10 @@
 }
 
 .hw-btn-dpad:active {
-  transform: translateY(2px);
+  transform: translateY(2.5px) scale(0.97);
   box-shadow:
-    0 1px 0 #18181c,
-    0 1px 1px rgba(0, 0, 0, 0.3),
+    0 0.5px 0 #18181c,
+    0 0.5px 1px rgba(0, 0, 0, 0.3),
     inset 0 1px 2px rgba(0, 0, 0, 0.3),
     0 0 6px rgba(0, 255, 65, 0.08);
 }
@@ -368,10 +453,10 @@
 }
 
 .hw-btn-confirm:active {
-  transform: translateY(2px);
+  transform: translateY(2.5px) scale(0.97);
   box-shadow:
-    0 1px 0 #1a1a1e,
-    0 1px 1px rgba(0, 0, 0, 0.3),
+    0 0.5px 0 #1a1a1e,
+    0 0.5px 1px rgba(0, 0, 0, 0.3),
     inset 0 1px 2px rgba(0, 0, 0, 0.3),
     0 0 8px rgba(0, 255, 65, 0.1);
 }
