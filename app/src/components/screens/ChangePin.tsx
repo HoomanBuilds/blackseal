@@ -1,6 +1,6 @@
 "use client"
 
-import { useCallback, useState } from "react"
+import { useCallback, useEffect, useRef, useState } from "react"
 import { useDeviceStore } from "@/lib/store/device-store"
 import { PinPad } from "@/components/device/PinPad"
 import { deriveKeyFromPin, derivePinWrappingKey } from "@/lib/crypto/key-derivation"
@@ -12,6 +12,8 @@ type Step = "current" | "new" | "confirm"
 
 export function ChangePin() {
   const setScreen = useDeviceStore((s) => s.setScreen)
+  const buttonAction = useDeviceStore((s) => s.buttonAction)
+  const buttonSeq = useDeviceStore((s) => s.buttonSeq)
   const [step, setStep] = useState<Step>("current")
   const [currentPin, setCurrentPin] = useState("")
   const [newPin, setNewPin] = useState("")
@@ -69,6 +71,15 @@ export function ChangePin() {
     [step, currentPin, newPin, setScreen]
   )
 
+  const prevSeq = useRef(0)
+  useEffect(() => {
+    if (buttonSeq === prevSeq.current || !buttonAction) return
+    prevSeq.current = buttonSeq
+    if (buttonAction === "left") {
+      setScreen("SETTINGS")
+    }
+  }, [buttonAction, buttonSeq, setScreen])
+
   const label =
     step === "current" ? "CURRENT PIN" : step === "new" ? "NEW PIN" : "CONFIRM NEW PIN"
 
@@ -82,6 +93,9 @@ export function ChangePin() {
       )}
       <div className="flex-1 flex items-center justify-center">
         <PinPad key={step + error} onSubmit={handleSubmit} />
+      </div>
+      <div className="oled-text-dim" style={{ fontSize: 10, textAlign: "center" }}>
+        [◄] Back to Settings
       </div>
     </div>
   )
