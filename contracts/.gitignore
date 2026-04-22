@@ -1,0 +1,21 @@
+# Node
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Rust / Anchor build artifacts
+target/
+.anchor/
+test-ledger/
+.DS_Store
+
+# Local keypairs & secrets — never commit
+*.keypair.json
+wallet.json
+id.json
+
+# IDE
+.idea/
+.vscode/
+*.swp
