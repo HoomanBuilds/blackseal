@@ -13,6 +13,9 @@ export function SetPin() {
   const setScreen = useDeviceStore((s) => s.setScreen)
   const seedPhrase = useDeviceStore((s) => s.seedPhrase)
   const setEncryptionKey = useDeviceStore((s) => s.setEncryptionKey)
+  const pendingRestore = useDeviceStore((s) => s.pendingRestore)
+  const setPendingRestore = useDeviceStore((s) => s.setPendingRestore)
+  const setSetupComplete = useDeviceStore((s) => s.setSetupComplete)
 
   const [step, setStep] = useState<"enter" | "confirm">("enter")
   const [firstPin, setFirstPin] = useState("")
@@ -41,7 +44,16 @@ export function SetPin() {
           localStorage.setItem("bs_seed_ct", ciphertext)
           localStorage.setItem("bs_seed_iv", iv)
 
-          setScreen("BACKUP_CHOICE")
+          if (pendingRestore) {
+            // Restored from Solana — vault, key, and seed are already in memory.
+            setSetupComplete(true)
+            localStorage.setItem("bs_setup", "true")
+            localStorage.setItem("bs_backup", "true")
+            setPendingRestore(false)
+            setScreen("MAIN_MENU")
+          } else {
+            setScreen("BACKUP_CHOICE")
+          }
         } else {
           setError(true)
           setStep("enter")
@@ -49,7 +61,7 @@ export function SetPin() {
         }
       }
     },
-    [step, firstPin, seedPhrase, setEncryptionKey, setScreen]
+    [step, firstPin, seedPhrase, setEncryptionKey, setScreen, pendingRestore, setPendingRestore, setSetupComplete]
   )
 
   return (
