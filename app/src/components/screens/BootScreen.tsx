@@ -19,11 +19,12 @@ export function BootScreen() {
     setBackupEnabled(localStorage.getItem("bs_backup") === "true")
     if (isSetup) setLocked(true)
 
+    let timeoutId: ReturnType<typeof setTimeout>
     const interval = setInterval(() => {
       setProgress((p) => {
         if (p >= 100) {
           clearInterval(interval)
-          setTimeout(() => {
+          timeoutId = setTimeout(() => {
             setScreen(isSetup ? "PIN_UNLOCK" : "GENERATE_SEED")
           }, 300)
           return 100
@@ -31,7 +32,10 @@ export function BootScreen() {
         return p + 4
       })
     }, 60)
-    return () => clearInterval(interval)
+    return () => {
+      clearInterval(interval)
+      clearTimeout(timeoutId)
+    }
   }, [setScreen, setSetupComplete, setBackupEnabled, setLocked])
 
   const barWidth = Math.floor((progress / 100) * 17)

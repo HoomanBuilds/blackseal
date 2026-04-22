@@ -109,6 +109,8 @@ export function CompanionPanel() {
         setLastBackup(result.lastUpdated * 1000, result.version)
         setRestoreDialogOpen(false)
         setScreen("SET_PIN")
+      } catch (err) {
+        setErrorMsg(err instanceof Error ? err.message : "seed restore failed")
       } finally {
         setTransferring(false)
       }
