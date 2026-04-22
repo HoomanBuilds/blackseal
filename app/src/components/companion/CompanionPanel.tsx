@@ -1,25 +1,84 @@
 "use client"
 
-import { useMemo } from "react"
+import { useCallback, useMemo, useState } from "react"
 import { useDeviceStore } from "@/lib/store/device-store"
 import { useConnectionStore } from "@/lib/store/connection-store"
+import { useVaultStore } from "@/lib/store/vault-store"
+import { useCompanionConnection } from "@/lib/hooks/useCompanionConnection"
+import { runBackup, runRestore } from "@/lib/companion/backup-flow"
 import { BackupStatus } from "./BackupStatus"
 import { TransactionLog } from "./TransactionLog"
 import { RestoreFlow } from "./RestoreFlow"
 
 export function CompanionPanel() {
+  useCompanionConnection()
+
   const backupEnabled = useDeviceStore((s) => s.backupEnabled)
   const setupComplete = useDeviceStore((s) => s.setupComplete)
   const isLocked = useDeviceStore((s) => s.isLocked)
+  const seedPhrase = useDeviceStore((s) => s.seedPhrase)
+  const encryptionKey = useDeviceStore((s) => s.encryptionKey)
+  const vault = useVaultStore((s) => s.vault)
+  const setVault = useVaultStore((s) => s.setVault)
+
   const isConnected = useConnectionStore((s) => s.isConnected)
+  const setTransferring = useConnectionStore((s) => s.setTransferring)
+  const setLastBackup = useConnectionStore((s) => s.setLastBackup)
+  const addTransaction = useConnectionStore((s) => s.addTransaction)
+
+  const [errorMsg, setErrorMsg] = useState<string | null>(null)
 
   const sessionId = useMemo(
     () => Math.floor(Math.random() * 0xffffffff).toString(16).padStart(8, "0"),
     []
   )
 
-  const canBackup = setupComplete && !isLocked && backupEnabled && isConnected
-  const canRestore = backupEnabled && isConnected
+  const canBackup =
+    setupComplete && !isLocked && backupEnabled && isConnected && !!vault && !!seedPhrase && !!encryptionKey
+  const canRestore = backupEnabled && isConnected && !!seedPhrase && !!encryptionKey
+
+  const handleBackup = useCallback(async () => {
+    if (!vault || !encryptionKey || !seedPhrase) return
+    setErrorMsg(null)
+    setTransferring(true)
+    try {
+      const result = await runBackup(vault, encryptionKey, seedPhrase)
+      const now = Date.now()
+      if (result.initSignature) {
+        addTransaction({ signature: result.initSignature, type: "init", timestamp: now })
+      }
+      addTransaction({ signature: result.signature, type: "backup", timestamp: now })
+      setLastBackup(now, result.version)
+    } catch (err) {
+      setErrorMsg(err instanceof Error ? err.message : "backup failed")
+    } finally {
+      setTransferring(false)
+    }
+  }, [vault, encryptionKey, seedPhrase, addTransaction, setLastBackup, setTransferring])
+
+  const handleRestore = useCallback(async () => {
+    if (!encryptionKey || !seedPhrase) return
+    setErrorMsg(null)
+    setTransferring(true)
+    try {
+      const result = await runRestore(encryptionKey, seedPhrase)
+      if (!result) {
+        setErrorMsg("no backup found on chain")
+        return
+      }
+      setVault(result.vault)
+      addTransaction({
+        signature: `restore-${Date.now().toString(16)}`,
+        type: "restore",
+        timestamp: Date.now(),
+      })
+      setLastBackup(result.lastUpdated * 1000, result.version)
+    } catch (err) {
+      setErrorMsg(err instanceof Error ? err.message : "restore failed")
+    } finally {
+      setTransferring(false)
+    }
+  }, [encryptionKey, seedPhrase, setVault, addTransaction, setLastBackup, setTransferring])
 
   return (
     <aside
@@ -64,11 +123,17 @@ export function CompanionPanel() {
       <div className="console-hair" />
 
       <RestoreFlow
-        onBackup={() => console.log("backup")}
-        onRestore={() => console.log("restore")}
+        onBackup={handleBackup}
+        onRestore={handleRestore}
         canBackup={canBackup}
         canRestore={canRestore}
       />
+
+      {errorMsg && (
+        <div className="px-5 py-2 text-[10px] tracking-[0.2em] text-[color:var(--console-warn)] border-t border-[var(--console-hair)]">
+          ERR · {errorMsg}
+        </div>
+      )}
 
       {/* FOOTPRINT LEDGER */}
       <footer className="px-5 py-2.5 flex items-center justify-between border-t border-[var(--console-hair)]">
