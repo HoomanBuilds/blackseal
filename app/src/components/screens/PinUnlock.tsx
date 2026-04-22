@@ -32,26 +32,33 @@ export function PinUnlock() {
         // Unwrap the seed using PIN-derived key
         const seedCt = localStorage.getItem("bs_seed_ct")
         const seedIv = localStorage.getItem("bs_seed_iv")
-        if (seedCt && seedIv) {
-          try {
-            const wrappingKey = await derivePinWrappingKey(pin)
-            const seedPhrase = await decrypt(seedCt, seedIv, wrappingKey)
-            setSeedPhrase(seedPhrase)
+        if (!seedCt || !seedIv) {
+          // Partial corruption — seed wrapping data incomplete
+          localStorage.clear()
+          clearVault()
+          wipeDevice()
+          setScreen("WIPE_ANIMATION")
+          return
+        }
 
-            const seed = await mnemonicToSeed(seedPhrase)
-            const vaultKey = await deriveEncryptionKey(seed)
-            setEncryptionKey(vaultKey)
+        try {
+          const wrappingKey = await derivePinWrappingKey(pin)
+          const seedPhrase = await decrypt(seedCt, seedIv, wrappingKey)
+          setSeedPhrase(seedPhrase)
 
-            const vault = await loadVault(vaultKey)
-            if (vault) setVault(vault)
-          } catch {
-            // Corrupt seed — fall through to wipe
-            localStorage.clear()
-            clearVault()
-            wipeDevice()
-            setScreen("WIPE_ANIMATION")
-            return
-          }
+          const seed = await mnemonicToSeed(seedPhrase)
+          const vaultKey = await deriveEncryptionKey(seed)
+          setEncryptionKey(vaultKey)
+
+          const vault = await loadVault(vaultKey)
+          if (vault) setVault(vault)
+        } catch {
+          // Corrupt seed — wipe device
+          localStorage.clear()
+          clearVault()
+          wipeDevice()
+          setScreen("WIPE_ANIMATION")
+          return
         }
 
         resetFailedAttempts()
