@@ -1,6 +1,7 @@
 import { encrypt, decrypt } from "@/lib/crypto/encryption"
 import { mnemonicToSeed } from "@/lib/crypto/bip39"
 import { deriveKeypairFromSeed } from "@/lib/crypto/solana-keypair"
+import { deriveEncryptionKey } from "@/lib/crypto/key-derivation"
 import { BlackSealClient } from "@/lib/solana/transactions"
 import { DEVNET_RPC } from "@/lib/solana/program"
 import type { Vault } from "@/lib/store/vault-store"
@@ -69,6 +70,47 @@ export async function runRestore(
 
   return {
     vault,
+    version: snapshot.version,
+    lastUpdated: snapshot.lastUpdated,
+  }
+}
+
+export interface SeedRestoreResult {
+  vault: Vault
+  encryptionKey: CryptoKey
+  publicKey: string
+  version: number
+  lastUpdated: number
+}
+
+/**
+ * Given a raw seed phrase, derive the encryption key and keypair, fetch the
+ * on-chain backup, and decrypt it. Used during first-time setup when the user
+ * is recovering a device from their seed.
+ */
+export async function restoreFromSeed(
+  seedPhrase: string
+): Promise<SeedRestoreResult | null> {
+  const seed = await mnemonicToSeed(seedPhrase)
+  const keypair = deriveKeypairFromSeed(seed)
+  const encryptionKey = await deriveEncryptionKey(seed)
+
+  const client = BlackSealClient.fromKeypair(keypair, DEVNET_RPC)
+  const snapshot = await client.fetchBackup()
+  if (!snapshot) return null
+
+  const json = new TextDecoder().decode(snapshot.encryptedData)
+  const { ciphertext, iv } = JSON.parse(json) as {
+    ciphertext: string
+    iv: string
+  }
+  const plaintext = await decrypt(ciphertext, iv, encryptionKey)
+  const vault = JSON.parse(plaintext) as Vault
+
+  return {
+    vault,
+    encryptionKey,
+    publicKey: keypair.publicKey.toBase58(),
     version: snapshot.version,
     lastUpdated: snapshot.lastUpdated,
   }
