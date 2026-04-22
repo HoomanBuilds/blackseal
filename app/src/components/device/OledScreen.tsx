@@ -21,6 +21,19 @@ export function OledScreen({ children }: OledScreenProps) {
         }}
       />
 
+      {/* Scanlines overlay */}
+      <div
+        className="absolute inset-0 pointer-events-none z-20 oled-scanlines"
+      />
+
+      {/* CRT vignette */}
+      <div
+        className="absolute inset-0 pointer-events-none z-20"
+        style={{
+          background: "radial-gradient(ellipse at center, transparent 60%, rgba(0,0,0,0.35) 100%)",
+        }}
+      />
+
       {/* Content area */}
       <div
         className="oled-text relative z-10 h-full"

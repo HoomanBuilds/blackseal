@@ -202,7 +202,8 @@
 
 .device-shell-outer {
   filter: drop-shadow(0 25px 50px rgba(0, 0, 0, 0.7))
-    drop-shadow(0 8px 16px rgba(0, 0, 0, 0.4));
+    drop-shadow(0 8px 16px rgba(0, 0, 0, 0.4))
+    drop-shadow(0 0 40px rgba(0, 255, 65, 0.04));
 }
 
 .device-body {
@@ -263,6 +264,24 @@
     inset 0 -1px 2px rgba(0, 0, 0, 0.4),
     0 1px 0 rgba(255, 255, 255, 0.03);
   border: 1px solid #0a0a0a;
+}
+
+.oled-scanlines {
+  background: repeating-linear-gradient(
+    0deg,
+    transparent 0px,
+    transparent 2px,
+    rgba(0, 0, 0, 0.12) 2px,
+    rgba(0, 0, 0, 0.12) 4px
+  );
+  animation: oled-flicker 8s ease-in-out infinite;
+}
+
+@keyframes oled-flicker {
+  0%, 96%, 100% { opacity: 1; }
+  97% { opacity: 0.92; }
+  98% { opacity: 1; }
+  99% { opacity: 0.95; }
 }
 
 .usb-port {
@@ -332,7 +351,8 @@
   box-shadow:
     0 1px 0 #18181c,
     0 1px 1px rgba(0, 0, 0, 0.3),
-    inset 0 1px 2px rgba(0, 0, 0, 0.3);
+    inset 0 1px 2px rgba(0, 0, 0, 0.3),
+    0 0 6px rgba(0, 255, 65, 0.08);
 }
 
 .hw-btn-confirm {
@@ -352,7 +372,8 @@
   box-shadow:
     0 1px 0 #1a1a1e,
     0 1px 1px rgba(0, 0, 0, 0.3),
-    inset 0 1px 2px rgba(0, 0, 0, 0.3);
+    inset 0 1px 2px rgba(0, 0, 0, 0.3),
+    0 0 8px rgba(0, 255, 65, 0.1);
 }
 
 .hw-btn-icon {
