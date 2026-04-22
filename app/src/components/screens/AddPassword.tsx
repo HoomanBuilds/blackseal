@@ -29,6 +29,15 @@ export function AddPassword() {
     setScreen("PASSWORD_LIST")
   }, [password, label, addPassword, setScreen])
 
+  const onCancel = useCallback(() => {
+    if (step === "password") {
+      setStep("label")
+      setPassword("")
+    } else {
+      setScreen("PASSWORD_LIST")
+    }
+  }, [step, setScreen])
+
   return step === "label" ? (
     <CharPicker
       key="label"
@@ -36,6 +45,7 @@ export function AddPassword() {
       value={label}
       onChange={setLabel}
       onDone={onLabelDone}
+      onCancel={onCancel}
     />
   ) : (
     <CharPicker
@@ -44,6 +54,7 @@ export function AddPassword() {
       value={password}
       onChange={setPassword}
       onDone={onPasswordDone}
+      onCancel={onCancel}
     />
   )
 }

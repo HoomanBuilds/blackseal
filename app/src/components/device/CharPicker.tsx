@@ -15,17 +15,18 @@ const CHAR_GRID: string[][] = [
   ["0", "1", "2", "3", "4", "5", "6"],
   ["7", "8", "9", "!", "@", "#", "$"],
   ["%", "&", "*", "-", "_", ".", "/"],
-  ["DEL", "", "DONE", "", "", "", ""],
+  ["DEL", "", "DONE", "", "ESC", "", ""],
 ]
 
 interface CharPickerProps {
   value: string
   onChange: (value: string) => void
   onDone: () => void
+  onCancel?: () => void
   label: string
 }
 
-export function CharPicker({ value, onChange, onDone, label }: CharPickerProps) {
+export function CharPicker({ value, onChange, onDone, onCancel, label }: CharPickerProps) {
   const buttonAction = useDeviceStore((s) => s.buttonAction)
   const buttonSeq = useDeviceStore((s) => s.buttonSeq)
 
@@ -51,6 +52,8 @@ export function CharPicker({ value, onChange, onDone, label }: CharPickerProps) 
         onChange(value.slice(0, -1))
       } else if (char === "DONE") {
         onDone()
+      } else if (char === "ESC") {
+        onCancel?.()
       } else if (char !== "") {
         onChange(value + char)
       }
@@ -96,7 +99,7 @@ export function CharPicker({ value, onChange, onDone, label }: CharPickerProps) 
           )
         })}
       </div>
-      <div className="oled-text-dim">[Arrows] Move [OK] Select</div>
+      <div className="oled-text-dim">[Arrows] Move [OK] Select{onCancel ? " [ESC] Back" : ""}</div>
     </div>
   )
 }

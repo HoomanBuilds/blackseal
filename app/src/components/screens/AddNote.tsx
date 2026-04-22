@@ -29,6 +29,15 @@ export function AddNote() {
     setScreen("NOTE_LIST")
   }, [title, body, addNote, setScreen])
 
+  const onCancel = useCallback(() => {
+    if (step === "body") {
+      setStep("title")
+      setBody("")
+    } else {
+      setScreen("NOTE_LIST")
+    }
+  }, [step, setScreen])
+
   return step === "title" ? (
     <CharPicker
       key="title"
@@ -36,6 +45,7 @@ export function AddNote() {
       value={title}
       onChange={setTitle}
       onDone={onTitleDone}
+      onCancel={onCancel}
     />
   ) : (
     <CharPicker
@@ -44,6 +54,7 @@ export function AddNote() {
       value={body}
       onChange={setBody}
       onDone={onBodyDone}
+      onCancel={onCancel}
     />
   )
 }
