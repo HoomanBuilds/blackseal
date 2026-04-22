@@ -2,6 +2,7 @@
 
 import { DeviceShell } from "@/components/device/DeviceShell"
 import { ScreenRouter } from "@/components/screens/ScreenRouter"
+import { CompanionPanel } from "@/components/companion/CompanionPanel"
 import { useAutoLock } from "@/lib/hooks/useAutoLock"
 import { useVaultPersistence } from "@/lib/hooks/useVaultPersistence"
 
@@ -15,9 +16,7 @@ export default function Home() {
         <ScreenRouter />
       </DeviceShell>
 
-      <div className="w-[400px] h-[500px] rounded-xl border border-zinc-800 bg-zinc-900/50 flex items-center justify-center text-zinc-600 text-sm">
-        Companion App
-      </div>
+      <CompanionPanel />
     </main>
   )
 }
