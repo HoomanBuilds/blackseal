@@ -131,7 +131,7 @@ export function CompanionPanel() {
   return (
     <>
     <aside
-      className={`console-panel w-[420px] h-[620px] flex flex-col overflow-hidden transition-opacity duration-300 ${
+      className={`console-panel w-full max-w-[420px] lg:w-[420px] h-auto lg:h-[620px] flex flex-col overflow-hidden transition-opacity duration-300 ${
         backupEnabled ? "opacity-100" : "opacity-70"
       }`}
       style={{ fontFamily: "var(--font-console), ui-monospace, monospace" }}

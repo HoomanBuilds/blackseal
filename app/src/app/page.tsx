@@ -12,12 +12,14 @@ export default function Home() {
   useVaultPersistence()
 
   return (
-    <main className="min-h-screen desk-surface flex items-center justify-center gap-6 p-8">
+    <main className="min-h-screen desk-surface flex flex-col lg:flex-row items-center justify-center gap-4 lg:gap-6 p-4 lg:p-8">
       <DeviceShell>
         <ScreenRouter />
       </DeviceShell>
 
-      <UsbCable />
+      <div className="hidden lg:block">
+        <UsbCable />
+      </div>
 
       <CompanionPanel />
     </main>
