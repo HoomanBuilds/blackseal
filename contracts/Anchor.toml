@@ -1,0 +1,21 @@
+[toolchain]
+package_manager = "npm"
+
+[features]
+resolution = true
+skip-lint = false
+
+[programs.devnet]
+black_seal = "B45qckbUSwjCFUGCTFv7NnRdCh31WXhpLE4qT9Jc1Nhm"
+
+[programs.localnet]
+black_seal = "B45qckbUSwjCFUGCTFv7NnRdCh31WXhpLE4qT9Jc1Nhm"
+
+[provider]
+cluster = "localnet"
+wallet = "~/.config/solana/id.json"
+
+[scripts]
+test = "npx ts-mocha -p ./tsconfig.json -t 1000000 tests/**/*.ts"
+
+[hooks]
