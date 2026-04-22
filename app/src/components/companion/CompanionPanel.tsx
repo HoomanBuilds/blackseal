@@ -5,10 +5,11 @@ import { useDeviceStore } from "@/lib/store/device-store"
 import { useConnectionStore } from "@/lib/store/connection-store"
 import { useVaultStore } from "@/lib/store/vault-store"
 import { useCompanionConnection } from "@/lib/hooks/useCompanionConnection"
-import { runBackup, runRestore } from "@/lib/companion/backup-flow"
+import { runBackup, runRestore, restoreFromSeed } from "@/lib/companion/backup-flow"
 import { BackupStatus } from "./BackupStatus"
 import { TransactionLog } from "./TransactionLog"
 import { RestoreFlow } from "./RestoreFlow"
+import { SeedRestoreDialog } from "./SeedRestoreDialog"
 
 export function CompanionPanel() {
   useCompanionConnection()
@@ -18,6 +19,11 @@ export function CompanionPanel() {
   const isLocked = useDeviceStore((s) => s.isLocked)
   const seedPhrase = useDeviceStore((s) => s.seedPhrase)
   const encryptionKey = useDeviceStore((s) => s.encryptionKey)
+  const setSeedPhrase = useDeviceStore((s) => s.setSeedPhrase)
+  const setEncryptionKey = useDeviceStore((s) => s.setEncryptionKey)
+  const setBackupEnabled = useDeviceStore((s) => s.setBackupEnabled)
+  const setScreen = useDeviceStore((s) => s.setScreen)
+  const setPendingRestore = useDeviceStore((s) => s.setPendingRestore)
   const vault = useVaultStore((s) => s.vault)
   const setVault = useVaultStore((s) => s.setVault)
 
@@ -27,6 +33,7 @@ export function CompanionPanel() {
   const addTransaction = useConnectionStore((s) => s.addTransaction)
 
   const [errorMsg, setErrorMsg] = useState<string | null>(null)
+  const [restoreDialogOpen, setRestoreDialogOpen] = useState(false)
 
   const sessionId = useMemo(
     () => Math.floor(Math.random() * 0xffffffff).toString(16).padStart(8, "0"),
@@ -80,7 +87,49 @@ export function CompanionPanel() {
     }
   }, [encryptionKey, seedPhrase, setVault, addTransaction, setLastBackup, setTransferring])
 
+  const handleSeedRestore = useCallback(
+    async (phrase: string) => {
+      setErrorMsg(null)
+      setTransferring(true)
+      try {
+        const result = await restoreFromSeed(phrase)
+        if (!result) {
+          throw new Error("no vault found for this seed")
+        }
+        setSeedPhrase(phrase)
+        setEncryptionKey(result.encryptionKey)
+        setBackupEnabled(true)
+        setVault(result.vault)
+        setPendingRestore(true)
+        addTransaction({
+          signature: `seed-restore-${Date.now().toString(16)}`,
+          type: "restore",
+          timestamp: Date.now(),
+        })
+        setLastBackup(result.lastUpdated * 1000, result.version)
+        setRestoreDialogOpen(false)
+        setScreen("SET_PIN")
+      } finally {
+        setTransferring(false)
+      }
+    },
+    [
+      setSeedPhrase,
+      setEncryptionKey,
+      setBackupEnabled,
+      setVault,
+      setPendingRestore,
+      addTransaction,
+      setLastBackup,
+      setScreen,
+      setTransferring,
+    ]
+  )
+
+  const canOfferRestore = !setupComplete && !restoreDialogOpen
+
   return (
+    <>
     <aside
       className={`console-panel w-[420px] h-[620px] flex flex-col overflow-hidden transition-opacity duration-300 ${
         backupEnabled ? "opacity-100" : "opacity-70"
@@ -108,7 +157,17 @@ export function CompanionPanel() {
           >
             {backupEnabled ? "BACKUP ON" : "LOCAL ONLY"}
           </span>
-          <span className="console-hex mt-3">rev.0.1.0-devnet</span>
+          {canOfferRestore ? (
+            <button
+              type="button"
+              onClick={() => setRestoreDialogOpen(true)}
+              className="mt-3 text-[10px] tracking-[0.25em] console-accent-text hover:text-[color:var(--console-phosphor)] transition-colors"
+            >
+              ↓ RESTORE EXISTING
+            </button>
+          ) : (
+            <span className="console-hex mt-3">rev.0.1.0-devnet</span>
+          )}
         </div>
       </header>
 
@@ -143,5 +202,11 @@ export function CompanionPanel() {
         <span className="console-label opacity-60">AES-256-GCM</span>
       </footer>
     </aside>
+    <SeedRestoreDialog
+      open={restoreDialogOpen}
+      onClose={() => setRestoreDialogOpen(false)}
+      onSubmit={handleSeedRestore}
+    />
+    </>
   )
 }
