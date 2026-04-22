@@ -35,6 +35,7 @@ interface DeviceState {
   buttonSeq: number
   selectedPasswordId: string | null
   selectedNoteId: string | null
+  pendingRestore: boolean
 
   setScreen: (screen: DeviceScreen) => void
   setSetupComplete: (complete: boolean) => void
@@ -46,6 +47,7 @@ interface DeviceState {
   setEncryptionKey: (key: CryptoKey | null) => void
   setSelectedPasswordId: (id: string | null) => void
   setSelectedNoteId: (id: string | null) => void
+  setPendingRestore: (pending: boolean) => void
   touchActivity: () => void
   pressButton: (action: ButtonAction) => void
   wipeDevice: () => void
@@ -64,6 +66,7 @@ const initialState = {
   buttonSeq: 0,
   selectedPasswordId: null as string | null,
   selectedNoteId: null as string | null,
+  pendingRestore: false,
 }
 
 export const useDeviceStore = create<DeviceState>()((set) => ({
@@ -80,6 +83,7 @@ export const useDeviceStore = create<DeviceState>()((set) => ({
   setEncryptionKey: (encryptionKey) => set({ encryptionKey }),
   setSelectedPasswordId: (selectedPasswordId) => set({ selectedPasswordId }),
   setSelectedNoteId: (selectedNoteId) => set({ selectedNoteId }),
+  setPendingRestore: (pendingRestore) => set({ pendingRestore }),
   touchActivity: () => set({ lastActivity: Date.now() }),
   pressButton: (action) =>
     set((state) => ({
