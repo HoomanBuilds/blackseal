@@ -672,6 +672,11 @@
   100% { background: transparent; border-left-color: var(--console-hair-bright); }
 }
 
+@keyframes cable-pulse {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 0.8; }
+}
+
 /* ========================================
    PAGE BACKGROUND
    Subtle desk surface
