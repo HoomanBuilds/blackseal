@@ -3,8 +3,11 @@
 import { useEffect, useState } from "react"
 import { useDeviceStore } from "@/lib/store/device-store"
 
+const TITLE = "BLACK SEAL"
+
 export function BootScreen() {
   const [progress, setProgress] = useState(0)
+  const [revealed, setRevealed] = useState(0)
   const setScreen = useDeviceStore((s) => s.setScreen)
   const setSetupComplete = useDeviceStore((s) => s.setSetupComplete)
   const setBackupEnabled = useDeviceStore((s) => s.setBackupEnabled)
@@ -38,12 +41,19 @@ export function BootScreen() {
     }
   }, [setScreen, setSetupComplete, setBackupEnabled, setLocked])
 
+  useEffect(() => {
+    if (revealed >= TITLE.length) return
+    const id = setTimeout(() => setRevealed((r) => r + 1), 50)
+    return () => clearTimeout(id)
+  }, [revealed])
+
   const barWidth = Math.floor((progress / 100) * 17)
 
   return (
     <div className="flex flex-col items-center justify-center h-full">
       <div style={{ fontSize: 16, fontWeight: "bold", letterSpacing: "0.15em" }}>
-        BLACK SEAL
+        {TITLE.slice(0, revealed)}
+        {revealed < TITLE.length && <span className="animate-pulse">_</span>}
       </div>
       <div className="oled-text-dim" style={{ fontSize: 11, marginTop: 4 }}>
         Offline Vault
