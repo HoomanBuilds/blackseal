@@ -1,0 +1,314 @@
+{
+  "address": "B45qckbUSwjCFUGCTFv7NnRdCh31WXhpLE4qT9Jc1Nhm",
+  "metadata": {
+    "name": "black_seal",
+    "version": "0.1.0",
+    "spec": "0.1.0",
+    "description": "Created with Anchor"
+  },
+  "instructions": [
+    {
+      "name": "delete_vault",
+      "discriminator": [
+        99,
+        171,
+        186,
+        178,
+        201,
+        17,
+        81,
+        238
+      ],
+      "accounts": [
+        {
+          "name": "vault",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  98,
+                  108,
+                  97,
+                  99,
+                  107,
+                  95,
+                  115,
+                  101,
+                  97,
+                  108,
+                  95,
+                  118,
+                  97,
+                  117,
+                  108,
+                  116
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "owner"
+              }
+            ]
+          }
+        },
+        {
+          "name": "owner",
+          "writable": true,
+          "signer": true,
+          "relations": [
+            "vault"
+          ]
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "fetch_backup",
+      "discriminator": [
+        236,
+        178,
+        201,
+        125,
+        98,
+        3,
+        250,
+        187
+      ],
+      "accounts": [
+        {
+          "name": "vault",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  98,
+                  108,
+                  97,
+                  99,
+                  107,
+                  95,
+                  115,
+                  101,
+                  97,
+                  108,
+                  95,
+                  118,
+                  97,
+                  117,
+                  108,
+                  116
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "owner"
+              }
+            ]
+          }
+        },
+        {
+          "name": "owner",
+          "signer": true,
+          "relations": [
+            "vault"
+          ]
+        }
+      ],
+      "args": [],
+      "returns": "bytes"
+    },
+    {
+      "name": "initialize_vault",
+      "discriminator": [
+        48,
+        191,
+        163,
+        44,
+        71,
+        129,
+        63,
+        164
+      ],
+      "accounts": [
+        {
+          "name": "vault",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  98,
+                  108,
+                  97,
+                  99,
+                  107,
+                  95,
+                  115,
+                  101,
+                  97,
+                  108,
+                  95,
+                  118,
+                  97,
+                  117,
+                  108,
+                  116
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "owner"
+              }
+            ]
+          }
+        },
+        {
+          "name": "owner",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "upload_backup",
+      "discriminator": [
+        6,
+        246,
+        148,
+        22,
+        148,
+        161,
+        170,
+        222
+      ],
+      "accounts": [
+        {
+          "name": "vault",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  98,
+                  108,
+                  97,
+                  99,
+                  107,
+                  95,
+                  115,
+                  101,
+                  97,
+                  108,
+                  95,
+                  118,
+                  97,
+                  117,
+                  108,
+                  116
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "owner"
+              }
+            ]
+          }
+        },
+        {
+          "name": "owner",
+          "writable": true,
+          "signer": true,
+          "relations": [
+            "vault"
+          ]
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "encrypted_data",
+          "type": "bytes"
+        }
+      ]
+    }
+  ],
+  "accounts": [
+    {
+      "name": "Vault",
+      "discriminator": [
+        211,
+        8,
+        232,
+        43,
+        2,
+        152,
+        117,
+        119
+      ]
+    }
+  ],
+  "errors": [
+    {
+      "code": 6000,
+      "name": "BlobTooLarge",
+      "msg": "Encrypted blob exceeds maximum allowed size"
+    },
+    {
+      "code": 6001,
+      "name": "VersionOverflow",
+      "msg": "Version counter overflow"
+    },
+    {
+      "code": 6002,
+      "name": "Unauthorized",
+      "msg": "Signer is not the vault owner"
+    }
+  ],
+  "types": [
+    {
+      "name": "Vault",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "owner",
+            "type": "pubkey"
+          },
+          {
+            "name": "version",
+            "type": "u32"
+          },
+          {
+            "name": "last_updated",
+            "type": "i64"
+          },
+          {
+            "name": "data_size",
+            "type": "u32"
+          },
+          {
+            "name": "bump",
+            "type": "u8"
+          },
+          {
+            "name": "encrypted_data",
+            "type": "bytes"
+          }
+        ]
+      }
+    }
+  ]
+}
