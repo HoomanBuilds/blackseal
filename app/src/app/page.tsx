@@ -1,27 +1,27 @@
 "use client"
 
-import { DeviceShell } from "@/components/device/DeviceShell"
-import { ScreenRouter } from "@/components/screens/ScreenRouter"
-import { UsbCable } from "@/components/device/UsbCable"
-import { CompanionPanel } from "@/components/companion/CompanionPanel"
-import { useAutoLock } from "@/lib/hooks/useAutoLock"
-import { useVaultPersistence } from "@/lib/hooks/useVaultPersistence"
+import { Navbar } from "@/components/landing/Navbar"
+import { HeroSection } from "@/components/landing/HeroTerminal"
+import { StatsStrip } from "@/components/landing/StatsStrip"
+import { FeaturesSection } from "@/components/landing/FeaturesSection"
+import { HowItWorksSection } from "@/components/landing/HowItWorksSection"
+import { SpecSheet } from "@/components/landing/SpecSheet"
+import { TryItSection } from "@/components/landing/TryItSection"
+import { Footer } from "@/components/landing/Footer"
+import { SmoothScroll } from "@/components/landing/SmoothScroll"
 
-export default function Home() {
-  useAutoLock()
-  useVaultPersistence()
-
+export default function LandingPage() {
   return (
-    <main className="min-h-screen desk-surface flex flex-col lg:flex-row items-center justify-center gap-4 lg:gap-6 p-4 lg:p-8">
-      <DeviceShell>
-        <ScreenRouter />
-      </DeviceShell>
-
-      <div className="hidden lg:block">
-        <UsbCable />
-      </div>
-
-      <CompanionPanel />
-    </main>
+    <div className="landing-base">
+      <SmoothScroll />
+      <Navbar />
+      <HeroSection />
+      <StatsStrip />
+      <FeaturesSection />
+      <HowItWorksSection />
+      <SpecSheet />
+      <TryItSection />
+      <Footer />
+    </div>
   )
 }

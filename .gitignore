@@ -3,6 +3,9 @@ docs/
 CLAUDE.md
 .claude/
 
+# Inspiration / reference
+inspiration/
+
 # Node / Next.js
 app/node_modules/
 app/.next/
