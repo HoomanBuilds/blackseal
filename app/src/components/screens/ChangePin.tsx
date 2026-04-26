@@ -51,9 +51,9 @@ export function ChangePin() {
             const newWrap = await derivePinWrappingKey(pin)
             const { ciphertext, iv } = await encrypt(seedPhrase, newWrap)
 
-            localStorage.setItem("bs_pin_hash", newHash)
             localStorage.setItem("bs_seed_ct", ciphertext)
             localStorage.setItem("bs_seed_iv", iv)
+            localStorage.setItem("bs_pin_hash", newHash)
             setScreen("SETTINGS")
           } catch {
             setError("Failed to re-wrap seed.")

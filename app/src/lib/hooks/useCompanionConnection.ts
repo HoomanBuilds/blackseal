@@ -41,15 +41,7 @@ export function useCompanionConnection() {
         setPublicKey(keypair.publicKey.toBase58())
         setConnected(true)
 
-        let balance = await client.getBalanceSol()
-        if (balance < 0.05) {
-          try {
-            await client.requestAirdrop(1)
-            balance = await client.getBalanceSol()
-          } catch {
-            // devnet airdrops are rate-limited; fall through with current balance
-          }
-        }
+        const balance = await client.getBalanceSol()
         if (!cancelled) setSolanaBalance(balance)
       } catch {
         if (!cancelled) setConnected(false)

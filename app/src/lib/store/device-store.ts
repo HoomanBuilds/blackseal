@@ -76,8 +76,15 @@ export const useDeviceStore = create<DeviceState>()((set) => ({
   setSetupComplete: (setupComplete) => set({ setupComplete }),
   setLocked: (isLocked) => set({ isLocked }),
   incrementFailedAttempts: () =>
-    set((state) => ({ failedAttempts: state.failedAttempts + 1 })),
-  resetFailedAttempts: () => set({ failedAttempts: 0 }),
+    set((state) => {
+      const next = state.failedAttempts + 1
+      try { localStorage.setItem("bs_failed", String(next)) } catch {}
+      return { failedAttempts: next }
+    }),
+  resetFailedAttempts: () => {
+    try { localStorage.removeItem("bs_failed") } catch {}
+    set({ failedAttempts: 0 })
+  },
   setBackupEnabled: (backupEnabled) => set({ backupEnabled }),
   setSeedPhrase: (seedPhrase) => set({ seedPhrase }),
   setEncryptionKey: (encryptionKey) => set({ encryptionKey }),
@@ -91,5 +98,8 @@ export const useDeviceStore = create<DeviceState>()((set) => ({
       buttonSeq: state.buttonSeq + 1,
       lastActivity: Date.now(),
     })),
-  wipeDevice: () => set({ ...initialState, lastActivity: Date.now() }),
+  wipeDevice: () => {
+    try { localStorage.removeItem("bs_failed") } catch {}
+    set({ ...initialState, lastActivity: Date.now() })
+  },
 }))
