@@ -14,6 +14,7 @@ export function PinPad({ onSubmit, length = 8 }: PinPadProps) {
 
   const [digits, setDigits] = useState<number[]>(Array(length).fill(0))
   const [position, setPosition] = useState(0)
+  const [touched, setTouched] = useState(false)
   const prevSeq = useRef(0)
 
   useEffect(() => {
@@ -21,25 +22,29 @@ export function PinPad({ onSubmit, length = 8 }: PinPadProps) {
     prevSeq.current = buttonSeq
 
     if (buttonAction === "up") {
+      setTouched(true)
       setDigits((d) => {
         const next = [...d]
         next[position] = (next[position] + 1) % 10
         return next
       })
     } else if (buttonAction === "down") {
+      setTouched(true)
       setDigits((d) => {
         const next = [...d]
         next[position] = (next[position] + 9) % 10
         return next
       })
     } else if (buttonAction === "right") {
+      setTouched(true)
       setPosition((p) => Math.min(length - 1, p + 1))
     } else if (buttonAction === "left") {
+      setTouched(true)
       setPosition((p) => Math.max(0, p - 1))
     } else if (buttonAction === "confirm") {
-      onSubmit(digits.join(""))
+      if (touched) onSubmit(digits.join(""))
     }
-  }, [buttonAction, buttonSeq, position, digits, length, onSubmit])
+  }, [buttonAction, buttonSeq, position, digits, length, onSubmit, touched])
 
   return (
     <div className="flex flex-col items-center">

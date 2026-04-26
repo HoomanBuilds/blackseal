@@ -14,7 +14,7 @@ export function Settings() {
 
   const items: MenuItem[] = [
     { label: "Change PIN", action: "screen", screen: "CHANGE_PIN" },
-    { label: backupEnabled ? "Disable Backup" : "Enable Backup", action: "screen", screen: "SETTINGS" },
+    { label: backupEnabled ? "Pause Backup" : "Enable Backup", action: "screen", screen: "SETTINGS" },
     { label: "Wipe Device", action: "screen", screen: "WIPE_DEVICE" },
   ]
 

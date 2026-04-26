@@ -28,20 +28,24 @@ export function NoteView() {
     prevSeq.current = buttonSeq
 
     if (buttonAction === "left") {
-      setSelectedNoteId(null)
-      setScreen("NOTE_LIST")
-    } else if (buttonAction === "up") {
-      if (confirmDelete) setConfirmDelete(false)
-      else setPage((p) => Math.max(0, p - 1))
-    } else if (buttonAction === "down") {
-      if (!confirmDelete) {
-        if (page < totalPages - 1) setPage((p) => p + 1)
-        else setConfirmDelete(true)
+      if (confirmDelete) {
+        setConfirmDelete(false)
+      } else {
+        setSelectedNoteId(null)
+        setScreen("NOTE_LIST")
       }
-    } else if (buttonAction === "right" && confirmDelete && note) {
-      deleteNote(note.id)
-      setSelectedNoteId(null)
-      setScreen("NOTE_LIST")
+    } else if (buttonAction === "up") {
+      setPage((p) => Math.max(0, p - 1))
+    } else if (buttonAction === "down") {
+      setPage((p) => Math.min(totalPages - 1, p + 1))
+    } else if (buttonAction === "confirm") {
+      if (confirmDelete && note) {
+        deleteNote(note.id)
+        setSelectedNoteId(null)
+        setScreen("NOTE_LIST")
+      } else {
+        setConfirmDelete(true)
+      }
     }
   }, [buttonAction, buttonSeq, page, totalPages, confirmDelete, note, deleteNote, setSelectedNoteId, setScreen])
 
@@ -69,11 +73,11 @@ export function NoteView() {
       </div>
       {confirmDelete ? (
         <div style={{ fontSize: 10, color: "#ff4444" }}>
-          Delete? [►] Yes [▲] Cancel
+          Delete? [OK] Yes [◄] Cancel
         </div>
       ) : (
         <div className="oled-text-dim" style={{ fontSize: 10 }}>
-          [▲▼] Page {page + 1}/{totalPages} [◄] Back
+          [▲▼] Page {page + 1}/{totalPages} [OK] Del [◄] Back
         </div>
       )}
     </div>

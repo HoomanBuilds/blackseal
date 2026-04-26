@@ -1,6 +1,6 @@
 "use client"
 
-import { useCallback, useMemo, useState } from "react"
+import { useCallback, useEffect, useState } from "react"
 import { useDeviceStore } from "@/lib/store/device-store"
 import { useConnectionStore } from "@/lib/store/connection-store"
 import { useVaultStore } from "@/lib/store/vault-store"
@@ -35,10 +35,10 @@ export function CompanionPanel() {
   const [errorMsg, setErrorMsg] = useState<string | null>(null)
   const [restoreDialogOpen, setRestoreDialogOpen] = useState(false)
 
-  const sessionId = useMemo(
-    () => Math.floor(Math.random() * 0xffffffff).toString(16).padStart(8, "0"),
-    []
-  )
+  const [sessionId, setSessionId] = useState("00000000")
+  useEffect(() => {
+    setSessionId(Math.floor(Math.random() * 0xffffffff).toString(16).padStart(8, "0"))
+  }, [])
 
   const canBackup =
     setupComplete && !isLocked && backupEnabled && isConnected && !!vault && !!seedPhrase && !!encryptionKey

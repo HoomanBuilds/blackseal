@@ -15,6 +15,8 @@ const CHAR_GRID: string[][] = [
   ["0", "1", "2", "3", "4", "5", "6"],
   ["7", "8", "9", "!", "@", "#", "$"],
   ["%", "&", "*", "-", "_", ".", "/"],
+  ["+", "=", "?", ":", ";", "'", "\""],
+  ["(", ")", "[", "]", "{", "}", ","],
   ["DEL", "", "DONE", "", "ESC", "", ""],
 ]
 
@@ -58,7 +60,7 @@ export function CharPicker({ value, onChange, onDone, onCancel, label }: CharPic
         onChange(value + char)
       }
     }
-  }, [buttonAction, buttonSeq, row, col, value, onChange, onDone])
+  }, [buttonAction, buttonSeq, row, col, value, onChange, onDone, onCancel])
 
   const visibleStart = Math.max(0, Math.min(row - 1, CHAR_GRID.length - 4))
   const visibleRows = CHAR_GRID.slice(visibleStart, visibleStart + 4)

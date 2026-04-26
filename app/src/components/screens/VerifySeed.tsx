@@ -3,8 +3,14 @@
 import { useEffect, useMemo, useRef, useState } from "react"
 import { useDeviceStore } from "@/lib/store/device-store"
 
+function cryptoRandom(): number {
+  const buf = new Uint32Array(1)
+  crypto.getRandomValues(buf)
+  return buf[0] / 0x100000000
+}
+
 function pickRandom<T>(arr: T[], count: number): T[] {
-  const shuffled = [...arr].sort(() => Math.random() - 0.5)
+  const shuffled = [...arr].sort(() => cryptoRandom() - 0.5)
   return shuffled.slice(0, count)
 }
 
@@ -34,7 +40,7 @@ export function VerifySeed() {
         words.filter((w) => w !== correct),
         3
       )
-      const options = [...decoys, correct].sort(() => Math.random() - 0.5)
+      const options = [...decoys, correct].sort(() => cryptoRandom() - 0.5)
       return { wordIndex, correct, options }
     })
   }, [words])
@@ -46,7 +52,10 @@ export function VerifySeed() {
     prevSeq.current = buttonSeq
     setError(false)
 
-    if (buttonAction === "up") {
+    if (buttonAction === "left") {
+      setScreen("GENERATE_SEED")
+      return
+    } else if (buttonAction === "up") {
       setSelected((s) => Math.max(0, s - 1))
     } else if (buttonAction === "down") {
       setSelected((s) => Math.min(current.options.length - 1, s + 1))
@@ -89,7 +98,7 @@ export function VerifySeed() {
         <div style={{ fontSize: 10, color: "#ff4444" }}>Wrong! Try again.</div>
       )}
       <div className="oled-text-dim" style={{ fontSize: 10 }}>
-        [▲▼] Select [OK] Confirm
+        [◄] Back [▲▼] Select [OK] Confirm
       </div>
     </div>
   )
