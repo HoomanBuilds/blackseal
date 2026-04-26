@@ -14,13 +14,13 @@ export default function SimulatorPage() {
 
   return (
     <div className="min-h-screen desk-surface flex flex-col">
-      <header className="flex items-center justify-between px-6 py-3 border-b border-[#E4E4E7]">
+      <header className="flex items-center justify-between px-6 py-3.5 border-b border-[#DCDCE0] bg-[#F4F4F5]">
         <Link
           href="/"
-          className="flex items-center gap-2 no-underline"
+          className="flex items-center gap-2.5 no-underline"
           style={{
-            fontFamily: "var(--l-display, var(--font-display))",
-            fontSize: 15,
+            fontFamily: "var(--font-syne), system-ui, sans-serif",
+            fontSize: 18,
             fontWeight: 600,
             color: "#171717",
             letterSpacing: "-0.02em",
@@ -31,13 +31,14 @@ export default function SimulatorPage() {
               display: "inline-flex",
               alignItems: "center",
               justifyContent: "center",
-              width: 24,
-              height: 24,
-              borderRadius: 5,
+              width: 26,
+              height: 26,
+              borderRadius: 6,
               background: "#171717",
               color: "#FCFCFC",
-              fontSize: 12,
+              fontSize: 13,
               fontWeight: 700,
+              fontFamily: "var(--font-syne), system-ui, sans-serif",
               letterSpacing: "-0.04em",
             }}
           >
@@ -57,7 +58,7 @@ export default function SimulatorPage() {
         </span>
       </header>
 
-      <main className="flex-1 flex flex-col lg:flex-row items-center justify-center gap-4 lg:gap-6 p-4 lg:p-8">
+      <main className="flex-1 flex flex-col lg:flex-row items-center justify-center gap-6 lg:gap-8 p-4 sm:p-6 lg:p-8">
         <DeviceShell>
           <ScreenRouter />
         </DeviceShell>

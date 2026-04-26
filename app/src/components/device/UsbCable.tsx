@@ -23,8 +23,8 @@ export function UsbCable() {
         <defs>
           {/* Braided sheath pattern */}
           <pattern id="braid" x={0} y={0} width={4} height={6} patternUnits="userSpaceOnUse">
-            <line x1={0} y1={0} x2={4} y2={6} stroke="rgba(255,255,255,0.025)" strokeWidth={0.5} />
-            <line x1={4} y1={0} x2={0} y2={6} stroke="rgba(255,255,255,0.015)" strokeWidth={0.5} />
+            <line x1={0} y1={0} x2={4} y2={6} stroke="rgba(255,255,255,0.08)" strokeWidth={0.5} />
+            <line x1={4} y1={0} x2={0} y2={6} stroke="rgba(255,255,255,0.05)" strokeWidth={0.5} />
           </pattern>
 
           {/* Connector metal gradient */}
@@ -36,7 +36,7 @@ export function UsbCable() {
         </defs>
 
         {/* Cable shadow on surface */}
-        <path d={CABLE_PATH} fill="none" stroke="rgba(0,0,0,0.5)" strokeWidth={7} strokeLinecap="round" />
+        <path d={CABLE_PATH} fill="none" stroke="rgba(0,0,0,0.15)" strokeWidth={7} strokeLinecap="round" />
 
         {/* Cable body */}
         <path d={CABLE_PATH} fill="none" stroke={active ? "#1e1e22" : "#151518"} strokeWidth={4.5} strokeLinecap="round" />
@@ -45,7 +45,7 @@ export function UsbCable() {
         <path d={CABLE_PATH} fill="none" stroke="url(#braid)" strokeWidth={4} strokeLinecap="round" />
 
         {/* Cable edge highlight (top light catch) */}
-        <path d={CABLE_PATH} fill="none" stroke="rgba(255,255,255,0.05)" strokeWidth={1} strokeLinecap="round" strokeDasharray="6 4" />
+        <path d={CABLE_PATH} fill="none" stroke="rgba(255,255,255,0.12)" strokeWidth={1} strokeLinecap="round" strokeDasharray="6 4" />
 
         {/* Data flow glow — only when transferring */}
         {isTransferring && (

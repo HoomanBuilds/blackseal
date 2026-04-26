@@ -133,9 +133,7 @@ export function CompanionPanel() {
   return (
     <>
     <aside
-      className={`console-panel w-full max-w-[420px] lg:w-[420px] h-auto lg:h-[620px] flex flex-col overflow-hidden transition-opacity duration-300 ${
-        backupEnabled ? "opacity-100" : "opacity-70"
-      }`}
+      className="console-panel w-full max-w-[420px] lg:w-[420px] h-auto lg:h-[620px] flex flex-col overflow-hidden"
       style={{ fontFamily: "var(--font-console), ui-monospace, monospace" }}
     >
       {/* MASTHEAD */}
@@ -143,7 +141,7 @@ export function CompanionPanel() {
         <div className="flex-1 px-5 py-5 flex flex-col gap-1">
           <div className="flex items-center gap-3">
             <span className="console-display-heading text-[14px]">BLACK SEAL</span>
-            <span className="console-hex">// COMPANION</span>
+            <span className="console-hex" style={{ color: "var(--console-magenta)" }}>// COMPANION</span>
           </div>
           <div className="flex items-center gap-3">
             <span className="console-label">SESSION</span>
@@ -163,7 +161,8 @@ export function CompanionPanel() {
             <button
               type="button"
               onClick={() => setRestoreDialogOpen(true)}
-              className="mt-3 text-[10px] tracking-[0.25em] console-accent-text hover:text-[color:var(--console-phosphor)] transition-colors"
+              className="mt-3 text-[11px] tracking-[0.15em] console-accent-text hover:text-[color:var(--console-phosphor)] transition-colors"
+              style={{ borderBottom: "1px solid var(--console-accent)", paddingBottom: 1 }}
             >
               ↓ RESTORE EXISTING
             </button>
@@ -191,7 +190,7 @@ export function CompanionPanel() {
       />
 
       {errorMsg && (
-        <div className="px-5 py-2 text-[10px] tracking-[0.2em] text-[color:var(--console-warn)] border-t border-[var(--console-hair)]">
+        <div className="px-5 py-2 text-[11px] tracking-[0.12em] text-[color:var(--console-warn)] border-t border-[var(--console-hair)]">
           ERR · {errorMsg}
         </div>
       )}

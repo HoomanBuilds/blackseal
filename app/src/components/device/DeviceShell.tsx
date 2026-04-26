@@ -27,6 +27,7 @@ export function DeviceShell({ children }: DeviceShellProps) {
         className="device-body relative"
         style={{
           width: 400,
+          maxWidth: "100%",
           borderRadius: 16,
           padding: "28px 28px 20px",
           transform: "rotateX(1.5deg)",
