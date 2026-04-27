@@ -17,7 +17,7 @@ export function WipeDevice() {
     { label: "Yes, Wipe Everything", danger: true },
   ]
   const [selected, setSelected] = useState(0)
-  const prevSeq = useRef(0)
+  const prevSeq = useRef(buttonSeq)
 
   useEffect(() => {
     if (buttonSeq === prevSeq.current || !buttonAction) return

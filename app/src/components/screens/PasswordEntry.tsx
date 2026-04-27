@@ -21,7 +21,7 @@ export function PasswordEntry() {
   const entry = passwords.find((p) => p.id === selectedId)
   const [revealed, setRevealed] = useState(false)
   const [remaining, setRemaining] = useState(REVEAL_MS / 1000)
-  const prevSeq = useRef(0)
+  const prevSeq = useRef(buttonSeq)
 
   useEffect(() => {
     if (!revealed) return

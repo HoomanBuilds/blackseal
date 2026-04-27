@@ -15,7 +15,7 @@ export function PinPad({ onSubmit, length = 8 }: PinPadProps) {
   const [digits, setDigits] = useState<number[]>(Array(length).fill(0))
   const [position, setPosition] = useState(0)
   const [touched, setTouched] = useState(false)
-  const prevSeq = useRef(0)
+  const prevSeq = useRef(buttonSeq)
 
   useEffect(() => {
     if (buttonSeq === prevSeq.current || !buttonAction) return

@@ -13,7 +13,7 @@ export function Dashboard() {
   const backupEnabled = useDeviceStore((s) => s.backupEnabled)
   const vault = useVaultStore((s) => s.vault)
   const lastBackup = useConnectionStore((s) => s.lastBackupTime)
-  const lastSeq = useRef(0)
+  const lastSeq = useRef(buttonSeq)
 
   useEffect(() => {
     if (buttonSeq === lastSeq.current) return

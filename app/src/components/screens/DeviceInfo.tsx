@@ -14,7 +14,7 @@ export function DeviceInfo() {
   const vault = useVaultStore((s) => s.vault)
   const lastBackupTime = useConnectionStore((s) => s.lastBackupTime)
   const publicKey = useConnectionStore((s) => s.publicKeyBase58)
-  const prevSeq = useRef(0)
+  const prevSeq = useRef(buttonSeq)
 
   useEffect(() => {
     if (buttonSeq === prevSeq.current || !buttonAction) return

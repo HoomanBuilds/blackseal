@@ -13,7 +13,7 @@ export function GenerateSeed() {
 
   const [words, setWords] = useState<string[]>([])
   const [index, setIndex] = useState(0)
-  const prevSeq = useRef(0)
+  const prevSeq = useRef(buttonSeq)
 
   useEffect(() => {
     const phrase = generateSeedPhrase()

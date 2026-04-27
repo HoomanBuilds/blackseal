@@ -9,7 +9,7 @@ export function SetupComplete() {
   const buttonSeq = useDeviceStore((s) => s.buttonSeq)
   const setScreen = useDeviceStore((s) => s.setScreen)
   const backupEnabled = useDeviceStore((s) => s.backupEnabled)
-  const lastSeq = useRef(0)
+  const lastSeq = useRef(buttonSeq)
 
   useEffect(() => {
     if (buttonSeq !== lastSeq.current && buttonAction === "confirm") {

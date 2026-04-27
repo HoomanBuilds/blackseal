@@ -25,7 +25,7 @@ export function VerifySeed() {
   const [selected, setSelected] = useState(0)
   const [error, setError] = useState(false)
   const [flash, setFlash] = useState(false)
-  const prevSeq = useRef(0)
+  const prevSeq = useRef(buttonSeq)
 
   const words = useMemo(() => seedPhrase?.split(" ") ?? [], [seedPhrase])
 

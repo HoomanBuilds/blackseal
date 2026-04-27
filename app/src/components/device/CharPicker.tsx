@@ -34,7 +34,7 @@ export function CharPicker({ value, onChange, onDone, onCancel, label }: CharPic
 
   const [row, setRow] = useState(0)
   const [col, setCol] = useState(0)
-  const prevSeq = useRef(0)
+  const prevSeq = useRef(buttonSeq)
 
   useEffect(() => {
     if (buttonSeq === prevSeq.current || !buttonAction) return

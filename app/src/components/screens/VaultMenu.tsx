@@ -18,7 +18,7 @@ export function VaultMenu() {
   const setScreen = useDeviceStore((s) => s.setScreen)
   const vault = useVaultStore((s) => s.vault)
   const [selected, setSelected] = useState(0)
-  const lastSeq = useRef(0)
+  const lastSeq = useRef(buttonSeq)
 
   const items = useMemo<MenuItem[]>(
     () => [

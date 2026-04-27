@@ -21,7 +21,7 @@ export function NoteView() {
 
   const note = notes.find((n) => n.id === selectedId)
   const [page, setPage] = useState(0)
-  const prevSeq = useRef(0)
+  const prevSeq = useRef(buttonSeq)
 
   const lines = wrapText(note?.body ?? "", WRAP_WIDTH)
   const totalPages = Math.max(1, Math.ceil(lines.length / LINES_PER_PAGE))

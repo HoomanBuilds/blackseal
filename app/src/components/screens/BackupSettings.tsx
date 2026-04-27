@@ -14,7 +14,7 @@ export function BackupSettings() {
   const setBackupEnabled = useDeviceStore((s) => s.setBackupEnabled)
   const vault = useVaultStore((s) => s.vault)
   const lastBackupTime = useConnectionStore((s) => s.lastBackupTime)
-  const prevSeq = useRef(0)
+  const prevSeq = useRef(buttonSeq)
 
   useEffect(() => {
     if (buttonSeq === prevSeq.current || !buttonAction) return
