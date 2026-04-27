@@ -27,7 +27,7 @@ const STEPS = [
   {
     n: "02",
     label: "Save what matters",
-    primary: "Add passwords, secret notes, and instructions for your family — directly on the device.",
+    primary: "Add passwords, secret notes, and instructions for your family directly on the device.",
     secondary: "Everything is sealed with AES-256-GCM the moment you hit confirm. No keyboard, no clipboard, no leaks.",
     visual: "lock",
   },

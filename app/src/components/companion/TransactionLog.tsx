@@ -4,7 +4,7 @@ import { useConnectionStore } from "@/lib/store/connection-store"
 import { explorerTxUrl } from "@/lib/solana/transactions"
 
 const TYPE_LABEL: Record<string, { label: string; className: string }> = {
-  init: { label: "INIT", className: "text-[color:var(--console-text-dim)]" },
+  init: { label: "INIT", className: "text-[color:var(--console-magenta)]" },
   backup: { label: "UPLINK", className: "console-phosphor-text" },
   restore: { label: "DNLINK", className: "console-accent-text" },
   delete: { label: "WIPE", className: "text-[color:var(--console-warn)]" },
@@ -40,8 +40,8 @@ export function TransactionLog() {
           {transactions.length === 0 ? (
             <div className="h-full flex items-center justify-center py-12">
               <div className="text-center">
-                <div className="console-hex opacity-40 mb-2">— NO TRANSACTIONS —</div>
-                <div className="console-label opacity-30">awaiting signal</div>
+                <div className="console-hex mb-2">— NO TRANSACTIONS —</div>
+                <div className="console-hex" style={{ fontSize: 9 }}>awaiting signal</div>
               </div>
             </div>
           ) : (

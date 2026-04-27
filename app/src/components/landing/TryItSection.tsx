@@ -92,7 +92,7 @@ export function TryItSection() {
             }}
           >
             A full hardware-vault simulation in your browser. Real BIP-39
-            seeds, real AES-256-GCM encryption, real Solana devnet backups —
+            seeds, real AES-256-GCM encryption, real Solana devnet backups,
             no install, no signup, no tracking.
           </motion.p>
 

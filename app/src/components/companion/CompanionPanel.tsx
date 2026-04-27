@@ -199,10 +199,10 @@ export function CompanionPanel() {
 
       {/* FOOTPRINT LEDGER */}
       <footer className="px-5 py-2.5 flex items-center justify-between border-t border-[var(--console-hair)]">
-        <span className="console-hex opacity-60">
+        <span className="console-hex">
           [PDA] ${"<"}black_seal_vault${">"}
         </span>
-        <span className="console-label opacity-60">AES-256-GCM</span>
+        <span className="console-label">AES-256-GCM</span>
       </footer>
     </aside>
     <SeedRestoreDialog

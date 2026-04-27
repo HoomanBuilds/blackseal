@@ -43,7 +43,7 @@ const FEATURES: Feature[] = [
       </svg>
     ),
     title: "Every Password, Sealed",
-    desc: "Store credentials for banking, social, crypto, work — all locked behind one 8-digit PIN, encrypted with AES-256-GCM on the device itself.",
+    desc: "Store credentials for banking, social, crypto, work all locked behind one 8-digit PIN, encrypted with AES-256-GCM on the device itself.",
   },
   {
     icon: (

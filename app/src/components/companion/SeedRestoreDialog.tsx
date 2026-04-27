@@ -45,7 +45,7 @@ export function SeedRestoreDialog({ open, onClose, onSubmit }: Props) {
         </header>
         <div className="console-hair" />
 
-        <p className="console-label leading-relaxed text-[10px] tracking-[0.18em] opacity-80">
+        <p className="leading-relaxed text-[11px] tracking-[0.08em]" style={{ color: "var(--console-text-dim)", fontFamily: "var(--font-console), ui-monospace, monospace" }}>
           Paste the 24-word seed phrase from your previous device. Words only, separated by spaces.
           The seed stays local — only the derived public key ever reaches Solana.
         </p>

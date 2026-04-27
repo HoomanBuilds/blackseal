@@ -86,7 +86,7 @@ export function BackupStatus() {
               ? "is-warn"
               : isConnected
                 ? "is-live"
-                : ""
+                : "is-danger"
           }`}
         >
           {isTransferring ? "TRANSFER" : isConnected ? "IDLE" : "DOWN"}
