@@ -10,7 +10,6 @@ export type DeviceScreen =
   | "BACKUP_CHOICE"
   | "SETUP_COMPLETE"
   | "PIN_UNLOCK"
-  | "MAIN_MENU"
   | "DASHBOARD"
   | "VAULT_MENU"
   | "PASSWORD_LIST"

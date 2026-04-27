@@ -47,7 +47,7 @@ describe("device-store", () => {
   })
 
   it("wipes device state", () => {
-    useDeviceStore.getState().setScreen("MAIN_MENU")
+    useDeviceStore.getState().setScreen("DASHBOARD")
     useDeviceStore.getState().setSetupComplete(true)
     useDeviceStore.getState().wipeDevice()
     expect(useDeviceStore.getState().screen).toBe("BOOT_SCREEN")

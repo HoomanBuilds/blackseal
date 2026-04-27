@@ -7,7 +7,6 @@ import { useVaultStore } from "@/lib/store/vault-store"
 const LOCK_AFTER_MS = 2 * 60 * 1000
 
 const LOCKABLE_SCREENS: Set<string> = new Set([
-  "MAIN_MENU",
   "DASHBOARD",
   "VAULT_MENU",
   "PASSWORD_LIST",
