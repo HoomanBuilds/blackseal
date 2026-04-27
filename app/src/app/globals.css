@@ -81,6 +81,20 @@
   --sidebar-accent-foreground: oklch(0.205 0 0);
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.708 0 0);
+
+  /* OLED Display - Modern Color LED System */
+  --oled-bg: #000000;
+  --oled-text: #FFFFFF;
+  --oled-text-secondary: #A0A0A0;
+  --oled-text-dim: #606060;
+  --oled-accent: #4A9EFF;
+  --oled-success: #34D399;
+  --oled-warning: #FBBF24;
+  --oled-danger: #EF4444;
+  --oled-card-bg: #0d0d14;
+  --oled-border: #1a1a2e;
+  --oled-selection-bg: rgba(74, 158, 255, 0.15);
+  --oled-selection-pip: #4A9EFF;
 }
 
 .dark {
