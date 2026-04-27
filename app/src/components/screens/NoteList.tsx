@@ -3,17 +3,19 @@
 import { useEffect, useRef, useState } from "react"
 import { useDeviceStore } from "@/lib/store/device-store"
 import { useVaultStore } from "@/lib/store/vault-store"
+import { ScreenLayout } from "@/components/device/ScreenLayout"
 
-const VISIBLE_COUNT = 5
+const VISIBLE_COUNT = 6
 
 export function NoteList() {
   const setScreen = useDeviceStore((s) => s.setScreen)
   const buttonAction = useDeviceStore((s) => s.buttonAction)
   const buttonSeq = useDeviceStore((s) => s.buttonSeq)
   const setSelectedNoteId = useDeviceStore((s) => s.setSelectedNoteId)
+  const backupEnabled = useDeviceStore((s) => s.backupEnabled)
   const notes = useVaultStore((s) => s.vault?.notes ?? [])
 
-  const items = ["[+] Add New", ...notes.map((n) => n.title)]
+  const total = notes.length + 1
   const [selected, setSelected] = useState(0)
   const prevSeq = useRef(0)
 
@@ -24,9 +26,9 @@ export function NoteList() {
     if (buttonAction === "up") {
       setSelected((s) => Math.max(0, s - 1))
     } else if (buttonAction === "down") {
-      setSelected((s) => Math.min(items.length - 1, s + 1))
+      setSelected((s) => Math.min(total - 1, s + 1))
     } else if (buttonAction === "left") {
-      setScreen("DASHBOARD")
+      setScreen("VAULT_MENU")
     } else if (buttonAction === "confirm") {
       if (selected === 0) {
         setScreen("ADD_NOTE")
@@ -38,33 +40,55 @@ export function NoteList() {
         }
       }
     }
-  }, [buttonAction, buttonSeq, selected, items.length, notes, setScreen, setSelectedNoteId])
+  }, [buttonAction, buttonSeq, selected, total, notes, setScreen, setSelectedNoteId])
 
-  const start = Math.max(0, Math.min(selected - Math.floor(VISIBLE_COUNT / 2), items.length - VISIBLE_COUNT))
-  const visible = items.slice(start, start + VISIBLE_COUNT)
+  const start = Math.max(0, Math.min(selected - Math.floor(VISIBLE_COUNT / 2), total - VISIBLE_COUNT))
+  const end = Math.min(total, start + VISIBLE_COUNT)
 
   return (
-    <div className="flex flex-col h-full">
-      <div className="oled-text-dim" style={{ fontSize: 10 }}>
-        NOTES ({notes.length})
-      </div>
-      <div className="flex-1 flex flex-col" style={{ marginTop: 4, gap: 2 }}>
-        {visible.map((label, i) => {
+    <ScreenLayout
+      title={`NOTES (${notes.length})`}
+      showBack
+      hints={[
+        { key: "▲▼", label: "Move" },
+        { key: "OK", label: "Open" },
+        { key: "◄", label: "Back" },
+      ]}
+    >
+      <div className="flex flex-col gap-1 py-1">
+        {Array.from({ length: end - start }).map((_, i) => {
           const idx = start + i
+          const isSel = idx === selected
+          if (idx === 0) {
+            return (
+              <div key="add" className={`oled-row ${isSel ? "is-selected" : ""}`}>
+                <span className="oled-text-accent" style={{ marginRight: 8, fontSize: 12 }}>＋</span>
+                <span className={isSel ? "oled-text" : "oled-text-secondary"}>Add New Note</span>
+              </div>
+            )
+          }
+          const n = notes[idx - 1]
+          if (!n) return null
           return (
-            <div
-              key={idx}
-              style={{ fontSize: 11, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}
-              className={idx === selected ? "" : "oled-text-dim"}
-            >
-              {idx === selected ? ">" : " "} {label}
+            <div key={n.id} className={`oled-row ${isSel ? "is-selected" : ""}`}>
+              {backupEnabled && (
+                <span className={`oled-status-dot ${n.backedUp ? "is-success" : "is-warning"}`} />
+              )}
+              <span
+                className={isSel ? "oled-text" : "oled-text-secondary"}
+                style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}
+              >
+                {n.title}
+              </span>
             </div>
           )
         })}
+        {notes.length === 0 && (
+          <div className="oled-text-dim text-center" style={{ fontSize: 11, marginTop: 12 }}>
+            No notes saved yet
+          </div>
+        )}
       </div>
-      <div className="oled-text-dim" style={{ fontSize: 10 }}>
-        [◄] Back [OK] Open
-      </div>
-    </div>
+    </ScreenLayout>
   )
 }

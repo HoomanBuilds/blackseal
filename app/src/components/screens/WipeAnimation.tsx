@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react"
 import { useDeviceStore } from "@/lib/store/device-store"
+import { ScreenLayout } from "@/components/device/ScreenLayout"
 
 export function WipeAnimation() {
   const setScreen = useDeviceStore((s) => s.setScreen)
@@ -23,22 +24,39 @@ export function WipeAnimation() {
     return () => clearInterval(interval)
   }, [setScreen])
 
-  const barWidth = Math.floor((progress / 100) * 17)
-
   return (
-    <div className="flex flex-col items-center justify-center h-full">
-      <div style={{ fontSize: 13, fontWeight: "bold", color: "#ff4444" }}>
-        WIPING...
-      </div>
-      <div style={{ fontSize: 12, marginTop: 10 }}>
-        [{"\u2588".repeat(barWidth)}
-        {"\u2591".repeat(17 - barWidth)}]
-      </div>
-      {done && (
-        <div style={{ fontSize: 11, marginTop: 8 }}>
-          Device wiped.
+    <ScreenLayout hideStatusBar>
+      <div className="flex flex-col items-center justify-center h-full gap-3">
+        <div className="oled-text-danger" style={{ fontSize: 18, fontWeight: 700, letterSpacing: 1 }}>
+          WIPING…
         </div>
-      )}
-    </div>
+        <div
+          style={{
+            width: 220,
+            height: 6,
+            background: "var(--oled-border)",
+            borderRadius: 3,
+            overflow: "hidden",
+          }}
+        >
+          <div
+            style={{
+              width: `${progress}%`,
+              height: "100%",
+              background: "var(--oled-danger)",
+              transition: "width 80ms linear",
+            }}
+          />
+        </div>
+        <div className="oled-text-dim" style={{ fontSize: 10 }}>
+          {progress}%
+        </div>
+        {done && (
+          <div className="oled-text-secondary" style={{ fontSize: 11, marginTop: 4 }}>
+            Device wiped.
+          </div>
+        )}
+      </div>
+    </ScreenLayout>
   )
 }

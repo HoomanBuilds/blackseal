@@ -4,6 +4,7 @@ import { useCallback } from "react"
 import { useDeviceStore } from "@/lib/store/device-store"
 import { useVaultStore } from "@/lib/store/vault-store"
 import { PinPad } from "@/components/device/PinPad"
+import { ScreenLayout } from "@/components/device/ScreenLayout"
 import { deriveKeyFromPin, deriveEncryptionKey, derivePinWrappingKey } from "@/lib/crypto/key-derivation"
 import { mnemonicToSeed } from "@/lib/crypto/bip39"
 import { decrypt } from "@/lib/crypto/encryption"
@@ -29,11 +30,9 @@ export function PinUnlock() {
       const attemptHash = await deriveKeyFromPin(pin, PIN_SALT)
 
       if (storedHash && attemptHash === storedHash) {
-        // Unwrap the seed using PIN-derived key
         const seedCt = localStorage.getItem("bs_seed_ct")
         const seedIv = localStorage.getItem("bs_seed_iv")
         if (!seedCt || !seedIv) {
-          // Partial corruption — seed wrapping data incomplete
           localStorage.clear()
           clearVault()
           wipeDevice()
@@ -53,7 +52,6 @@ export function PinUnlock() {
           const vault = await loadVault(vaultKey)
           if (vault) setVault(vault)
         } catch {
-          // Corrupt seed — wipe device
           localStorage.clear()
           clearVault()
           wipeDevice()
@@ -91,20 +89,27 @@ export function PinUnlock() {
     ]
   )
 
+  const remaining = 3 - failedAttempts
+
   return (
-    <div className="flex flex-col h-full">
-      <div className="oled-text-dim" style={{ fontSize: 10 }}>
-        ENTER PIN
-      </div>
-      {failedAttempts > 0 && (
-        <div style={{ fontSize: 10, color: "#ff4444", marginTop: 2 }}>
-          Incorrect. {3 - failedAttempts} attempt{3 - failedAttempts !== 1 ? "s" : ""} left.
-          {failedAttempts === 2 && " Next fail wipes all data."}
+    <ScreenLayout title="UNLOCK">
+      <div className="flex flex-col h-full items-center justify-center gap-3 py-2">
+        <div style={{ fontSize: 22 }}>🔒</div>
+        <div className="oled-text-secondary" style={{ fontSize: 11 }}>
+          Enter your 8-digit PIN
         </div>
-      )}
-      <div className="flex-1 flex items-center justify-center">
+        {failedAttempts > 0 && (
+          <div className="oled-text-warning text-center" style={{ fontSize: 11 }}>
+            Incorrect. {remaining} attempt{remaining !== 1 ? "s" : ""} left.
+            {failedAttempts === 2 && (
+              <div className="oled-text-danger" style={{ fontSize: 10, marginTop: 2 }}>
+                Next fail wipes all data.
+              </div>
+            )}
+          </div>
+        )}
         <PinPad key={failedAttempts} onSubmit={handleSubmit} />
       </div>
-    </div>
+    </ScreenLayout>
   )
 }

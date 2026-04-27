@@ -1,22 +1,29 @@
 "use client"
 
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useMemo, useRef, useState } from "react"
 import { useDeviceStore, type DeviceScreen } from "@/lib/store/device-store"
+import { ScreenLayout } from "@/components/device/ScreenLayout"
 
-type MenuItem = { label: string; action: "screen" | "wipe"; screen?: DeviceScreen }
+interface MenuItem {
+  icon: string
+  label: string
+  screen: DeviceScreen
+  danger?: boolean
+}
 
 export function Settings() {
   const setScreen = useDeviceStore((s) => s.setScreen)
   const buttonAction = useDeviceStore((s) => s.buttonAction)
   const buttonSeq = useDeviceStore((s) => s.buttonSeq)
-  const backupEnabled = useDeviceStore((s) => s.backupEnabled)
-  const setBackupEnabled = useDeviceStore((s) => s.setBackupEnabled)
 
-  const items: MenuItem[] = [
-    { label: "Change PIN", action: "screen", screen: "CHANGE_PIN" },
-    { label: backupEnabled ? "Pause Backup" : "Enable Backup", action: "screen", screen: "SETTINGS" },
-    { label: "Wipe Device", action: "screen", screen: "WIPE_DEVICE" },
-  ]
+  const items = useMemo<MenuItem[]>(
+    () => [
+      { icon: "🔐", label: "Change PIN", screen: "CHANGE_PIN" },
+      { icon: "☁", label: "Backup", screen: "BACKUP_SETTINGS" },
+      { icon: "🗑", label: "Wipe Device", screen: "WIPE_DEVICE", danger: true },
+    ],
+    []
+  )
 
   const [selected, setSelected] = useState(0)
   const prevSeq = useRef(0)
@@ -30,38 +37,42 @@ export function Settings() {
     } else if (buttonAction === "down") {
       setSelected((s) => Math.min(items.length - 1, s + 1))
     } else if (buttonAction === "left") {
-      setScreen("DASHBOARD")
+      setScreen("VAULT_MENU")
     } else if (buttonAction === "confirm") {
-      const item = items[selected]
-      if (selected === 1) {
-        const next = !backupEnabled
-        setBackupEnabled(next)
-        localStorage.setItem("bs_backup", next ? "true" : "false")
-      } else if (item.screen) {
-        setScreen(item.screen)
-      }
+      setScreen(items[selected].screen)
     }
-  }, [buttonAction, buttonSeq, selected, items, backupEnabled, setBackupEnabled, setScreen])
+  }, [buttonAction, buttonSeq, selected, items, setScreen])
 
   return (
-    <div className="flex flex-col h-full">
-      <div className="oled-text-dim" style={{ fontSize: 10 }}>
-        SETTINGS
+    <ScreenLayout
+      title="SETTINGS"
+      showBack
+      hints={[
+        { key: "▲▼", label: "Move" },
+        { key: "OK", label: "Open" },
+        { key: "◄", label: "Back" },
+      ]}
+    >
+      <div className="flex flex-col gap-1 py-2">
+        {items.map((item, i) => {
+          const isSel = selected === i
+          const labelClass = item.danger
+            ? isSel
+              ? "oled-text-danger"
+              : "oled-text-secondary"
+            : isSel
+              ? "oled-text"
+              : "oled-text-secondary"
+          return (
+            <div key={item.label} className={`oled-row ${isSel ? "is-selected" : ""}`}>
+              <span style={{ fontSize: 14, marginRight: 10 }}>{item.icon}</span>
+              <span className={labelClass} style={{ flex: 1 }}>
+                {item.label}
+              </span>
+            </div>
+          )
+        })}
       </div>
-      <div className="flex-1 flex flex-col justify-center" style={{ gap: 2 }}>
-        {items.map((item, i) => (
-          <div
-            key={item.label}
-            style={{ fontSize: 12 }}
-            className={i === selected ? "" : "oled-text-dim"}
-          >
-            {i === selected ? ">" : " "} {item.label}
-          </div>
-        ))}
-      </div>
-      <div className="oled-text-dim" style={{ fontSize: 10 }}>
-        [◄] Back [OK] Select
-      </div>
-    </div>
+    </ScreenLayout>
   )
 }

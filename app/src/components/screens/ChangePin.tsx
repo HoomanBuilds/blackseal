@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from "react"
 import { useDeviceStore } from "@/lib/store/device-store"
 import { PinPad } from "@/components/device/PinPad"
+import { ScreenLayout } from "@/components/device/ScreenLayout"
 import { deriveKeyFromPin, derivePinWrappingKey } from "@/lib/crypto/key-derivation"
 import { decrypt, encrypt } from "@/lib/crypto/encryption"
 
@@ -12,6 +13,7 @@ type Step = "current" | "new" | "confirm"
 
 export function ChangePin() {
   const setScreen = useDeviceStore((s) => s.setScreen)
+  const showSaveConfirm = useDeviceStore((s) => s.showSaveConfirm)
   const buttonAction = useDeviceStore((s) => s.buttonAction)
   const buttonSeq = useDeviceStore((s) => s.buttonSeq)
   const [step, setStep] = useState<Step>("current")
@@ -54,7 +56,7 @@ export function ChangePin() {
             localStorage.setItem("bs_seed_ct", ciphertext)
             localStorage.setItem("bs_seed_iv", iv)
             localStorage.setItem("bs_pin_hash", newHash)
-            setScreen("SETTINGS")
+            showSaveConfirm("PIN updated", "SETTINGS")
           } catch {
             setError("Failed to re-wrap seed.")
             setStep("current")
@@ -68,7 +70,7 @@ export function ChangePin() {
         }
       }
     },
-    [step, currentPin, newPin, setScreen]
+    [step, currentPin, newPin, showSaveConfirm]
   )
 
   const prevSeq = useRef(0)
@@ -80,23 +82,30 @@ export function ChangePin() {
     }
   }, [buttonAction, buttonSeq, setScreen])
 
-  const label =
-    step === "current" ? "CURRENT PIN" : step === "new" ? "NEW PIN" : "CONFIRM NEW PIN"
+  const title =
+    step === "current" ? "VERIFY PIN" : step === "new" ? "NEW PIN" : "CONFIRM PIN"
+  const subtitle =
+    step === "current"
+      ? "Enter your current PIN"
+      : step === "new"
+        ? "Choose a new 8-digit PIN"
+        : "Re-enter the new PIN"
 
   return (
-    <div className="flex flex-col h-full">
-      <div className="oled-text-dim" style={{ fontSize: 10 }}>
-        {label}
+    <ScreenLayout title={title} showBack hints={[{ key: "◄", label: "Cancel" }]}>
+      <div className="flex flex-col h-full px-1 py-2 gap-2">
+        <div className="oled-text-secondary text-center" style={{ fontSize: 11 }}>
+          {subtitle}
+        </div>
+        {error && (
+          <div className="oled-text-danger text-center" style={{ fontSize: 11 }}>
+            {error}
+          </div>
+        )}
+        <div className="flex-1 flex items-center justify-center">
+          <PinPad key={step + (error ?? "")} onSubmit={handleSubmit} />
+        </div>
       </div>
-      {error && (
-        <div style={{ fontSize: 10, color: "#ff4444", marginTop: 2 }}>{error}</div>
-      )}
-      <div className="flex-1 flex items-center justify-center">
-        <PinPad key={step + error} onSubmit={handleSubmit} />
-      </div>
-      <div className="oled-text-dim" style={{ fontSize: 10, textAlign: "center" }}>
-        [◄] Back to Settings
-      </div>
-    </div>
+    </ScreenLayout>
   )
 }

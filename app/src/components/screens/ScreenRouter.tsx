@@ -8,15 +8,22 @@ import { SetPin } from "./SetPin"
 import { PinUnlock } from "./PinUnlock"
 import { BackupChoice } from "./BackupChoice"
 import { SetupComplete } from "./SetupComplete"
-import { MainMenu } from "./MainMenu"
+import { Dashboard } from "./Dashboard"
+import { VaultMenu } from "./VaultMenu"
 import { PasswordList } from "./PasswordList"
 import { PasswordEntry } from "./PasswordEntry"
 import { AddPassword } from "./AddPassword"
+import { EditPassword } from "./EditPassword"
 import { NoteList } from "./NoteList"
 import { NoteView } from "./NoteView"
 import { AddNote } from "./AddNote"
+import { EditNote } from "./EditNote"
+import { SaveConfirm } from "./SaveConfirm"
+import { DeleteConfirm } from "./DeleteConfirm"
 import { Settings } from "./Settings"
 import { ChangePin } from "./ChangePin"
+import { BackupSettings } from "./BackupSettings"
+import { DeviceInfo } from "./DeviceInfo"
 import { WipeDevice } from "./WipeDevice"
 import { WipeAnimation } from "./WipeAnimation"
 
@@ -38,26 +45,38 @@ export function ScreenRouter() {
       return <BackupChoice />
     case "SETUP_COMPLETE":
       return <SetupComplete />
-    case "MAIN_MENU":
-      return <MainMenu />
     case "DASHBOARD":
-      return <MainMenu />
+      return <Dashboard />
+    case "VAULT_MENU":
+      return <VaultMenu />
     case "PASSWORD_LIST":
       return <PasswordList />
     case "PASSWORD_ENTRY":
       return <PasswordEntry />
     case "ADD_PASSWORD":
       return <AddPassword />
+    case "EDIT_PASSWORD":
+      return <EditPassword />
     case "NOTE_LIST":
       return <NoteList />
     case "NOTE_VIEW":
       return <NoteView />
     case "ADD_NOTE":
       return <AddNote />
+    case "EDIT_NOTE":
+      return <EditNote />
+    case "SAVE_CONFIRM":
+      return <SaveConfirm />
+    case "DELETE_CONFIRM":
+      return <DeleteConfirm />
     case "SETTINGS":
       return <Settings />
     case "CHANGE_PIN":
       return <ChangePin />
+    case "BACKUP_SETTINGS":
+      return <BackupSettings />
+    case "DEVICE_INFO":
+      return <DeviceInfo />
     case "WIPE_DEVICE":
       return <WipeDevice />
     case "WIPE_ANIMATION":
