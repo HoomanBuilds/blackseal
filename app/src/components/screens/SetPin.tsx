@@ -3,6 +3,7 @@
 import { useState, useCallback } from "react"
 import { useDeviceStore } from "@/lib/store/device-store"
 import { PinPad } from "@/components/device/PinPad"
+import { ScreenLayout } from "@/components/device/ScreenLayout"
 import { deriveKeyFromPin, deriveEncryptionKey, derivePinWrappingKey } from "@/lib/crypto/key-derivation"
 import { mnemonicToSeed } from "@/lib/crypto/bip39"
 import { encrypt } from "@/lib/crypto/encryption"
@@ -29,23 +30,19 @@ export function SetPin() {
         setError(false)
       } else {
         if (pin === firstPin && seedPhrase) {
-          // Hash PIN for verification
           const pinHash = await deriveKeyFromPin(pin, PIN_SALT)
           localStorage.setItem("bs_pin_hash", pinHash)
 
-          // Derive vault encryption key from the seed, keep in memory
           const seed = await mnemonicToSeed(seedPhrase)
           const vaultKey = await deriveEncryptionKey(seed)
           setEncryptionKey(vaultKey)
 
-          // Wrap the seed with a PIN-derived key so we can recover it on unlock
           const wrappingKey = await derivePinWrappingKey(pin)
           const { ciphertext, iv } = await encrypt(seedPhrase, wrappingKey)
           localStorage.setItem("bs_seed_ct", ciphertext)
           localStorage.setItem("bs_seed_iv", iv)
 
           if (pendingRestore) {
-            // Restored from Solana — vault, key, and seed are already in memory.
             setSetupComplete(true)
             localStorage.setItem("bs_setup", "true")
             localStorage.setItem("bs_backup", "true")
@@ -65,21 +62,27 @@ export function SetPin() {
   )
 
   return (
-    <div className="flex flex-col h-full">
-      <div className="oled-text-dim" style={{ fontSize: 10 }}>
-        {step === "enter" ? "SET YOUR PIN" : "CONFIRM PIN"}
-      </div>
-      <div className="oled-text-dim" style={{ fontSize: 10, marginTop: 2 }}>
-        {step === "enter" ? "Choose an 8-digit PIN" : "Enter the same PIN again"}
-      </div>
-      {error && (
-        <div style={{ fontSize: 10, color: "#ff4444", marginTop: 2 }}>
-          PINs didn't match. Try again.
+    <ScreenLayout
+      title={step === "enter" ? "SET PIN" : "CONFIRM PIN"}
+      hints={[
+        { key: "▲▼", label: "Digit" },
+        { key: "◄►", label: "Move" },
+        { key: "OK", label: "Submit" },
+      ]}
+    >
+      <div className="flex flex-col h-full px-2 py-2">
+        <div className="oled-text-secondary" style={{ fontSize: 11, marginTop: 2 }}>
+          {step === "enter" ? "Choose an 8-digit PIN" : "Enter the same PIN again"}
         </div>
-      )}
-      <div className="flex-1 flex items-center justify-center">
-        <PinPad key={step} onSubmit={handleSubmit} />
+        {error && (
+          <div className="oled-text-danger" style={{ fontSize: 10, marginTop: 4 }}>
+            PINs didn&apos;t match. Try again.
+          </div>
+        )}
+        <div className="flex-1 flex items-center justify-center">
+          <PinPad key={step} onSubmit={handleSubmit} />
+        </div>
       </div>
-    </div>
+    </ScreenLayout>
   )
 }

@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react"
 import { useDeviceStore } from "@/lib/store/device-store"
+import { ScreenLayout } from "@/components/device/ScreenLayout"
 
 const TITLE = "BLACK SEAL"
 
@@ -56,24 +57,42 @@ export function BootScreen() {
     return () => clearTimeout(id)
   }, [revealed])
 
-  const barWidth = Math.floor((progress / 100) * 17)
-
   return (
-    <div className="flex flex-col items-center justify-center h-full">
-      <div style={{ fontSize: 16, fontWeight: "bold", letterSpacing: "0.15em" }}>
-        {TITLE.slice(0, revealed)}
-        {revealed < TITLE.length && <span className="animate-pulse">_</span>}
+    <ScreenLayout hideStatusBar>
+      <div className="flex flex-col items-center justify-center h-full gap-3">
+        <div
+          className="oled-text"
+          style={{ fontSize: 22, fontWeight: 700, letterSpacing: "0.18em" }}
+        >
+          {TITLE.slice(0, revealed)}
+          {revealed < TITLE.length && <span className="animate-pulse oled-text-accent">_</span>}
+        </div>
+        <div className="oled-text-secondary" style={{ fontSize: 11 }}>
+          Offline Vault
+        </div>
+        <div
+          style={{
+            width: 200,
+            height: 4,
+            background: "var(--oled-border)",
+            borderRadius: 2,
+            overflow: "hidden",
+            marginTop: 10,
+          }}
+        >
+          <div
+            style={{
+              width: `${progress}%`,
+              height: "100%",
+              background: "var(--oled-accent)",
+              transition: "width 60ms linear",
+            }}
+          />
+        </div>
+        <div className="oled-text-dim" style={{ fontSize: 10, marginTop: 4 }}>
+          v0.1.0
+        </div>
       </div>
-      <div className="oled-text-dim" style={{ fontSize: 11, marginTop: 4 }}>
-        Offline Vault
-      </div>
-      <div style={{ fontSize: 12, marginTop: 14 }}>
-        [{"\u2588".repeat(barWidth)}
-        {"\u2591".repeat(17 - barWidth)}]
-      </div>
-      <div className="oled-text-dim" style={{ fontSize: 10, marginTop: 4 }}>
-        v0.1.0
-      </div>
-    </div>
+    </ScreenLayout>
   )
 }

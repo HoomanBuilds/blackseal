@@ -3,6 +3,17 @@
 import { useEffect, useRef, useState } from "react"
 import { useDeviceStore } from "@/lib/store/device-store"
 import { useVaultStore } from "@/lib/store/vault-store"
+import { ScreenLayout } from "@/components/device/ScreenLayout"
+
+interface Option {
+  title: string
+  description: string
+}
+
+const OPTIONS: Option[] = [
+  { title: "Yes, Enable Backup", description: "Encrypted backup on Solana" },
+  { title: "No, Local Only", description: "Vault never leaves this device" },
+]
 
 export function BackupChoice() {
   const setScreen = useDeviceStore((s) => s.setScreen)
@@ -28,34 +39,51 @@ export function BackupChoice() {
       initVault(enabled)
       localStorage.setItem("bs_setup", "true")
       localStorage.setItem("bs_backup", enabled ? "true" : "false")
-      setScreen("DASHBOARD")
+      setScreen("SETUP_COMPLETE")
     }
   }, [buttonAction, buttonSeq, selected, setBackupEnabled, setSetupComplete, initVault, setScreen])
 
-  const options = ["Yes, Enable Backup", "No, Local Only"]
-
   return (
-    <div className="flex flex-col h-full">
-      <div className="oled-text-dim" style={{ fontSize: 10 }}>
-        CLOUD BACKUP
+    <ScreenLayout
+      title="BACKUP"
+      hints={[
+        { key: "▲▼", label: "Select" },
+        { key: "OK", label: "Confirm" },
+      ]}
+    >
+      <div className="flex flex-col h-full px-1 py-2">
+        <div className="oled-text" style={{ fontSize: 13, fontWeight: 600 }}>
+          Store encrypted backup on Solana?
+        </div>
+        <div className="oled-text-secondary" style={{ fontSize: 10, marginTop: 2 }}>
+          Backup is optional. You can change this later.
+        </div>
+        <div className="flex-1 flex flex-col gap-2 justify-center mt-2">
+          {OPTIONS.map((opt, i) => {
+            const isSel = i === selected
+            return (
+              <div
+                key={opt.title}
+                className={`oled-card ${isSel ? "is-selected" : ""}`}
+                style={{
+                  borderColor: isSel ? "var(--oled-accent)" : "var(--oled-border)",
+                  background: isSel ? "var(--oled-selection-bg)" : "var(--oled-card-bg)",
+                }}
+              >
+                <div
+                  className={isSel ? "oled-text" : "oled-text-secondary"}
+                  style={{ fontSize: 12, fontWeight: 600 }}
+                >
+                  {opt.title}
+                </div>
+                <div className="oled-text-dim" style={{ fontSize: 10, marginTop: 2 }}>
+                  {opt.description}
+                </div>
+              </div>
+            )
+          })}
+        </div>
       </div>
-      <div className="oled-text-dim" style={{ fontSize: 10, marginTop: 2, lineHeight: 1.3 }}>
-        Store encrypted backup on Solana?
-      </div>
-      <div className="flex-1 flex flex-col gap-1 justify-center">
-        {options.map((opt, i) => (
-          <div
-            key={opt}
-            style={{ fontSize: 12 }}
-            className={i === selected ? "" : "oled-text-dim"}
-          >
-            {i === selected ? ">" : " "} {opt}
-          </div>
-        ))}
-      </div>
-      <div className="oled-text-dim" style={{ fontSize: 10 }}>
-        [▲▼] Select [OK] Confirm
-      </div>
-    </div>
+    </ScreenLayout>
   )
 }

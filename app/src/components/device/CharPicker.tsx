@@ -67,12 +67,12 @@ export function CharPicker({ value, onChange, onDone, onCancel, label }: CharPic
 
   return (
     <div className="flex flex-col h-full" style={{ fontSize: 10 }}>
-      <div className="oled-text-dim">{label}</div>
-      <div style={{ fontSize: 12, minHeight: 16, marginTop: 2 }}>
+      <div className="oled-text-secondary" style={{ letterSpacing: 0.4 }}>{label}</div>
+      <div className="oled-text" style={{ fontSize: 13, minHeight: 18, marginTop: 2, fontFamily: "var(--font-console)" }}>
         {value}
-        <span className="animate-pulse">_</span>
+        <span className="animate-pulse oled-text-accent">_</span>
       </div>
-      <div className="flex-1 flex flex-col justify-center" style={{ gap: 2, fontFamily: "var(--font-oled)" }}>
+      <div className="flex-1 flex flex-col justify-center" style={{ gap: 3, fontFamily: "var(--font-console)" }}>
         {visibleRows.map((gridRow, ri) => {
           const actualRow = visibleStart + ri
           return (
@@ -84,14 +84,16 @@ export function CharPicker({ value, onChange, onDone, onCancel, label }: CharPic
                   <span
                     key={ci}
                     style={{
-                      width: char.length > 1 ? 24 : 12,
+                      width: char.length > 1 ? 28 : 14,
                       textAlign: "center",
-                      fontWeight: isSelected ? "bold" : "normal",
-                      background: isSelected ? "#00ff41" : "transparent",
-                      color: isSelected ? "#000" : undefined,
+                      fontWeight: isSelected ? 600 : 400,
+                      background: isSelected ? "var(--oled-accent)" : "transparent",
+                      color: isSelected ? "#fff" : undefined,
                       visibility: char === "" ? "hidden" : "visible",
+                      borderRadius: 2,
+                      padding: "1px 0",
                     }}
-                    className={!isSelected && char !== "" ? "oled-text-dim" : ""}
+                    className={!isSelected && char !== "" ? "oled-text-secondary" : ""}
                   >
                     {display}
                   </span>
@@ -101,7 +103,11 @@ export function CharPicker({ value, onChange, onDone, onCancel, label }: CharPic
           )
         })}
       </div>
-      <div className="oled-text-dim">[Arrows] Move [OK] Select{onCancel ? " [ESC] Back" : ""}</div>
+      <div className="oled-text-dim" style={{ marginTop: 2 }}>
+        <span className="oled-text-secondary">[Arrows]</span> Move{" "}
+        <span className="oled-text-secondary">[OK]</span> Select
+        {onCancel ? <> <span className="oled-text-secondary">[ESC]</span> Back</> : null}
+      </div>
     </div>
   )
 }

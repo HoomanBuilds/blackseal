@@ -48,22 +48,31 @@ export function PinPad({ onSubmit, length = 8 }: PinPadProps) {
 
   return (
     <div className="flex flex-col items-center">
-      <div className="flex" style={{ gap: 4, fontSize: 16 }}>
-        {digits.map((d, i) => (
-          <span
-            key={i}
-            style={{
-              fontWeight: i === position ? "bold" : "normal",
-              textDecoration: i === position ? "underline" : "none",
-            }}
-            className={i === position ? "" : "oled-text-dim"}
-          >
-            {d}
-          </span>
-        ))}
+      <div className="flex" style={{ gap: 8, fontSize: 20, fontFamily: "var(--font-console)" }}>
+        {digits.map((d, i) => {
+          const active = i === position
+          return (
+            <span
+              key={i}
+              style={{
+                fontWeight: active ? 700 : 400,
+                color: active ? "var(--oled-accent)" : undefined,
+                borderBottom: active ? "2px solid var(--oled-accent)" : "2px solid transparent",
+                paddingBottom: 2,
+                minWidth: 16,
+                textAlign: "center",
+              }}
+              className={active ? "" : "oled-text-secondary"}
+            >
+              {d}
+            </span>
+          )
+        })}
       </div>
-      <div className="oled-text-dim" style={{ fontSize: 10, marginTop: 8 }}>
-        [▲▼] Digit [◄►] Move [OK] Submit
+      <div className="oled-text-dim" style={{ fontSize: 10, marginTop: 10 }}>
+        <span className="oled-text-secondary">[▲▼]</span> Digit{" "}
+        <span className="oled-text-secondary">[◄►]</span> Move{" "}
+        <span className="oled-text-secondary">[OK]</span> Submit
       </div>
     </div>
   )

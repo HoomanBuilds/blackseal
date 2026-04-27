@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from "react"
 import { useDeviceStore } from "@/lib/store/device-store"
+import { ScreenLayout } from "@/components/device/ScreenLayout"
 
 function cryptoRandom(): number {
   const buf = new Uint32Array(1)
@@ -23,6 +24,7 @@ export function VerifySeed() {
   const [challengeIndex, setChallengeIndex] = useState(0)
   const [selected, setSelected] = useState(0)
   const [error, setError] = useState(false)
+  const [flash, setFlash] = useState(false)
   const prevSeq = useRef(0)
 
   const words = useMemo(() => seedPhrase?.split(" ") ?? [], [seedPhrase])
@@ -61,12 +63,17 @@ export function VerifySeed() {
       setSelected((s) => Math.min(current.options.length - 1, s + 1))
     } else if (buttonAction === "confirm") {
       if (current.options[selected] === current.correct) {
-        if (challengeIndex < challenges.length - 1) {
-          setChallengeIndex((i) => i + 1)
-          setSelected(0)
-        } else {
-          setScreen("SET_PIN")
-        }
+        setFlash(true)
+        const isLast = challengeIndex >= challenges.length - 1
+        setTimeout(() => {
+          setFlash(false)
+          if (isLast) {
+            setScreen("SET_PIN")
+          } else {
+            setChallengeIndex((i) => i + 1)
+            setSelected(0)
+          }
+        }, 250)
       } else {
         setError(true)
       }
@@ -76,30 +83,49 @@ export function VerifySeed() {
   if (!current) return null
 
   return (
-    <div className="flex flex-col h-full">
-      <div className="oled-text-dim" style={{ fontSize: 10 }}>
-        VERIFY ({challengeIndex + 1}/3)
-      </div>
-      <div style={{ fontSize: 11, marginTop: 2 }}>
-        Word #{current.wordIndex + 1}?
-      </div>
-      <div className="flex-1 flex flex-col gap-1 justify-center" style={{ marginTop: 4 }}>
-        {current.options.map((word, i) => (
-          <div
-            key={word}
-            style={{ fontSize: 12 }}
-            className={i === selected ? "" : "oled-text-dim"}
-          >
-            {i === selected ? ">" : " "} {word}
+    <ScreenLayout
+      title="VERIFY SEED"
+      hints={[
+        { key: "◄", label: "Back" },
+        { key: "▲▼", label: "Select" },
+        { key: "OK", label: "Confirm" },
+      ]}
+    >
+      <div className="flex flex-col h-full px-1 py-2">
+        <div className="flex items-center justify-between">
+          <span className="oled-text-secondary" style={{ fontSize: 10 }}>
+            Challenge {challengeIndex + 1} of {challenges.length}
+          </span>
+          {flash && (
+            <span className="oled-text-success" style={{ fontSize: 10, fontWeight: 600 }}>
+              ✓ Correct
+            </span>
+          )}
+        </div>
+        <div className="oled-text" style={{ fontSize: 13, fontWeight: 600, marginTop: 4 }}>
+          Pick word #{current.wordIndex + 1}
+        </div>
+        <div className="flex-1 flex flex-col gap-1 mt-2">
+          {current.options.map((word, i) => {
+            const isSel = i === selected
+            return (
+              <div key={word} className={`oled-row ${isSel ? "is-selected" : ""}`}>
+                <span
+                  className={isSel ? "oled-text" : "oled-text-secondary"}
+                  style={{ fontSize: 12, fontFamily: "var(--font-console)" }}
+                >
+                  {word}
+                </span>
+              </div>
+            )
+          })}
+        </div>
+        {error && (
+          <div className="oled-text-danger" style={{ fontSize: 10, marginTop: 2 }}>
+            Wrong word. Try again.
           </div>
-        ))}
+        )}
       </div>
-      {error && (
-        <div style={{ fontSize: 10, color: "#ff4444" }}>Wrong! Try again.</div>
-      )}
-      <div className="oled-text-dim" style={{ fontSize: 10 }}>
-        [◄] Back [▲▼] Select [OK] Confirm
-      </div>
-    </div>
+    </ScreenLayout>
   )
 }

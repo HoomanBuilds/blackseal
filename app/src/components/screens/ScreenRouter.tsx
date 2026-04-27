@@ -7,6 +7,7 @@ import { VerifySeed } from "./VerifySeed"
 import { SetPin } from "./SetPin"
 import { PinUnlock } from "./PinUnlock"
 import { BackupChoice } from "./BackupChoice"
+import { SetupComplete } from "./SetupComplete"
 import { MainMenu } from "./MainMenu"
 import { PasswordList } from "./PasswordList"
 import { PasswordEntry } from "./PasswordEntry"
@@ -35,6 +36,8 @@ export function ScreenRouter() {
       return <PinUnlock />
     case "BACKUP_CHOICE":
       return <BackupChoice />
+    case "SETUP_COMPLETE":
+      return <SetupComplete />
     case "MAIN_MENU":
       return <MainMenu />
     case "DASHBOARD":
