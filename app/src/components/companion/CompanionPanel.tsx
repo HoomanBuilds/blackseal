@@ -26,6 +26,7 @@ export function CompanionPanel() {
   const setPendingRestore = useDeviceStore((s) => s.setPendingRestore)
   const vault = useVaultStore((s) => s.vault)
   const setVault = useVaultStore((s) => s.setVault)
+  const markAllBackedUp = useVaultStore((s) => s.markAllBackedUp)
 
   const isConnected = useConnectionStore((s) => s.isConnected)
   const setTransferring = useConnectionStore((s) => s.setTransferring)
@@ -56,12 +57,13 @@ export function CompanionPanel() {
       }
       addTransaction({ signature: result.signature, type: "backup", timestamp: now })
       setLastBackup(now, result.version)
+      markAllBackedUp()
     } catch (err) {
       setErrorMsg(err instanceof Error ? err.message : "backup failed")
     } finally {
       setTransferring(false)
     }
-  }, [vault, encryptionKey, seedPhrase, addTransaction, setLastBackup, setTransferring])
+  }, [vault, encryptionKey, seedPhrase, addTransaction, setLastBackup, setTransferring, markAllBackedUp])
 
   const handleRestore = useCallback(async () => {
     if (!encryptionKey || !seedPhrase) return

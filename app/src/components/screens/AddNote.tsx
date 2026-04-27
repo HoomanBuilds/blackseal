@@ -25,6 +25,7 @@ export function AddNote() {
       body,
       isLegacy: false,
       createdAt: Date.now(),
+      backedUp: false,
     })
     setScreen("NOTE_LIST")
   }, [title, body, addNote, setScreen])

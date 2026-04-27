@@ -38,9 +38,9 @@ export function Buttons() {
       <div
         className="grid w-fit"
         style={{
-          gridTemplateColumns: "repeat(3, 36px)",
-          gridTemplateRows: "repeat(3, 36px)",
-          gap: 3,
+          gridTemplateColumns: "repeat(3, 44px)",
+          gridTemplateRows: "repeat(3, 44px)",
+          gap: 5,
         }}
       >
         <div />
@@ -51,8 +51,8 @@ export function Buttons() {
         <div className="flex items-center justify-center">
           <div
             style={{
-              width: 14,
-              height: 14,
+              width: 16,
+              height: 16,
               borderRadius: "50%",
               background: "radial-gradient(circle at 40% 40%, #2a2a2e, #18181c)",
               boxShadow: "inset 0 1px 2px rgba(0,0,0,0.6), 0 0.5px 0 rgba(255,255,255,0.03)",

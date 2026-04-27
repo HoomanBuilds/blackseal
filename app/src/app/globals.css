@@ -434,8 +434,8 @@
 }
 
 .hw-btn-dpad {
-  width: 36px;
-  height: 36px;
+  width: 44px;
+  height: 44px;
   border-radius: 3px;
   background: linear-gradient(to bottom, #3a3a40, #2c2c32);
   box-shadow:
@@ -446,7 +446,7 @@
 }
 
 .hw-btn-dpad:active {
-  transform: translateY(2.5px) scale(0.97);
+  transform: translateY(3px) scale(0.97);
   box-shadow:
     0 0.5px 0 #18181c,
     0 0.5px 1px rgba(0, 0, 0, 0.3),
@@ -455,8 +455,8 @@
 }
 
 .hw-btn-confirm {
-  width: 56px;
-  height: 36px;
+  width: 72px;
+  height: 44px;
   border-radius: 4px;
   background: linear-gradient(to bottom, #404048, #34343c);
   box-shadow:
@@ -467,7 +467,7 @@
 }
 
 .hw-btn-confirm:active {
-  transform: translateY(2.5px) scale(0.97);
+  transform: translateY(3px) scale(0.97);
   box-shadow:
     0 0.5px 0 #1a1a1e,
     0 0.5px 1px rgba(0, 0, 0, 0.3),

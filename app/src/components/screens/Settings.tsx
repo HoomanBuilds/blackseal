@@ -30,7 +30,7 @@ export function Settings() {
     } else if (buttonAction === "down") {
       setSelected((s) => Math.min(items.length - 1, s + 1))
     } else if (buttonAction === "left") {
-      setScreen("MAIN_MENU")
+      setScreen("DASHBOARD")
     } else if (buttonAction === "confirm") {
       const item = items[selected]
       if (selected === 1) {

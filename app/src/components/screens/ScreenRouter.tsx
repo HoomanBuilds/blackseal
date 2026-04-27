@@ -37,6 +37,8 @@ export function ScreenRouter() {
       return <BackupChoice />
     case "MAIN_MENU":
       return <MainMenu />
+    case "DASHBOARD":
+      return <MainMenu />
     case "PASSWORD_LIST":
       return <PasswordList />
     case "PASSWORD_ENTRY":

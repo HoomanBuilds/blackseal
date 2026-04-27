@@ -26,7 +26,7 @@ export function PasswordList() {
     } else if (buttonAction === "down") {
       setSelected((s) => Math.min(items.length - 1, s + 1))
     } else if (buttonAction === "left") {
-      setScreen("MAIN_MENU")
+      setScreen("DASHBOARD")
     } else if (buttonAction === "confirm") {
       if (selected === 0) {
         setScreen("ADD_PASSWORD")

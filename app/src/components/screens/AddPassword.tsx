@@ -23,8 +23,10 @@ export function AddPassword() {
     addPassword({
       id: crypto.randomUUID(),
       label: label.trim(),
+      username: "",
       password,
       createdAt: Date.now(),
+      backedUp: false,
     })
     setScreen("PASSWORD_LIST")
   }, [password, label, addPassword, setScreen])

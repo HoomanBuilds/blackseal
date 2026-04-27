@@ -68,8 +68,21 @@ export async function runRestore(
   const plaintext = await decrypt(ciphertext, iv, encryptionKey)
   const vault = JSON.parse(plaintext) as Vault
 
+  const normalized: Vault = {
+    ...vault,
+    passwords: vault.passwords.map((p) => ({
+      ...p,
+      username: p.username ?? "",
+      backedUp: true,
+    })),
+    notes: vault.notes.map((n) => ({
+      ...n,
+      backedUp: true,
+    })),
+  }
+
   return {
-    vault,
+    vault: normalized,
     version: snapshot.version,
     lastUpdated: snapshot.lastUpdated,
   }
@@ -107,8 +120,21 @@ export async function restoreFromSeed(
   const plaintext = await decrypt(ciphertext, iv, encryptionKey)
   const vault = JSON.parse(plaintext) as Vault
 
+  const normalized: Vault = {
+    ...vault,
+    passwords: vault.passwords.map((p) => ({
+      ...p,
+      username: p.username ?? "",
+      backedUp: true,
+    })),
+    notes: vault.notes.map((n) => ({
+      ...n,
+      backedUp: true,
+    })),
+  }
+
   return {
-    vault,
+    vault: normalized,
     encryptionKey,
     publicKey: keypair.publicKey.toBase58(),
     version: snapshot.version,

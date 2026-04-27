@@ -50,7 +50,7 @@ export function SetPin() {
             localStorage.setItem("bs_setup", "true")
             localStorage.setItem("bs_backup", "true")
             setPendingRestore(false)
-            setScreen("MAIN_MENU")
+            setScreen("DASHBOARD")
           } else {
             setScreen("BACKUP_CHOICE")
           }

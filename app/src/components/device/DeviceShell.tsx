@@ -26,10 +26,10 @@ export function DeviceShell({ children }: DeviceShellProps) {
       <div
         className="device-body relative"
         style={{
-          width: 400,
+          width: 560,
           maxWidth: "100%",
           borderRadius: 16,
-          padding: "28px 28px 20px",
+          padding: "36px 36px 28px",
           transform: "rotateX(1.5deg)",
           border: "1px solid rgba(255,255,255,0.04)",
         }}
@@ -41,10 +41,10 @@ export function DeviceShell({ children }: DeviceShellProps) {
         />
 
         {/* Screw holes */}
-        <div className="screw-hole absolute" style={{ top: 10, left: 10 }} />
-        <div className="screw-hole absolute" style={{ top: 10, right: 10 }} />
-        <div className="screw-hole absolute" style={{ bottom: 10, left: 10 }} />
-        <div className="screw-hole absolute" style={{ bottom: 10, right: 10 }} />
+        <div className="screw-hole absolute" style={{ top: 14, left: 14 }} />
+        <div className="screw-hole absolute" style={{ top: 14, right: 14 }} />
+        <div className="screw-hole absolute" style={{ bottom: 14, left: 14 }} />
+        <div className="screw-hole absolute" style={{ bottom: 14, right: 14 }} />
 
         {/* Status LED */}
         <div className="absolute" style={{ top: 14, left: "50%", transform: "translateX(-50%)" }}>
@@ -56,7 +56,7 @@ export function DeviceShell({ children }: DeviceShellProps) {
           className="screen-bezel"
           style={{
             borderRadius: 6,
-            padding: "10px 12px",
+            padding: "14px 16px",
             marginTop: 8,
           }}
         >

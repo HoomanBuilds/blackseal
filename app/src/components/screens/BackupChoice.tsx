@@ -28,7 +28,7 @@ export function BackupChoice() {
       initVault(enabled)
       localStorage.setItem("bs_setup", "true")
       localStorage.setItem("bs_backup", enabled ? "true" : "false")
-      setScreen("MAIN_MENU")
+      setScreen("DASHBOARD")
     }
   }, [buttonAction, buttonSeq, selected, setBackupEnabled, setSetupComplete, initVault, setScreen])
 

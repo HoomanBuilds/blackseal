@@ -63,7 +63,7 @@ export function PinUnlock() {
 
         resetFailedAttempts()
         setLocked(false)
-        setScreen("MAIN_MENU")
+        setScreen("DASHBOARD")
       } else {
         const newAttempts = failedAttempts + 1
         if (newAttempts >= 3) {
