@@ -149,64 +149,111 @@
    ======================================== */
 
 .oled-viewport {
-  background: #000000;
-  image-rendering: pixelated;
   position: relative;
-}
-
-.oled-viewport::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background:
-    repeating-linear-gradient(
-      to right,
-      transparent 0px,
-      transparent 1.4px,
-      rgba(0, 0, 0, 0.35) 1.4px,
-      rgba(0, 0, 0, 0.35) 2px
-    ),
-    repeating-linear-gradient(
-      to bottom,
-      transparent 0px,
-      transparent 1.4px,
-      rgba(0, 0, 0, 0.35) 1.4px,
-      rgba(0, 0, 0, 0.35) 2px
-    );
-  pointer-events: none;
-  z-index: 20;
-}
-
-.oled-viewport::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(
-    ellipse at center,
-    transparent 60%,
-    rgba(0, 0, 0, 0.3) 100%
-  );
-  pointer-events: none;
-  z-index: 21;
+  width: 100%;
+  height: 100%;
+  background: var(--oled-bg);
+  color: var(--oled-text);
+  font-family: var(--font-console), ui-monospace, monospace;
+  border-radius: 4px;
+  overflow: hidden;
+  image-rendering: auto;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 .oled-text {
-  font-family: var(--font-oled), "Share Tech Mono", monospace;
-  color: #00ff41;
-  text-shadow:
-    0 0 2px rgba(0, 255, 65, 0.8),
-    0 0 6px rgba(0, 255, 65, 0.4),
-    0 0 12px rgba(0, 255, 65, 0.15);
-  -webkit-font-smoothing: none;
-  -moz-osx-font-smoothing: unset;
-  font-smooth: never;
+  color: var(--oled-text);
+  font-weight: 500;
+}
+
+.oled-text-secondary {
+  color: var(--oled-text-secondary);
+  font-weight: 400;
 }
 
 .oled-text-dim {
-  color: #00993a;
-  text-shadow:
-    0 0 2px rgba(0, 153, 58, 0.5),
-    0 0 4px rgba(0, 153, 58, 0.2);
+  color: var(--oled-text-dim);
+  font-weight: 400;
+}
+
+.oled-text-accent {
+  color: var(--oled-accent);
+  font-weight: 500;
+}
+
+.oled-text-success {
+  color: var(--oled-success);
+  font-weight: 500;
+}
+
+.oled-text-warning {
+  color: var(--oled-warning);
+  font-weight: 500;
+}
+
+.oled-text-danger {
+  color: var(--oled-danger);
+  font-weight: 500;
+}
+
+.oled-card {
+  background: var(--oled-card-bg);
+  border: 1px solid var(--oled-border);
+  border-radius: 3px;
+  padding: 6px 10px;
+}
+
+.oled-row {
+  display: flex;
+  align-items: center;
+  padding: 6px 10px;
+  border-radius: 3px;
+}
+
+.oled-row.is-selected {
+  background: var(--oled-selection-bg);
+  position: relative;
+}
+
+.oled-row.is-selected::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 4px;
+  bottom: 4px;
+  width: 2px;
+  background: var(--oled-selection-pip);
+  border-radius: 1px;
+}
+
+.oled-divider {
+  height: 1px;
+  background: var(--oled-border);
+  margin: 4px 0;
+}
+
+.oled-status-dot {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  vertical-align: middle;
+  margin-right: 4px;
+}
+
+.oled-status-dot.is-success { background: var(--oled-success); box-shadow: 0 0 4px var(--oled-success); }
+.oled-status-dot.is-warning { background: var(--oled-warning); }
+.oled-status-dot.is-danger { background: var(--oled-danger); }
+.oled-status-dot.is-dim { background: var(--oled-text-dim); }
+
+.oled-screen-enter {
+  animation: oled-fade-in 180ms ease-out;
+}
+
+@keyframes oled-fade-in {
+  from { opacity: 0; transform: translateY(2px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 /* ========================================
@@ -294,54 +341,7 @@
   border: 1px solid #0a0a0a;
 }
 
-.oled-scanlines {
-  background: repeating-linear-gradient(
-    0deg,
-    transparent 0px,
-    transparent 2px,
-    rgba(0, 0, 0, 0.12) 2px,
-    rgba(0, 0, 0, 0.12) 4px
-  );
-  animation: oled-flicker 8s ease-in-out infinite;
-}
-
-@keyframes oled-flicker {
-  0%, 96%, 100% { opacity: 1; }
-  97% { opacity: 0.92; }
-  98% { opacity: 1; }
-  99% { opacity: 0.95; }
-}
-
-.oled-interference {
-  background: linear-gradient(
-    to bottom,
-    transparent 0%,
-    rgba(0, 255, 65, 0.015) 48%,
-    rgba(0, 255, 65, 0.03) 50%,
-    rgba(0, 255, 65, 0.015) 52%,
-    transparent 100%
-  );
-  animation: interference-roll 10s linear infinite;
-  opacity: 0.5;
-}
-
-@keyframes interference-roll {
-  0% { transform: translateY(-100%); }
-  100% { transform: translateY(200%); }
-}
-
-.oled-screen-enter {
-  animation: oled-draw 0.12s ease-out;
-}
-
-@keyframes oled-draw {
-  0% { opacity: 0; clip-path: inset(0 0 100% 0); }
-  100% { opacity: 1; clip-path: inset(0 0 0 0); }
-}
-
 @media (prefers-reduced-motion: reduce) {
-  .oled-scanlines,
-  .oled-interference { animation: none; }
   .oled-screen-enter { animation: none; }
   .console-dot.is-pulse { animation: none; }
   .console-ticker span { animation: none; }
