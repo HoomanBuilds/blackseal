@@ -43,7 +43,7 @@ const FEATURES: Feature[] = [
       </svg>
     ),
     title: "Passwords",
-    desc: "Store credentials for banking, social, crypto, and work. All locked behind one 8 digit PIN, encrypted with AES 256 GCM on the device itself.",
+    desc: "Banking, social, crypto, work — all locked behind one 8-digit PIN, encrypted with AES-256-GCM on the device itself.",
   },
   {
     icon: (
@@ -55,7 +55,7 @@ const FEATURES: Feature[] = [
       </svg>
     ),
     title: "Documents",
-    desc: "Keep sensitive documents, account numbers, and important records in an encrypted vault that never connects to the internet.",
+    desc: "Sensitive documents, account numbers, and important records in a vault that never connects to the internet.",
   },
   {
     icon: (
@@ -67,7 +67,7 @@ const FEATURES: Feature[] = [
       </svg>
     ),
     title: "Private Notes",
-    desc: "Free form encrypted notes for recovery instructions, personal messages, and anything meant for your eyes only.",
+    desc: "Encrypted notes for recovery instructions, personal messages, and anything meant for your eyes only.",
   },
   {
     icon: (
@@ -77,7 +77,7 @@ const FEATURES: Feature[] = [
       </svg>
     ),
     title: "IDs & Records",
-    desc: "Store passport numbers, insurance details, and identification records offline where they cannot be breached remotely.",
+    desc: "Passport numbers, insurance details, and identification records stored offline where they can't be breached remotely.",
   },
   {
     icon: (
@@ -86,7 +86,7 @@ const FEATURES: Feature[] = [
       </svg>
     ),
     title: "Wills & Legacy",
-    desc: "Digital legacy instructions for your family. Recovery phrases, account access, and final messages sealed until needed.",
+    desc: "Digital legacy instructions for your family. Recovery phrases, account access, and final messages — sealed until needed.",
   },
 ]
 
@@ -149,34 +149,72 @@ export function FeaturesSection() {
                 key={f.title}
                 custom={i + 3}
                 variants={fadeUp}
-                className="landing-card"
-                style={{ padding: "2.25rem" }}
+                className="group relative overflow-hidden"
+                style={{
+                  background: "var(--bg-2)",
+                  border: "1px solid rgba(255, 255, 255, 0.08)",
+                  borderRadius: 20,
+                  padding: "2rem 1.75rem",
+                  transition: "border-color 0.3s, transform 0.3s var(--ease-out)",
+                }}
+                whileHover={{ y: -4, borderColor: "rgba(255, 65, 76, 0.35)" }}
               >
+                {/* Top accent line */}
                 <div
                   style={{
-                    display: "inline-flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    width: 56,
-                    height: 56,
-                    borderRadius: 14,
-                    background: "rgba(255, 65, 76, 0.08)",
-                    border: "1px solid rgba(255, 65, 76, 0.18)",
-                    color: "var(--accent)",
-                    marginBottom: 22,
+                    position: "absolute",
+                    top: 0,
+                    left: "10%",
+                    right: "10%",
+                    height: 2,
+                    background: "linear-gradient(90deg, transparent, var(--accent), transparent)",
+                    opacity: 0,
+                    transition: "opacity 0.3s",
                   }}
-                >
-                  {f.icon}
+                  className="group-hover:!opacity-100"
+                />
+
+                {/* Header row: number + icon */}
+                <div className="flex items-center justify-between mb-5">
+                  <div
+                    style={{
+                      display: "inline-flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      width: 48,
+                      height: 48,
+                      borderRadius: 12,
+                      background: "rgba(255, 65, 76, 0.06)",
+                      border: "1px solid rgba(255, 65, 76, 0.14)",
+                      color: "var(--accent)",
+                      transition: "background 0.3s, border-color 0.3s",
+                    }}
+                    className="group-hover:!bg-[rgba(255,65,76,0.12)] group-hover:!border-[rgba(255,65,76,0.3)]"
+                  >
+                    {f.icon}
+                  </div>
+                  <span
+                    style={{
+                      fontFamily: "var(--l-mono)",
+                      fontSize: 13,
+                      fontWeight: 500,
+                      color: "var(--ink-16)",
+                      letterSpacing: "0.04em",
+                    }}
+                  >
+                    0{i + 1}
+                  </span>
                 </div>
+
                 <h3
                   style={{
                     fontFamily: "var(--l-display)",
-                    fontSize: 22,
+                    fontSize: 20,
                     fontWeight: 600,
                     color: "var(--ink)",
                     letterSpacing: "-0.015em",
                     lineHeight: 1.25,
-                    marginBottom: 10,
+                    marginBottom: 8,
                   }}
                 >
                   {f.title}
@@ -184,9 +222,9 @@ export function FeaturesSection() {
                 <p
                   style={{
                     fontFamily: "var(--l-body)",
-                    fontSize: 15,
+                    fontSize: 14,
                     lineHeight: 1.6,
-                    color: "var(--ink-60)",
+                    color: "var(--ink-40)",
                   }}
                 >
                   {f.desc}

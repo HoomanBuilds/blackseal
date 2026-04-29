@@ -2,24 +2,13 @@
 
 import { useRef, useEffect, useState, useCallback } from "react"
 import { motion } from "motion/react"
-import dynamic from "next/dynamic"
+import Image from "next/image"
 import gsap from "gsap"
 import { ScrollTrigger } from "gsap/ScrollTrigger"
 import { useGSAP } from "@gsap/react"
 
 gsap.registerPlugin(ScrollTrigger, useGSAP)
 
-const DeviceScene = dynamic(
-  () => import("./DeviceScene").then((m) => m.DeviceScene),
-  {
-    ssr: false,
-    loading: () => (
-      <div style={{ width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center" }}>
-        <div style={{ width: 140, height: 210, borderRadius: 8, background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)" }} />
-      </div>
-    ),
-  }
-)
 
 const fadeUp = {
   hidden: { opacity: 0, y: 40 },
@@ -183,7 +172,7 @@ export function SpecSheet() {
           </motion.p>
         </motion.div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-14 items-stretch">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-14 items-start">
           {/* Spec table — left */}
           <div
             className="overflow-hidden"
@@ -202,15 +191,22 @@ export function SpecSheet() {
             ))}
           </div>
 
-          {/* 3D device — right */}
+          {/* Exploded device — right */}
           <motion.div
             initial={{ opacity: 0, y: 40 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-100px" }}
             transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1], delay: 0.15 }}
-            className="relative w-full h-full min-h-[360px] lg:min-h-0"
+            className="relative w-full flex items-center justify-center min-h-[360px] lg:min-h-0"
           >
-            <DeviceScene screenText="BLACK SEAL" />
+            <Image
+              src="/exploded_blackseal.png"
+              alt="Black Seal exploded view"
+              width={800}
+              height={800}
+              className="w-full h-auto max-w-[380px]"
+              style={{ objectFit: "contain", filter: "drop-shadow(0 8px 32px rgba(0,0,0,0.5))" }}
+            />
           </motion.div>
         </div>
       </div>
