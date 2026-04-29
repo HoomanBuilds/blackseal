@@ -58,6 +58,20 @@ export default function SimulatorPage() {
         </span>
       </header>
 
+      <div
+        className="text-center px-4 py-3"
+        style={{
+          background: "#EDEDF0",
+          borderBottom: "1px solid #DCDCE0",
+          fontFamily: "var(--font-geist-sans), system-ui, sans-serif",
+          fontSize: 14,
+          color: "#52525B",
+          lineHeight: 1.5,
+        }}
+      >
+        A browser simulation of Black Seal, the offline hardware vault. Real encryption, real seed phrases, no install required.
+      </div>
+
       <main className="flex-1 flex flex-col lg:flex-row items-center justify-center gap-6 lg:gap-8 p-4 sm:p-6 lg:p-8">
         <DeviceShell>
           <ScreenRouter />

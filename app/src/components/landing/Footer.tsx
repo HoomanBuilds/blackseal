@@ -1,9 +1,9 @@
 "use client"
 
 const PRODUCT_LINKS = [
-  { label: "Features", href: "#features" },
+  { label: "Why Offline", href: "#features" },
   { label: "How It Works", href: "#how" },
-  { label: "Specs", href: "#specs" },
+  { label: "Security", href: "#specs" },
   { label: "Simulator", href: "/app" },
 ]
 
@@ -55,12 +55,12 @@ function LinkColumn({
                 fontFamily: "var(--l-body)",
                 fontSize: 14,
                 fontWeight: 500,
-                color: "var(--ink-80)",
+                color: "var(--ink-60)",
                 textDecoration: "none",
                 transition: "color 0.2s",
               }}
               onMouseEnter={(e) => (e.currentTarget.style.color = "var(--accent)")}
-              onMouseLeave={(e) => (e.currentTarget.style.color = "var(--ink-80)")}
+              onMouseLeave={(e) => (e.currentTarget.style.color = "var(--ink-60)")}
             >
               {link.label}
             </a>
@@ -74,14 +74,16 @@ function LinkColumn({
 export function Footer() {
   return (
     <footer
+      className="relative"
       style={{
         background: "var(--bg-1)",
-        borderTop: "1px solid #DDDDDD",
+        borderTop: "1px solid rgba(255, 255, 255, 0.06)",
+        zIndex: 2,
       }}
     >
       <div
         className="landing-container"
-        style={{ paddingTop: 80, paddingBottom: 40 }}
+        style={{ paddingTop: "clamp(48px, 8vw, 80px)", paddingBottom: 40 }}
       >
         <div className="grid grid-cols-2 md:grid-cols-12 gap-10 md:gap-8">
           {/* Brand block */}
@@ -106,7 +108,7 @@ export function Footer() {
                   height: 28,
                   borderRadius: 6,
                   background: "var(--ink)",
-                  color: "#FCFCFC",
+                  color: "#0f0f0f",
                   fontSize: 14,
                   fontWeight: 700,
                   fontFamily: "var(--l-display)",
@@ -176,9 +178,9 @@ export function Footer() {
                     width: 36,
                     height: 36,
                     borderRadius: 8,
-                    border: "1px solid #DDDDDD",
-                    background: "#FFFFFF",
-                    color: "var(--ink-60)",
+                    border: "1px solid rgba(255, 255, 255, 0.08)",
+                    background: "rgba(255, 255, 255, 0.03)",
+                    color: "var(--ink-40)",
                     transition: "all 0.2s",
                   }}
                   onMouseEnter={(e) => {
@@ -186,8 +188,8 @@ export function Footer() {
                     e.currentTarget.style.borderColor = "var(--accent)"
                   }}
                   onMouseLeave={(e) => {
-                    e.currentTarget.style.color = "var(--ink-60)"
-                    e.currentTarget.style.borderColor = "#DDDDDD"
+                    e.currentTarget.style.color = "var(--ink-40)"
+                    e.currentTarget.style.borderColor = "rgba(255, 255, 255, 0.08)"
                   }}
                 >
                   <svg width="16" height="16" viewBox="0 0 24 24">
@@ -212,7 +214,7 @@ export function Footer() {
         <div
           style={{
             height: 1,
-            background: "#DDDDDD",
+            background: "rgba(255, 255, 255, 0.06)",
             marginTop: 60,
             marginBottom: 28,
           }}

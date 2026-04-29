@@ -15,7 +15,7 @@ const DeviceScene = dynamic(
     ssr: false,
     loading: () => (
       <div style={{ width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center" }}>
-        <div style={{ width: 140, height: 210, borderRadius: 8, background: "rgba(23,23,23,0.04)", border: "1px solid rgba(23,23,23,0.08)" }} />
+        <div style={{ width: 140, height: 210, borderRadius: 8, background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)" }} />
       </div>
     ),
   }
@@ -36,13 +36,13 @@ const stagger = {
 }
 
 const SPECS = [
-  { label: "Encryption", value: "AES-256-GCM" },
-  { label: "Key Derivation", value: "PBKDF2-HMAC-SHA512" },
+  { label: "Encryption", value: "AES 256 GCM" },
+  { label: "Key Derivation", value: "PBKDF2 HMAC SHA512" },
   { label: "Iterations", value: "100,000" },
-  { label: "Seed Standard", value: "BIP-39, 24 words" },
+  { label: "Seed Standard", value: "BIP 39, 24 words" },
   { label: "Entropy", value: "256 bits" },
-  { label: "PIN Protection", value: "8-digit, 3-strike wipe" },
-  { label: "Auto-Lock", value: "2 min inactivity" },
+  { label: "PIN Protection", value: "8 digit, 3 strike wipe" },
+  { label: "Auto Lock", value: "2 min inactivity" },
   { label: "Key Storage", value: "Never stored \u2014 derived on unlock" },
   { label: "Backup", value: "Solana PDA (optional)" },
   { label: "Keypair", value: "Ed25519" },
@@ -110,9 +110,9 @@ function SpecRow({ label, value, index }: { label: string; value: string; index:
   }, { scope: rowRef })
 
   return (
-    <div ref={rowRef} className="group flex items-baseline py-3.5 px-5 hover:bg-[var(--ink-02)] transition-colors duration-300">
+    <div ref={rowRef} className="group flex items-baseline py-3.5 px-5 hover:bg-[rgba(255,255,255,0.02)] transition-colors duration-300">
       <div
-        className="w-44 sm:w-48 shrink-0 text-sm"
+        className="w-32 sm:w-44 lg:w-48 shrink-0 text-sm"
         style={{ fontFamily: "var(--l-mono)", fontSize: 11, letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--ink-40)" }}
       >
         {label}
@@ -137,7 +137,7 @@ export function SpecSheet() {
     <section
       id="specs"
       className="landing-section relative overflow-hidden landing-bg-numeral"
-      style={{ background: "var(--bg-3)" }}
+      style={{ background: "var(--bg-3)", zIndex: 2 }}
     >
       <div className="landing-container relative" style={{ zIndex: 2 }}>
         <motion.div
@@ -188,10 +188,10 @@ export function SpecSheet() {
           <div
             className="overflow-hidden"
             style={{
-              background: "#FFFFFF",
-              border: "1px solid #DDDDDD",
+              background: "rgba(255, 255, 255, 0.02)",
+              border: "1px solid rgba(255, 255, 255, 0.08)",
               borderRadius: 16,
-              boxShadow: "0 1px 2px rgba(23,23,23,0.04)",
+              boxShadow: "0 1px 2px rgba(0,0,0,0.20)",
             }}
           >
             {SPECS.map((spec, i) => (
@@ -202,7 +202,7 @@ export function SpecSheet() {
             ))}
           </div>
 
-          {/* 3D device — right (no frame, no overlay, matches table height) */}
+          {/* 3D device — right */}
           <motion.div
             initial={{ opacity: 0, y: 40 }}
             whileInView={{ opacity: 1, y: 0 }}

@@ -42,8 +42,8 @@ const FEATURES: Feature[] = [
         <path d="M7 11V7a5 5 0 0110 0v4" />
       </svg>
     ),
-    title: "Every Password, Sealed",
-    desc: "Store credentials for banking, social, crypto, work all locked behind one 8-digit PIN, encrypted with AES-256-GCM on the device itself.",
+    title: "Passwords",
+    desc: "Store credentials for banking, social, crypto, and work. All locked behind one 8 digit PIN, encrypted with AES 256 GCM on the device itself.",
   },
   {
     icon: (
@@ -54,30 +54,39 @@ const FEATURES: Feature[] = [
         <line x1="8" y1="17" x2="13" y2="17" />
       </svg>
     ),
-    title: "Notes for the Unthinkable",
-    desc: "Free-form encrypted notes for digital legacy, recovery instructions, and anything a family member might need if you're not around to explain.",
+    title: "Documents",
+    desc: "Keep sensitive documents, account numbers, and important records in an encrypted vault that never connects to the internet.",
   },
   {
     icon: (
       <svg {...ICON_PROPS}>
-        <circle cx="12" cy="12" r="10" />
-        <line x1="2" y1="12" x2="22" y2="12" />
-        <path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z" />
+        <line x1="17" y1="10" x2="3" y2="10" />
+        <line x1="21" y1="6" x2="3" y2="6" />
+        <line x1="21" y1="14" x2="3" y2="14" />
+        <line x1="17" y1="18" x2="3" y2="18" />
       </svg>
     ),
-    title: "100% Air-Gapped",
-    desc: "No Wi-Fi, no Bluetooth, no radio of any kind. Even AI agents that have your email can't reach what's on this device.",
+    title: "Private Notes",
+    desc: "Free form encrypted notes for recovery instructions, personal messages, and anything meant for your eyes only.",
+  },
+  {
+    icon: (
+      <svg {...ICON_PROPS}>
+        <rect x="2" y="5" width="20" height="14" rx="2" />
+        <line x1="2" y1="10" x2="22" y2="10" />
+      </svg>
+    ),
+    title: "IDs & Records",
+    desc: "Store passport numbers, insurance details, and identification records offline where they cannot be breached remotely.",
   },
   {
     icon: (
       <svg {...ICON_PROPS}>
         <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-        <line x1="12" y1="9" x2="12" y2="13" />
-        <line x1="12" y1="17" x2="12.01" y2="17" />
       </svg>
     ),
-    title: "3-Strike Auto-Wipe",
-    desc: "Three wrong PINs and the device wipes itself clean. Two minutes idle and it locks. A stolen device is a useless brick.",
+    title: "Wills & Legacy",
+    desc: "Digital legacy instructions for your family. Recovery phrases, account access, and final messages sealed until needed.",
   },
 ]
 
@@ -86,7 +95,7 @@ export function FeaturesSection() {
     <section
       id="features"
       className="landing-section relative overflow-hidden landing-bg-dots"
-      style={{ background: "var(--bg-3)" }}
+      style={{ background: "var(--bg-3)", zIndex: 2 }}
     >
       <div className="landing-container relative" style={{ zIndex: 2 }}>
         <motion.div
@@ -96,7 +105,7 @@ export function FeaturesSection() {
           variants={stagger}
         >
           <motion.div variants={fadeUp} custom={0} className="landing-eyebrow">
-            Security
+            Secure What Matters
           </motion.div>
 
           <motion.h2
@@ -134,7 +143,7 @@ export function FeaturesSection() {
             all kept offline, encrypted, and entirely under your control.
           </motion.p>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mt-16">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 mt-16">
             {FEATURES.map((f, i) => (
               <motion.div
                 key={f.title}

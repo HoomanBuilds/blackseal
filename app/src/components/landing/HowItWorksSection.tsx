@@ -20,7 +20,7 @@ const STEPS = [
   {
     n: "01",
     label: "First boot, one time",
-    primary: "Power on, write down a 24-word BIP-39 phrase, set an 8-digit PIN.",
+    primary: "Power on, write down a 24 word BIP 39 phrase, set an 8 digit PIN.",
     secondary: "The seed never leaves the screen. Once recorded, it's only ever stored as a derived key inside the device.",
     visual: "seed",
   },
@@ -28,13 +28,13 @@ const STEPS = [
     n: "02",
     label: "Save what matters",
     primary: "Add passwords, secret notes, and instructions for your family directly on the device.",
-    secondary: "Everything is sealed with AES-256-GCM the moment you hit confirm. No keyboard, no clipboard, no leaks.",
+    secondary: "Everything is sealed with AES 256 GCM the moment you hit confirm. No keyboard, no clipboard, no leaks.",
     visual: "lock",
   },
   {
     n: "03",
     label: "Unlock to read",
-    primary: "Eight-digit PIN unlocks the vault for daily access.",
+    primary: "Eight digit PIN unlocks the vault for daily access.",
     secondary: "Three wrong tries wipes the device clean. Two minutes idle and it locks itself again.",
     visual: "device",
   },
@@ -49,7 +49,7 @@ const STEPS = [
 
 function StepVisual({ kind }: { kind: string }) {
   const stroke = "var(--accent)"
-  const dim = "rgba(23,23,23,0.35)"
+  const dim = "rgba(255,255,255,0.25)"
   if (kind === "seed") {
     return (
       <svg width="120" height="120" viewBox="0 0 120 120" fill="none">
@@ -84,7 +84,7 @@ function StepVisual({ kind }: { kind: string }) {
         <path d="M44 50V38a16 16 0 0132 0v12" stroke={stroke} strokeWidth={1.6} fill="none" />
         <circle cx="60" cy="68" r="4" fill={stroke} />
         <line x1="60" y1="72" x2="60" y2="82" stroke={stroke} strokeWidth={1.6} />
-        <text x="14" y="20" fontFamily="var(--l-mono)" fontSize="8" fill={dim}>AES-256-GCM</text>
+        <text x="14" y="20" fontFamily="var(--l-mono)" fontSize="8" fill={dim}>AES 256 GCM</text>
         <text x="14" y="112" fontFamily="var(--l-mono)" fontSize="8" fill={dim}>PBKDF2 ×100k</text>
       </svg>
     )
@@ -93,7 +93,7 @@ function StepVisual({ kind }: { kind: string }) {
     return (
       <svg width="120" height="120" viewBox="0 0 120 120" fill="none">
         <rect x="38" y="14" width="44" height="92" rx="6" stroke={dim} strokeWidth={1.4} />
-        <rect x="44" y="22" width="32" height="40" rx="2" fill="rgba(23,23,23,0.92)" />
+        <rect x="44" y="22" width="32" height="40" rx="2" fill="rgba(255,255,255,0.05)" />
         <text x="60" y="38" fontFamily="var(--l-mono)" fontSize="6" fill={stroke} textAnchor="middle">VAULT</text>
         <text x="60" y="50" fontFamily="var(--l-mono)" fontSize="5" fill={stroke} textAnchor="middle">●●●●●●●●</text>
         <circle cx="48" cy="78" r="3" stroke={dim} strokeWidth={1.2} />
@@ -122,7 +122,7 @@ export function HowItWorksSection() {
     <section
       id="how"
       className="landing-section relative overflow-hidden landing-bg-ticks"
-      style={{ background: "var(--bg-2)" }}
+      style={{ background: "var(--bg-2)", zIndex: 2 }}
     >
       <div className="landing-container relative" style={{ zIndex: 2 }}>
         <motion.div
@@ -175,19 +175,17 @@ export function HowItWorksSection() {
                 key={step.n}
                 custom={i + 3}
                 variants={fadeUp}
-                className="relative overflow-hidden"
+                className="landing-card relative overflow-hidden"
                 style={{
-                  background: "#FFFFFF",
-                  border: "1px solid #DDDDDD",
                   borderRadius: 20,
-                  padding: "32px 32px 28px",
+                  padding: "clamp(20px, 4vw, 32px)",
                   minHeight: 280,
                   display: "flex",
                   flexDirection: "column",
                   justifyContent: "space-between",
                 }}
               >
-                <div className="flex items-start justify-between gap-6">
+                <div className="flex flex-col sm:flex-row items-start sm:justify-between gap-4 sm:gap-6">
                   <div style={{ flex: 1 }}>
                     <div className="step-number">{step.n}</div>
                     <h4

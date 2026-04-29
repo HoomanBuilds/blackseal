@@ -1,33 +1,19 @@
 "use client"
 
-import { useEffect, useState } from "react"
-
 const NAV_LINKS = [
-  { label: "Features", href: "#features" },
-  { label: "How It Works", href: "#how" },
-  { label: "Specs", href: "#specs" },
+  { label: "Why Offline", href: "#features" },
+  { label: "Security", href: "#specs" },
+  { label: "How it works", href: "#how" },
+  { label: "FAQ", href: "#faq" },
 ]
 
 export function Navbar() {
-  const [scrolled, setScrolled] = useState(false)
-
-  useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 8)
-    onScroll()
-    window.addEventListener("scroll", onScroll, { passive: true })
-    return () => window.removeEventListener("scroll", onScroll)
-  }, [])
-
   return (
     <header
-      className="sticky top-0 z-30 w-full transition-all"
+      className="relative w-full"
       style={{
-        backdropFilter: scrolled ? "blur(14px)" : "blur(0px)",
-        WebkitBackdropFilter: scrolled ? "blur(14px)" : "blur(0px)",
-        background: scrolled ? "rgba(252, 252, 252, 0.85)" : "rgba(252, 252, 252, 0)",
-        borderBottom: scrolled
-          ? "1px solid #DDDDDD"
-          : "1px solid transparent",
+        zIndex: 10,
+        background: "transparent",
       }}
     >
       <div
@@ -60,7 +46,7 @@ export function Navbar() {
               height: 26,
               borderRadius: 6,
               background: "var(--ink)",
-              color: "#FCFCFC",
+              color: "#0f0f0f",
               fontSize: 13,
               fontWeight: 700,
               fontFamily: "var(--l-display)",
@@ -81,12 +67,12 @@ export function Navbar() {
                 fontFamily: "var(--l-body)",
                 fontSize: 14,
                 fontWeight: 500,
-                color: "var(--ink-60)",
+                color: "var(--ink-40)",
                 textDecoration: "none",
                 transition: "color 0.2s",
               }}
               onMouseEnter={(e) => (e.currentTarget.style.color = "var(--ink)")}
-              onMouseLeave={(e) => (e.currentTarget.style.color = "var(--ink-60)")}
+              onMouseLeave={(e) => (e.currentTarget.style.color = "var(--ink-40)")}
             >
               {link.label}
             </a>
@@ -98,7 +84,7 @@ export function Navbar() {
           className="landing-btn-primary"
           style={{ padding: "0.55rem 1.2rem", fontSize: 14 }}
         >
-          Launch Simulator
+          Get your vault
         </a>
       </div>
     </header>

@@ -16,17 +16,17 @@ const stagger = {
   visible: { transition: { staggerChildren: 0.08 } },
 }
 
-const BADGES = ["AES-256-GCM", "BIP-39", "Solana Devnet"]
+const BADGES = ["AES 256 GCM", "BIP 39", "Solana Devnet"]
 
 export function TryItSection() {
   return (
     <section
       className="relative overflow-hidden landing-bg-dots-dark landing-bg-orbs"
-      style={{ background: "var(--bg-dark)" }}
+      style={{ background: "var(--bg-dark)", zIndex: 2 }}
     >
       <div
         className="landing-container relative text-center"
-        style={{ zIndex: 2, paddingTop: 120, paddingBottom: 120 }}
+        style={{ zIndex: 2, paddingTop: "clamp(72px, 12vw, 120px)", paddingBottom: "clamp(72px, 12vw, 120px)" }}
       >
         <motion.div
           initial="hidden"
@@ -91,9 +91,9 @@ export function TryItSection() {
               marginTop: 24,
             }}
           >
-            A full hardware-vault simulation in your browser. Real BIP-39
-            seeds, real AES-256-GCM encryption, real Solana devnet backups,
-            no install, no signup, no tracking.
+            A full hardware vault simulation in your browser. Real BIP 39
+            seeds, real AES 256 GCM encryption, real Solana devnet backups.
+            No install, no signup, no tracking.
           </motion.p>
 
           <motion.div
@@ -103,7 +103,7 @@ export function TryItSection() {
             style={{ marginTop: 40 }}
           >
             <a href="/app" className="landing-btn-primary">
-              Launch Simulator
+              Get your vault
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
                 <line x1="5" y1="12" x2="19" y2="12" />
                 <polyline points="12 5 19 12 12 19" />

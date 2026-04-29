@@ -12,9 +12,9 @@ type Stat = {
 }
 
 const STATS: Stat[] = [
-  { numeric: 256, display: "256", suffix: "-bit", label: "AES-GCM Encryption" },
-  { numeric: 24, display: "24", suffix: " words", label: "BIP-39 Seed Phrase" },
-  { numeric: 3, display: "3", suffix: "-strike", label: "Auto-Wipe on Failure" },
+  { numeric: 256, display: "256", suffix: " bit", label: "AES GCM Encryption" },
+  { numeric: 24, display: "24", suffix: " words", label: "BIP 39 Seed Phrase" },
+  { numeric: 3, display: "3", suffix: " strike", label: "Auto Wipe on Failure" },
   { numeric: 100, display: "100", suffix: "%", label: "Offline by Default" },
 ]
 
@@ -66,10 +66,12 @@ export function StatsStrip() {
 
   return (
     <section
+      className="relative"
       style={{
-        background: "var(--bg-2)",
-        borderTop: "1px solid #DDDDDD",
-        borderBottom: "1px solid #DDDDDD",
+        background: "var(--bg-1)",
+        borderTop: "1px solid rgba(255, 255, 255, 0.06)",
+        borderBottom: "1px solid rgba(255, 255, 255, 0.06)",
+        zIndex: 3,
       }}
     >
       <div
