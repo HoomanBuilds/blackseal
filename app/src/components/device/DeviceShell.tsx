@@ -26,10 +26,10 @@ export function DeviceShell({ children }: DeviceShellProps) {
       <div
         className="device-body relative"
         style={{
-          width: 560,
+          width: 520,
           maxWidth: "100%",
           borderRadius: 16,
-          padding: "36px 36px 28px",
+          padding: "36px 32px 28px",
           transform: "rotateX(1.5deg)",
           border: "1px solid rgba(255,255,255,0.04)",
         }}

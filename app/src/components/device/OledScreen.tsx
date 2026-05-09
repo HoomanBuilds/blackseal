@@ -9,7 +9,7 @@ interface OledScreenProps {
   height?: number
 }
 
-export function OledScreen({ children, width, height = 240 }: OledScreenProps) {
+export function OledScreen({ children, width, height = 264 }: OledScreenProps) {
   const screen = useDeviceStore((s) => s.screen)
   const [animKey, setAnimKey] = useState(0)
 
