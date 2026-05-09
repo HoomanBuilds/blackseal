@@ -158,11 +158,9 @@ export function CompanionPanel() {
   return (
     <>
       <aside
-        className="console-panel w-full flex flex-col overflow-hidden"
+        className="console-panel w-full flex flex-col overflow-hidden self-stretch"
         style={{
           fontFamily: "var(--font-console), ui-monospace, monospace",
-          maxHeight: "calc(100vh - 140px)",
-          minHeight: 540,
         }}
       >
         {/* MASTHEAD — compact, single row */}
