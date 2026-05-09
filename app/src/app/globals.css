@@ -152,7 +152,9 @@
   position: relative;
   width: 100%;
   height: 100%;
-  background: var(--oled-bg);
+  background:
+    radial-gradient(ellipse at 50% 0%, rgba(0, 255, 65, 0.04), transparent 60%),
+    var(--oled-bg);
   color: var(--oled-text);
   font-family: var(--font-console), ui-monospace, monospace;
   border-radius: 4px;
@@ -160,6 +162,54 @@
   image-rendering: auto;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  isolation: isolate;
+}
+
+/* Persistence ghost — soft phosphor halo behind content */
+.oled-viewport::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(
+    ellipse at center,
+    rgba(0, 255, 65, 0.025),
+    transparent 70%
+  );
+  mix-blend-mode: screen;
+  z-index: 0;
+}
+
+/* Drifting scanlines — gives the OLED a living-pixel feel */
+.oled-viewport::after {
+  content: "";
+  position: absolute;
+  inset: -2px;
+  pointer-events: none;
+  background: repeating-linear-gradient(
+    to bottom,
+    transparent 0px,
+    transparent 2px,
+    rgba(0, 0, 0, 0.18) 2px,
+    rgba(0, 0, 0, 0.18) 3px
+  );
+  mix-blend-mode: multiply;
+  animation: oled-scan-drift 7s linear infinite;
+  z-index: 1;
+}
+
+.oled-viewport > * {
+  position: relative;
+  z-index: 2;
+}
+
+@keyframes oled-scan-drift {
+  0% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(3px);
+  }
 }
 
 .oled-text {
@@ -209,11 +259,13 @@
   align-items: center;
   padding: 6px 10px;
   border-radius: 3px;
+  position: relative;
+  transition: background 140ms ease-out;
 }
 
 .oled-row.is-selected {
   background: var(--oled-selection-bg);
-  position: relative;
+  animation: oled-row-reveal 220ms cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
 .oled-row.is-selected::before {
@@ -225,6 +277,28 @@
   width: 2px;
   background: var(--oled-selection-pip);
   border-radius: 1px;
+  box-shadow: 0 0 6px var(--oled-selection-pip);
+  animation: oled-pip-rise 220ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+@keyframes oled-row-reveal {
+  from {
+    background: transparent;
+  }
+  to {
+    background: var(--oled-selection-bg);
+  }
+}
+
+@keyframes oled-pip-rise {
+  from {
+    transform: scaleY(0);
+    opacity: 0;
+  }
+  to {
+    transform: scaleY(1);
+    opacity: 1;
+  }
 }
 
 .oled-divider {
@@ -257,17 +331,23 @@
 }
 
 .oled-screen-enter {
-  animation: oled-fade-in 180ms ease-out;
+  animation: oled-fade-in 220ms cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
 @keyframes oled-fade-in {
-  from {
+  0% {
     opacity: 0;
-    transform: translateY(2px);
+    filter: blur(1.5px) brightness(1.4);
+    transform: scale(1.005);
   }
-  to {
+  60% {
     opacity: 1;
-    transform: translateY(0);
+    filter: blur(0) brightness(1.1);
+  }
+  100% {
+    opacity: 1;
+    filter: blur(0) brightness(1);
+    transform: scale(1);
   }
 }
 
@@ -277,9 +357,34 @@
    ======================================== */
 
 .device-shell-outer {
-  filter: drop-shadow(0 20px 40px rgba(0, 0, 0, 0.25))
-    drop-shadow(0 6px 12px rgba(0, 0, 0, 0.15))
-    drop-shadow(0 0 60px rgba(0, 255, 65, 0.03));
+  position: relative;
+  filter: drop-shadow(0 20px 40px rgba(0, 0, 0, 0.32))
+    drop-shadow(0 6px 12px rgba(0, 0, 0, 0.18))
+    drop-shadow(0 0 60px rgba(0, 255, 65, 0.04));
+}
+
+/* Ambient phosphor pool under the device */
+.device-shell-outer::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: -36px;
+  width: 78%;
+  height: 32px;
+  transform: translateX(-50%);
+  background: radial-gradient(
+    ellipse at center,
+    rgba(0, 255, 65, 0.08),
+    transparent 70%
+  );
+  pointer-events: none;
+  z-index: -1;
+  animation: device-ambient 6s ease-in-out infinite;
+}
+
+@keyframes device-ambient {
+  0%, 100% { opacity: 0.55; }
+  50% { opacity: 0.9; }
 }
 
 .device-body {
@@ -346,26 +451,179 @@
 }
 
 .screen-bezel {
-  background: linear-gradient(to bottom, #0c0c0e, #080808);
+  position: relative;
+  background: linear-gradient(to bottom, #0c0c0e, #060606);
   box-shadow:
-    inset 0 2px 4px rgba(0, 0, 0, 0.8),
+    inset 0 2px 4px rgba(0, 0, 0, 0.85),
     inset 0 -1px 2px rgba(0, 0, 0, 0.4),
-    0 1px 0 rgba(255, 255, 255, 0.03),
-    0 0 30px rgba(0, 255, 65, 0.04),
-    0 0 60px rgba(0, 255, 65, 0.02);
+    inset 0 0 0 1px rgba(0, 255, 65, 0.025),
+    0 1px 0 rgba(255, 255, 255, 0.04),
+    0 0 30px rgba(0, 255, 65, 0.05),
+    0 0 70px rgba(0, 255, 65, 0.025);
   border: 1px solid #0a0a0a;
 }
 
+/* Subtle bezel chamfer highlight on top edge */
+.screen-bezel::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 8px;
+  right: 8px;
+  height: 1px;
+  background: linear-gradient(
+    to right,
+    transparent,
+    rgba(255, 255, 255, 0.06),
+    transparent
+  );
+  pointer-events: none;
+}
+
+/* PIN pad digit — active cursor pulse + keypress flash */
+.oled-pin-digit {
+  position: relative;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  min-width: 16px;
+  padding-bottom: 2px;
+  border-bottom: 2px solid transparent;
+  transition: color 120ms ease-out, border-color 120ms ease-out;
+}
+
+.oled-pin-digit.is-active {
+  color: var(--oled-accent);
+  border-bottom-color: var(--oled-accent);
+  font-weight: 700;
+  animation: oled-pin-cursor 1.1s ease-in-out infinite;
+}
+
+.oled-pin-digit.is-flash {
+  animation: oled-pin-flash 200ms ease-out;
+}
+
+@keyframes oled-pin-cursor {
+  0%, 100% {
+    border-bottom-color: var(--oled-accent);
+    text-shadow: 0 0 4px rgba(0, 255, 65, 0.5);
+  }
+  50% {
+    border-bottom-color: rgba(0, 255, 65, 0.2);
+    text-shadow: 0 0 1px rgba(0, 255, 65, 0.2);
+  }
+}
+
+@keyframes oled-pin-flash {
+  0% {
+    transform: scale(1.18);
+    text-shadow: 0 0 10px rgba(0, 255, 65, 0.9);
+  }
+  100% {
+    transform: scale(1);
+    text-shadow: 0 0 4px rgba(0, 255, 65, 0.4);
+  }
+}
+
+/* Shake on incorrect PIN */
+.oled-shake {
+  animation: oled-shake 320ms cubic-bezier(0.36, 0.07, 0.19, 0.97);
+}
+
+@keyframes oled-shake {
+  10%, 90% { transform: translateX(-1px); }
+  20%, 80% { transform: translateX(2px); }
+  30%, 50%, 70% { transform: translateX(-3px); }
+  40%, 60% { transform: translateX(3px); }
+}
+
+/* SAVED overlay content pop */
+.oled-saved-pop {
+  animation: oled-saved-pop 380ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+@keyframes oled-saved-pop {
+  0% {
+    transform: scale(0.86);
+    opacity: 0;
+    filter: blur(2px);
+  }
+  60% {
+    transform: scale(1.04);
+    opacity: 1;
+    filter: blur(0);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+    filter: blur(0);
+  }
+}
+
+/* Status flash overlay for save/error/wipe whole-screen feedback */
+.oled-flash {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 3;
+  opacity: 0;
+}
+
+.oled-flash.is-success {
+  animation: oled-flash-success 700ms ease-out;
+}
+
+.oled-flash.is-error {
+  animation: oled-flash-error 380ms ease-out;
+}
+
+@keyframes oled-flash-success {
+  0% {
+    opacity: 0;
+    background: rgba(0, 255, 65, 0.18);
+  }
+  20% {
+    opacity: 1;
+    background: rgba(0, 255, 65, 0.18);
+  }
+  100% {
+    opacity: 0;
+    background: rgba(0, 255, 65, 0);
+  }
+}
+
+@keyframes oled-flash-error {
+  0%, 100% {
+    opacity: 0;
+    background: rgba(255, 80, 80, 0);
+  }
+  30% {
+    opacity: 1;
+    background: rgba(255, 80, 80, 0.22);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
-  .oled-screen-enter {
-    animation: none;
+  .oled-screen-enter,
+  .oled-row.is-selected,
+  .oled-row.is-selected::before,
+  .oled-pin-digit.is-active,
+  .oled-pin-digit.is-flash,
+  .oled-viewport::after,
+  .oled-flash,
+  .oled-shake,
+  .oled-saved-pop,
+  .device-shell-outer::after,
+  .status-led::after,
+  .usb-port.is-active::after,
+  .console-tx-row.is-fresh::after,
+  .console-btn.is-transferring::after,
+  .uplink-dot.is-live::after,
+  .console-strip-enter {
+    animation: none !important;
   }
-  .console-dot.is-pulse {
-    animation: none;
-  }
-  .console-ticker span {
-    animation: none;
-  }
+  .console-dot.is-pulse,
+  .console-ticker span,
   .console-meter__fill {
     animation: none;
   }
@@ -394,6 +652,28 @@
   border-radius: 1px;
   background: #050506;
   box-shadow: inset 0 0.5px 1px rgba(0, 0, 0, 0.5);
+  transition: box-shadow 240ms ease-out;
+}
+
+.usb-port.is-active::after {
+  background: linear-gradient(180deg, #0d2410, #050506);
+  box-shadow:
+    inset 0 0.5px 1px rgba(0, 0, 0, 0.5),
+    inset 0 0 4px rgba(0, 255, 65, 0.45);
+  animation: usb-breathe 1.2s ease-in-out infinite;
+}
+
+@keyframes usb-breathe {
+  0%, 100% {
+    box-shadow:
+      inset 0 0.5px 1px rgba(0, 0, 0, 0.5),
+      inset 0 0 3px rgba(0, 255, 65, 0.25);
+  }
+  50% {
+    box-shadow:
+      inset 0 0.5px 1px rgba(0, 0, 0, 0.5),
+      inset 0 0 6px rgba(0, 255, 65, 0.55);
+  }
 }
 
 .status-led {
@@ -404,6 +684,42 @@
   box-shadow:
     0 0 4px rgba(0, 255, 65, 0.4),
     0 0 8px rgba(0, 255, 65, 0.15);
+  position: relative;
+}
+
+.status-led::after {
+  content: "";
+  position: absolute;
+  inset: -3px;
+  border-radius: 50%;
+  border: 1px solid rgba(0, 255, 65, 0.18);
+  animation: led-corona 3.2s ease-out infinite;
+  opacity: 0;
+}
+
+.status-led.is-locked::after {
+  border-color: rgba(0, 255, 65, 0.18);
+}
+
+.status-led.is-transfer::after {
+  border-color: rgba(255, 154, 60, 0.28);
+  animation-duration: 1.6s;
+}
+
+.status-led.is-danger::after {
+  border-color: rgba(255, 68, 68, 0.3);
+  animation-duration: 1.2s;
+}
+
+@keyframes led-corona {
+  0% {
+    inset: 0;
+    opacity: 0.7;
+  }
+  100% {
+    inset: -8px;
+    opacity: 0;
+  }
 }
 
 .status-led.is-locked {
@@ -469,8 +785,18 @@
   user-select: none;
   outline: none;
   transition:
-    transform 0.04s cubic-bezier(0.2, 0, 0.7, 1),
-    box-shadow 0.04s ease-out;
+    transform 0.08s cubic-bezier(0.2, 0, 0.7, 1),
+    box-shadow 0.12s ease-out,
+    background 0.18s ease-out;
+}
+
+.hw-btn:hover {
+  background: linear-gradient(to bottom, #44444a, #36363c);
+}
+
+.hw-btn:hover .hw-btn-icon,
+.hw-btn:hover .hw-btn-label {
+  color: #80808a;
 }
 
 .hw-btn-dpad {
@@ -770,6 +1096,92 @@
     0 0 24px rgba(255, 154, 60, 0.15);
 }
 
+/* Transferring shimmer for buttons */
+.console-btn:disabled {
+  position: relative;
+  overflow: hidden;
+}
+
+.console-btn.is-transferring {
+  opacity: 0.7;
+  cursor: wait;
+}
+
+.console-btn.is-transferring::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    100deg,
+    transparent 30%,
+    rgba(255, 154, 60, 0.2) 50%,
+    transparent 70%
+  );
+  animation: console-btn-shimmer 1.4s linear infinite;
+  pointer-events: none;
+}
+
+@keyframes console-btn-shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+/* Uplink dot with optional corona ring */
+.uplink-dot {
+  position: relative;
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: currentColor;
+  flex-shrink: 0;
+}
+
+.uplink-dot.is-live {
+  box-shadow: 0 0 8px currentColor;
+}
+
+.uplink-dot.is-live::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 1px solid currentColor;
+  opacity: 0.5;
+  animation: uplink-corona 2.4s ease-out infinite;
+}
+
+.uplink-dot.is-busy::after {
+  animation-duration: 1.1s;
+}
+
+@keyframes uplink-corona {
+  0% {
+    inset: 0;
+    opacity: 0.6;
+  }
+  100% {
+    inset: -8px;
+    opacity: 0;
+  }
+}
+
+/* Companion strip slide-up reveal */
+.console-strip-enter {
+  animation: console-strip-up 240ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+@keyframes console-strip-up {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 .console-meter {
   height: 4px;
   background: var(--console-panel-2);
@@ -859,18 +1271,38 @@
   gap: 10px;
   padding: 8px 10px;
   border-left: 2px solid var(--console-hair-bright);
+  position: relative;
+  overflow: hidden;
   transition:
     border-color 0.15s ease-out,
-    background 0.15s ease-out;
+    background 0.15s ease-out,
+    transform 0.18s ease-out;
 }
 
 .console-tx-row:hover {
   border-left-color: var(--console-accent);
   background: rgba(255, 154, 60, 0.03);
+  transform: translateX(2px);
 }
 
 .console-tx-row.is-fresh {
   animation: console-row-flash 1.6s ease-out;
+}
+
+.console-tx-row.is-fresh::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(182, 255, 106, 0.18) 40%,
+    rgba(182, 255, 106, 0.32) 50%,
+    rgba(182, 255, 106, 0.18) 60%,
+    transparent 100%
+  );
+  animation: console-row-sweep 900ms ease-out forwards;
+  pointer-events: none;
 }
 
 @keyframes console-row-flash {
@@ -881,6 +1313,17 @@
   100% {
     background: transparent;
     border-left-color: var(--console-hair-bright);
+  }
+}
+
+@keyframes console-row-sweep {
+  0% {
+    transform: translateX(-100%);
+    opacity: 0.9;
+  }
+  100% {
+    transform: translateX(100%);
+    opacity: 0;
   }
 }
 

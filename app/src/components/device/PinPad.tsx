@@ -15,11 +15,18 @@ export function PinPad({ onSubmit, length = 8 }: PinPadProps) {
   const [digits, setDigits] = useState<number[]>(Array(length).fill(0))
   const [position, setPosition] = useState(0)
   const [touched, setTouched] = useState(false)
+  const [flashTick, setFlashTick] = useState(0)
+  const [flashIdx, setFlashIdx] = useState<number | null>(null)
   const prevSeq = useRef(buttonSeq)
 
   useEffect(() => {
     if (buttonSeq === prevSeq.current || !buttonAction) return
     prevSeq.current = buttonSeq
+
+    const triggerFlash = (idx: number) => {
+      setFlashIdx(idx)
+      setFlashTick((t) => t + 1)
+    }
 
     if (buttonAction === "up") {
       setTouched(true)
@@ -28,6 +35,7 @@ export function PinPad({ onSubmit, length = 8 }: PinPadProps) {
         next[position] = (next[position] + 1) % 10
         return next
       })
+      triggerFlash(position)
     } else if (buttonAction === "down") {
       setTouched(true)
       setDigits((d) => {
@@ -35,6 +43,7 @@ export function PinPad({ onSubmit, length = 8 }: PinPadProps) {
         next[position] = (next[position] + 9) % 10
         return next
       })
+      triggerFlash(position)
     } else if (buttonAction === "right") {
       setTouched(true)
       setPosition((p) => Math.min(length - 1, p + 1))
@@ -51,19 +60,16 @@ export function PinPad({ onSubmit, length = 8 }: PinPadProps) {
       <div className="flex" style={{ gap: 8, fontSize: 20, fontFamily: "var(--font-console)" }}>
         {digits.map((d, i) => {
           const active = i === position
+          const flashing = flashIdx === i
+          const cls = [
+            "oled-pin-digit",
+            active ? "is-active" : "oled-text-secondary",
+            flashing ? "is-flash" : "",
+          ]
+            .filter(Boolean)
+            .join(" ")
           return (
-            <span
-              key={i}
-              style={{
-                fontWeight: active ? 700 : 400,
-                color: active ? "var(--oled-accent)" : undefined,
-                borderBottom: active ? "2px solid var(--oled-accent)" : "2px solid transparent",
-                paddingBottom: 2,
-                minWidth: 16,
-                textAlign: "center",
-              }}
-              className={active ? "" : "oled-text-secondary"}
-            >
+            <span key={`${i}-${flashing ? flashTick : "stable"}`} className={cls}>
               {d}
             </span>
           )
