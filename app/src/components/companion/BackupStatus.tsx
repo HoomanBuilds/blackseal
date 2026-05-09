@@ -1,12 +1,8 @@
 "use client"
 
+import { useState } from "react"
 import { useConnectionStore } from "@/lib/store/connection-store"
-
-function truncateKey(key: string | null, head = 6, tail = 6): string {
-  if (!key) return "—"
-  if (key.length <= head + tail + 3) return key
-  return `${key.slice(0, head)}···${key.slice(-tail)}`
-}
+import { explorerAccountUrl } from "@/lib/solana/transactions"
 
 function formatTimeAgo(timestamp: number | null): string {
   if (!timestamp) return "NEVER"
@@ -26,41 +22,44 @@ export function BackupStatus() {
   const lastBackupTime = useConnectionStore((s) => s.lastBackupTime)
   const backupVersion = useConnectionStore((s) => s.backupVersion)
 
+  const statusLabel = isTransferring
+    ? "TRANSFERRING"
+    : isConnected
+      ? "UPLINK · SOLANA DEVNET"
+      : "UPLINK OFFLINE"
+  const statusTone = isTransferring
+    ? "var(--console-accent)"
+    : isConnected
+      ? "var(--console-phosphor)"
+      : "var(--console-text-faint)"
+
   return (
     <section className="flex flex-col">
-      {/* UPLINK STATUS — headline moment */}
-      <div className="flex items-center justify-between px-5 pt-5 pb-4">
-        <div className="flex items-center gap-3">
-          <div className="flex items-center gap-2">
-            <span
-              className={`console-dot is-pulse ${
-                isConnected
-                  ? "text-[color:var(--console-phosphor)]"
-                  : "text-[color:var(--console-text-faint)]"
-              }`}
-            />
-            <span className="console-label">
-              {isConnected ? "UPLINK · SOLANA DEVNET" : "UPLINK OFFLINE"}
-            </span>
-          </div>
-        </div>
-        <div className="console-ticker" aria-hidden>
-          <span />
-          <span />
-          <span />
-          <span />
-          <span />
-        </div>
+      {/* UPLINK STATUS */}
+      <div className="flex items-center gap-2 px-5 pt-4 pb-3">
+        <span
+          className={`uplink-dot ${isConnected ? "is-live" : ""} ${
+            isTransferring ? "is-busy" : ""
+          }`}
+          style={{ color: statusTone }}
+        />
+        <span className="console-label" style={{ color: statusTone }}>
+          {statusLabel}
+        </span>
       </div>
 
       <div className="console-hair" />
 
-      {/* STATUS GRID — data-dense readouts */}
-      <div className="grid grid-cols-2 gap-px bg-[var(--console-hair)]">
-        <StatusCell label="SIGNER" value={truncateKey(publicKey)} mono />
+      {/* WALLET ADDRESS — full address with copy + faucet + explorer */}
+      <WalletAddressRow publicKey={publicKey} />
+
+      <div className="console-hair" />
+
+      {/* STATUS GRID — 3 essential readouts */}
+      <div className="grid grid-cols-3 gap-px bg-[var(--console-hair)]">
         <StatusCell
           label="BALANCE"
-          value={solBalance !== null ? `${solBalance.toFixed(4)} SOL` : "—"}
+          value={solBalance !== null ? `${solBalance.toFixed(3)} SOL` : "—"}
           accent
         />
         <StatusCell
@@ -73,25 +72,6 @@ export function BackupStatus() {
           value={`v${backupVersion.toString().padStart(3, "0")}`}
         />
       </div>
-
-      {/* SIGNAL METER */}
-      <div className="px-5 py-4 flex items-center gap-3">
-        <span className="console-label">SIGNAL</span>
-        <div className="console-meter flex-1">
-          {isConnected && <div className="console-meter__fill" />}
-        </div>
-        <span
-          className={`console-chip ${
-            isTransferring
-              ? "is-warn"
-              : isConnected
-                ? "is-live"
-                : "is-danger"
-          }`}
-        >
-          {isTransferring ? "TRANSFER" : isConnected ? "IDLE" : "DOWN"}
-        </span>
-      </div>
     </section>
   )
 }
@@ -99,24 +79,86 @@ export function BackupStatus() {
 interface StatusCellProps {
   label: string
   value: string
-  mono?: boolean
   accent?: boolean
   phosphor?: boolean
 }
 
-function StatusCell({ label, value, mono, accent, phosphor }: StatusCellProps) {
+function WalletAddressRow({ publicKey }: { publicKey: string | null }) {
+  const [copied, setCopied] = useState(false)
+
+  const handleCopy = async () => {
+    if (!publicKey) return
+    try {
+      await navigator.clipboard.writeText(publicKey)
+      setCopied(true)
+      setTimeout(() => setCopied(false), 1500)
+    } catch {
+      // ignore
+    }
+  }
+
+  const faucetUrl = publicKey
+    ? `https://faucet.solana.com/?cluster=devnet&address=${publicKey}`
+    : "https://faucet.solana.com/?cluster=devnet"
+
+  return (
+    <div className="px-5 py-3 flex flex-col gap-1.5 bg-[var(--console-panel)]">
+      <div className="flex items-center justify-between flex-wrap gap-2">
+        <span className="console-label">WALLET ADDRESS</span>
+        {publicKey && (
+          <div className="flex items-center gap-3 flex-wrap">
+            <button
+              type="button"
+              onClick={handleCopy}
+              className="console-label hover:text-[color:var(--console-phosphor)] transition-colors"
+              style={{ letterSpacing: "0.12em" }}
+            >
+              {copied ? "COPIED" : "COPY"}
+            </button>
+            <a
+              href={faucetUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="console-label hover:text-[color:var(--console-phosphor)] transition-colors"
+              style={{ letterSpacing: "0.12em" }}
+            >
+              FAUCET ↗
+            </a>
+            <a
+              href={explorerAccountUrl(publicKey)}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="console-label hover:text-[color:var(--console-phosphor)] transition-colors"
+              style={{ letterSpacing: "0.12em" }}
+            >
+              EXPLORER ↗
+            </a>
+          </div>
+        )}
+      </div>
+      <span
+        className="console-value-mono-sm break-all"
+        style={{ fontSize: 11, lineHeight: 1.45, color: "var(--console-text)" }}
+      >
+        {publicKey ?? "— unlock device with backup enabled —"}
+      </span>
+    </div>
+  )
+}
+
+function StatusCell({ label, value, accent, phosphor }: StatusCellProps) {
   const valueClass = accent
     ? "console-value console-accent-text"
     : phosphor
       ? "console-value console-phosphor-text"
-      : mono
-        ? "console-value-mono-sm"
-        : "console-value"
+      : "console-value"
 
   return (
-    <div className="bg-[var(--console-panel)] px-5 py-4 flex flex-col gap-2">
-      <span className="console-label">{label}</span>
-      <span className={valueClass}>{value}</span>
+    <div className="bg-[var(--console-panel)] px-3 py-3 flex flex-col gap-1.5 min-w-0">
+      <span className="console-label truncate">{label}</span>
+      <span className={`${valueClass} truncate`} style={{ fontSize: 12 }}>
+        {value}
+      </span>
     </div>
   )
 }

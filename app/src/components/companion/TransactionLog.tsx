@@ -27,15 +27,14 @@ export function TransactionLog() {
 
   return (
     <section className="flex flex-col flex-1 min-h-0">
-      <header className="flex items-center justify-between px-5 pt-4 pb-3">
-        <div className="flex items-center gap-2">
-          <span className="console-label">CHAIN LOG</span>
-          <span className="console-hex">/ 0x{transactions.length.toString(16).padStart(3, "0")}</span>
-        </div>
-        <span className="console-hex">stdout → devnet</span>
+      <header className="flex items-center justify-between px-5 pt-3 pb-2.5">
+        <span className="console-label">CHAIN LOG</span>
+        <span className="console-hex">
+          {transactions.length} {transactions.length === 1 ? "TX" : "TXS"}
+        </span>
       </header>
       <div className="console-hair" />
-      <div className="flex-1 overflow-hidden relative">
+      <div className="flex-1 overflow-hidden relative min-h-[140px]">
         <div className="absolute inset-0 overflow-y-auto console-scroll-fade px-3 py-2">
           {transactions.length === 0 ? (
             <div className="h-full flex items-center justify-center py-12">

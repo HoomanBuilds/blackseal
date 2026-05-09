@@ -24,6 +24,33 @@ async function clientFromSeed(seedPhrase: string): Promise<BlackSealClient> {
   return BlackSealClient.fromKeypair(keypair, DEVNET_RPC)
 }
 
+/** Devnet keypairs are funded lazily — airdrop if there isn't enough SOL to pay rent + fees.
+ *  The public devnet faucet is heavily rate-limited; we try 0.5 SOL first (more likely to
+ *  succeed) and fall through to a clear "fund manually" message if that also fails. */
+async function ensureFunded(client: BlackSealClient): Promise<void> {
+  const balance = await client.getBalanceSol()
+  if (balance >= 0.05) return
+
+  const address = client.owner.toBase58()
+  const amounts = [0.5, 0.25]
+  let lastErr: unknown
+
+  for (const amount of amounts) {
+    try {
+      await client.requestAirdrop(amount)
+      return
+    } catch (err) {
+      lastErr = err
+    }
+  }
+
+  const reason = lastErr instanceof Error ? lastErr.message : "rate limited"
+  throw new Error(
+    `Devnet auto-airdrop failed (${reason}). The public faucet is rate-limited — ` +
+      `tap "FAUCET ↗" in the panel above to fund ${address} manually, then retry.`
+  )
+}
+
 /** Encrypt the vault with the device key and upload to the Solana PDA.  */
 export async function runBackup(
   vault: Vault,
@@ -31,6 +58,7 @@ export async function runBackup(
   seedPhrase: string
 ): Promise<BackupResult> {
   const client = await clientFromSeed(seedPhrase)
+  await ensureFunded(client)
 
   // AES-GCM ciphertext + IV are packed as JSON so restore can recover both.
   const { ciphertext, iv } = await encrypt(JSON.stringify(vault), encryptionKey)

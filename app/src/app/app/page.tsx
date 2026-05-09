@@ -72,16 +72,18 @@ export default function SimulatorPage() {
         A browser simulation of Black Seal, the offline hardware vault. Real encryption, real seed phrases, no install required.
       </div>
 
-      <main className="flex-1 flex flex-col lg:flex-row items-center justify-center gap-6 lg:gap-8 p-4 sm:p-6 lg:p-8">
+      <main className="flex-1 flex flex-col lg:flex-row items-center lg:items-start justify-center gap-6 lg:gap-8 p-4 sm:p-6 lg:p-8">
         <DeviceShell>
           <ScreenRouter />
         </DeviceShell>
 
-        <div className="hidden lg:block">
+        <div className="hidden lg:block self-center">
           <UsbCable />
         </div>
 
-        <CompanionPanel />
+        <div className="w-full max-w-[420px] lg:w-[420px] lg:max-w-[420px] lg:self-stretch flex">
+          <CompanionPanel />
+        </div>
       </main>
     </div>
   )
