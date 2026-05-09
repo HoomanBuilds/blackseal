@@ -57,7 +57,7 @@ export function DeviceShell({ children }: DeviceShellProps) {
           style={{
             borderRadius: 6,
             padding: "14px 16px",
-            marginTop: 8,
+            marginTop: 16,
           }}
         >
           <OledScreen>{children}</OledScreen>
@@ -73,7 +73,7 @@ export function DeviceShell({ children }: DeviceShellProps) {
 
         {/* USB-C port */}
         <div className="flex justify-center" style={{ marginTop: 10 }}>
-          <div className="usb-port" />
+          <div className={`usb-port ${isTransferring ? "is-active" : ""}`} />
         </div>
 
         {/* Bottom edge shadow */}

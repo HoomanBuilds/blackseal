@@ -4,9 +4,12 @@ import { useEffect, useMemo, useRef, useState } from "react"
 import { useDeviceStore, type DeviceScreen } from "@/lib/store/device-store"
 import { useVaultStore } from "@/lib/store/vault-store"
 import { ScreenLayout } from "@/components/device/ScreenLayout"
+import { OledIcon } from "@/components/device/OledIcon"
+
+type IconName = "key" | "note" | "gear" | "info"
 
 interface MenuItem {
-  icon: string
+  icon: IconName
   label: string
   screen: DeviceScreen
   count?: number
@@ -22,10 +25,10 @@ export function VaultMenu() {
 
   const items = useMemo<MenuItem[]>(
     () => [
-      { icon: "🔑", label: "Passwords", screen: "PASSWORD_LIST", count: vault?.passwords.length ?? 0 },
-      { icon: "📝", label: "Notes", screen: "NOTE_LIST", count: vault?.notes.length ?? 0 },
-      { icon: "⚙", label: "Settings", screen: "SETTINGS" },
-      { icon: "ℹ", label: "Device Info", screen: "DEVICE_INFO" },
+      { icon: "key", label: "Passwords", screen: "PASSWORD_LIST", count: vault?.passwords.length ?? 0 },
+      { icon: "note", label: "Notes", screen: "NOTE_LIST", count: vault?.notes.length ?? 0 },
+      { icon: "gear", label: "Settings", screen: "SETTINGS" },
+      { icon: "info", label: "Device Info", screen: "DEVICE_INFO" },
     ],
     [vault?.passwords.length, vault?.notes.length]
   )
@@ -52,8 +55,15 @@ export function VaultMenu() {
       <div className="flex flex-col gap-1 py-2">
         {items.map((item, i) => (
           <div key={item.label} className={`oled-row ${selected === i ? "is-selected" : ""}`}>
-            <span style={{ fontSize: 14, marginRight: 10 }}>{item.icon}</span>
-            <span className={selected === i ? "oled-text" : "oled-text-secondary"} style={{ flex: 1 }}>
+            <OledIcon
+              name={item.icon}
+              size={14}
+              className={selected === i ? "oled-text" : "oled-text-secondary"}
+            />
+            <span
+              className={selected === i ? "oled-text" : "oled-text-secondary"}
+              style={{ flex: 1, marginLeft: 10 }}
+            >
               {item.label}
             </span>
             {item.count !== undefined && (

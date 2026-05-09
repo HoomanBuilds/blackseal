@@ -2,6 +2,7 @@
 
 import { useDeviceStore } from "@/lib/store/device-store"
 import { useVaultStore } from "@/lib/store/vault-store"
+import { OledIcon } from "./OledIcon"
 
 interface StatusBarProps {
   title?: string
@@ -40,9 +41,15 @@ export function StatusBar({ title, showBack = false }: StatusBarProps) {
           {title ?? (isLocked ? "LOCKED" : "BLACK SEAL")}
         </span>
       </div>
-      <div className="flex items-center gap-2 oled-text-secondary">
-        <span>{passwordCount}🔑</span>
-        <span>{noteCount}📝</span>
+      <div className="flex items-center gap-3 oled-text-secondary">
+        <span className="flex items-center gap-1">
+          <OledIcon name="key" size={10} strokeWidth={1.8} />
+          {passwordCount}
+        </span>
+        <span className="flex items-center gap-1">
+          <OledIcon name="note" size={10} strokeWidth={1.8} />
+          {noteCount}
+        </span>
         <span className={backupClass}>{backupLabel}</span>
       </div>
     </div>

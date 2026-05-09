@@ -3,6 +3,7 @@
 import { useEffect, useRef } from "react"
 import { useDeviceStore } from "@/lib/store/device-store"
 import { ScreenLayout } from "@/components/device/ScreenLayout"
+import { OledIcon } from "@/components/device/OledIcon"
 
 export function SetupComplete() {
   const buttonAction = useDeviceStore((s) => s.buttonAction)
@@ -21,12 +22,16 @@ export function SetupComplete() {
   return (
     <ScreenLayout hideStatusBar hints={[{ key: "OK", label: "Enter Vault" }]}>
       <div className="flex flex-col items-center justify-center h-full gap-3">
-        <div className="oled-text-success" style={{ fontSize: 18, fontWeight: 600 }}>
-          ✓ VAULT READY
+        <div
+          className="oled-text-success flex items-center gap-2"
+          style={{ fontSize: 18, fontWeight: 600 }}
+        >
+          <OledIcon name="check" size={20} strokeWidth={2} />
+          VAULT READY
         </div>
         <div className="flex flex-col gap-1 mt-2" style={{ fontSize: 12 }}>
-          <Row label="PIN set" value="✓" valueClass="oled-text-success" />
-          <Row label="Seed secured" value="✓" valueClass="oled-text-success" />
+          <Row label="PIN set" valueClass="oled-text-success" />
+          <Row label="Seed secured" valueClass="oled-text-success" />
           <Row
             label="Backup"
             value={backupEnabled ? "ON" : "OFF"}
@@ -38,11 +43,23 @@ export function SetupComplete() {
   )
 }
 
-function Row({ label, value, valueClass }: { label: string; value: string; valueClass: string }) {
+function Row({
+  label,
+  value,
+  valueClass,
+}: {
+  label: string
+  value?: string
+  valueClass: string
+}) {
   return (
     <div className="flex items-center justify-between gap-8" style={{ minWidth: 200 }}>
       <span className="oled-text-secondary">{label}</span>
-      <span className={valueClass}>{value}</span>
+      {value ? (
+        <span className={valueClass}>{value}</span>
+      ) : (
+        <OledIcon name="check" size={12} strokeWidth={2} className={valueClass} />
+      )}
     </div>
   )
 }

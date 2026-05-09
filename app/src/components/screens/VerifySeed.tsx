@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useRef, useState } from "react"
 import { useDeviceStore } from "@/lib/store/device-store"
 import { ScreenLayout } from "@/components/device/ScreenLayout"
+import { OledIcon } from "@/components/device/OledIcon"
 
 function cryptoRandom(): number {
   const buf = new Uint32Array(1)
@@ -97,8 +98,12 @@ export function VerifySeed() {
             Challenge {challengeIndex + 1} of {challenges.length}
           </span>
           {flash && (
-            <span className="oled-text-success" style={{ fontSize: 10, fontWeight: 600 }}>
-              ✓ Correct
+            <span
+              className="oled-text-success flex items-center gap-1"
+              style={{ fontSize: 10, fontWeight: 600 }}
+            >
+              <OledIcon name="check" size={10} strokeWidth={2.2} />
+              Correct
             </span>
           )}
         </div>

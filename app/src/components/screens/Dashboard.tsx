@@ -5,6 +5,7 @@ import { useDeviceStore } from "@/lib/store/device-store"
 import { useVaultStore } from "@/lib/store/vault-store"
 import { useConnectionStore } from "@/lib/store/connection-store"
 import { ScreenLayout } from "@/components/device/ScreenLayout"
+import { OledIcon } from "@/components/device/OledIcon"
 
 export function Dashboard() {
   const buttonAction = useDeviceStore((s) => s.buttonAction)
@@ -31,8 +32,8 @@ export function Dashboard() {
     <ScreenLayout hints={[{ key: "OK", label: "Open Vault" }]}>
       <div className="flex flex-col h-full px-2 py-3">
         <div className="flex justify-around items-end mt-3">
-          <Counter icon="🔑" count={passwordCount} label="passwords" />
-          <Counter icon="📝" count={noteCount} label="notes" />
+          <Counter icon="key" count={passwordCount} label="passwords" />
+          <Counter icon="note" count={noteCount} label="notes" />
         </div>
         <div className="oled-divider mt-4" />
         <div className="text-center mt-3" style={{ fontSize: 11 }}>
@@ -53,12 +54,20 @@ export function Dashboard() {
   )
 }
 
-function Counter({ icon, count, label }: { icon: string; count: number; label: string }) {
+function Counter({
+  icon,
+  count,
+  label,
+}: {
+  icon: "key" | "note"
+  count: number
+  label: string
+}) {
   return (
     <div className="flex flex-col items-center gap-1">
-      <div className="flex items-baseline gap-1">
-        <span style={{ fontSize: 14 }}>{icon}</span>
-        <span className="oled-text" style={{ fontSize: 22, fontWeight: 600 }}>
+      <div className="flex items-center gap-2">
+        <OledIcon name={icon} size={16} className="oled-text-secondary" />
+        <span className="oled-text" style={{ fontSize: 22, fontWeight: 600, lineHeight: 1 }}>
           {count}
         </span>
       </div>

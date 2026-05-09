@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react"
 import { useDeviceStore } from "@/lib/store/device-store"
 import { useVaultStore } from "@/lib/store/vault-store"
 import { ScreenLayout } from "@/components/device/ScreenLayout"
+import { OledIcon } from "@/components/device/OledIcon"
 
 const LINES_PER_PAGE = 5
 const WRAP_WIDTH = 38
@@ -108,8 +109,12 @@ function BackupBadge({ backedUp, backupEnabled }: { backedUp: boolean; backupEna
       </span>
     )
   return backedUp ? (
-    <span className="oled-text-success" style={{ fontSize: 10 }}>
-      SYNCED ✓
+    <span
+      className="oled-text-success flex items-center gap-1"
+      style={{ fontSize: 10 }}
+    >
+      SYNCED
+      <OledIcon name="check" size={10} strokeWidth={2.2} />
     </span>
   ) : (
     <span className="oled-text-warning" style={{ fontSize: 10 }}>

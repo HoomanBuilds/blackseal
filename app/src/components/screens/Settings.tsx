@@ -3,9 +3,12 @@
 import { useEffect, useMemo, useRef, useState } from "react"
 import { useDeviceStore, type DeviceScreen } from "@/lib/store/device-store"
 import { ScreenLayout } from "@/components/device/ScreenLayout"
+import { OledIcon } from "@/components/device/OledIcon"
+
+type IconName = "shield-key" | "cloud" | "trash"
 
 interface MenuItem {
-  icon: string
+  icon: IconName
   label: string
   screen: DeviceScreen
   danger?: boolean
@@ -18,9 +21,9 @@ export function Settings() {
 
   const items = useMemo<MenuItem[]>(
     () => [
-      { icon: "🔐", label: "Change PIN", screen: "CHANGE_PIN" },
-      { icon: "☁", label: "Backup", screen: "BACKUP_SETTINGS" },
-      { icon: "🗑", label: "Wipe Device", screen: "WIPE_DEVICE", danger: true },
+      { icon: "shield-key", label: "Change PIN", screen: "CHANGE_PIN" },
+      { icon: "cloud", label: "Backup", screen: "BACKUP_SETTINGS" },
+      { icon: "trash", label: "Wipe Device", screen: "WIPE_DEVICE", danger: true },
     ],
     []
   )
@@ -65,8 +68,8 @@ export function Settings() {
               : "oled-text-secondary"
           return (
             <div key={item.label} className={`oled-row ${isSel ? "is-selected" : ""}`}>
-              <span style={{ fontSize: 14, marginRight: 10 }}>{item.icon}</span>
-              <span className={labelClass} style={{ flex: 1 }}>
+              <OledIcon name={item.icon} size={14} className={labelClass} />
+              <span className={labelClass} style={{ flex: 1, marginLeft: 10 }}>
                 {item.label}
               </span>
             </div>

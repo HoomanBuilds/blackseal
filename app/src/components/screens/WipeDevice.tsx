@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react"
 import { useDeviceStore } from "@/lib/store/device-store"
 import { useVaultStore } from "@/lib/store/vault-store"
 import { ScreenLayout } from "@/components/device/ScreenLayout"
+import { OledIcon } from "@/components/device/OledIcon"
 
 export function WipeDevice() {
   const setScreen = useDeviceStore((s) => s.setScreen)
@@ -50,8 +51,12 @@ export function WipeDevice() {
       ]}
     >
       <div className="flex flex-col h-full px-1 py-2 gap-3">
-        <div className="oled-text-danger" style={{ fontSize: 13, fontWeight: 600 }}>
-          ⚠ ERASE ALL DATA?
+        <div
+          className="oled-text-danger flex items-center gap-2"
+          style={{ fontSize: 13, fontWeight: 600 }}
+        >
+          <OledIcon name="alert" size={14} strokeWidth={1.8} />
+          ERASE ALL DATA?
         </div>
         <div className="oled-text-secondary" style={{ fontSize: 11, lineHeight: 1.4 }}>
           This will permanently delete every password, note, and the seed phrase

@@ -5,6 +5,7 @@ import { useDeviceStore } from "@/lib/store/device-store"
 import { useVaultStore } from "@/lib/store/vault-store"
 import { PinPad } from "@/components/device/PinPad"
 import { ScreenLayout } from "@/components/device/ScreenLayout"
+import { OledIcon } from "@/components/device/OledIcon"
 import { deriveKeyFromPin, deriveEncryptionKey, derivePinWrappingKey } from "@/lib/crypto/key-derivation"
 import { mnemonicToSeed } from "@/lib/crypto/bip39"
 import { decrypt } from "@/lib/crypto/encryption"
@@ -93,8 +94,17 @@ export function PinUnlock() {
 
   return (
     <ScreenLayout title="UNLOCK">
-      <div className="flex flex-col h-full items-center justify-center gap-3 py-2">
-        <div style={{ fontSize: 22 }}>🔒</div>
+      {failedAttempts > 0 && (
+        <div key={failedAttempts} className="oled-flash is-error" />
+      )}
+      <div
+        className={
+          "flex flex-col h-full items-center justify-center gap-3 py-2 " +
+          (failedAttempts > 0 ? "oled-shake" : "")
+        }
+        key={`pin-${failedAttempts}`}
+      >
+        <OledIcon name="lock-closed" size={26} className="oled-text" strokeWidth={1.6} />
         <div className="oled-text-secondary" style={{ fontSize: 11 }}>
           Enter your 8-digit PIN
         </div>

@@ -9,7 +9,7 @@ interface OledScreenProps {
   height?: number
 }
 
-export function OledScreen({ children, width = 480, height = 256 }: OledScreenProps) {
+export function OledScreen({ children, width, height = 240 }: OledScreenProps) {
   const screen = useDeviceStore((s) => s.screen)
   const [animKey, setAnimKey] = useState(0)
 
@@ -19,9 +19,9 @@ export function OledScreen({ children, width = 480, height = 256 }: OledScreenPr
 
   return (
     <div
-      className="oled-viewport"
+      className="oled-viewport mx-auto"
       style={{
-        width,
+        width: width ?? "100%",
         height,
         padding: "10px 14px",
         fontSize: 13,
