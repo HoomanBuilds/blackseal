@@ -1,5 +1,7 @@
 "use client"
 
+import Image from "next/image"
+
 const NAV_LINKS = [
   { label: "Why Offline", href: "#features" },
   { label: "Security", href: "#specs" },
@@ -36,25 +38,14 @@ export function Navbar() {
             textDecoration: "none",
           }}
         >
-          <span
-            aria-hidden
-            style={{
-              display: "inline-flex",
-              alignItems: "center",
-              justifyContent: "center",
-              width: 26,
-              height: 26,
-              borderRadius: 6,
-              background: "var(--ink)",
-              color: "#0f0f0f",
-              fontSize: 13,
-              fontWeight: 700,
-              fontFamily: "var(--l-display)",
-              letterSpacing: "-0.04em",
-            }}
-          >
-            B
-          </span>
+          <Image
+            src="/blackseal-logo.png"
+            alt="Black Seal"
+            width={28}
+            height={28}
+            priority
+            style={{ display: "block", width: 28, height: 28, objectFit: "contain" }}
+          />
           Black Seal
         </a>
 
