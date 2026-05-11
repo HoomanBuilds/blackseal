@@ -2269,3 +2269,14 @@
   margin-bottom: -1px;
   vertical-align: bottom;
 }
+
+/* Hide page scrollbar while preserving scroll functionality */
+html {
+  scrollbar-width: none;        /* Firefox */
+  -ms-overflow-style: none;     /* IE/legacy Edge */
+}
+html::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+  display: none;                /* Chrome/Safari/new Edge */
+}
