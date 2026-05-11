@@ -21,9 +21,40 @@ const BADGES = ["AES 256 GCM", "BIP 39", "Solana Devnet"]
 export function TryItSection() {
   return (
     <section
-      className="relative overflow-hidden landing-bg-dots-dark landing-bg-orbs"
-      style={{ background: "var(--bg-dark)", zIndex: 2 }}
+      // className="relative overflow-hidden landing-bg-dots-dark landing-bg-orbs"
+      className="relative overflow-hidden flex items-center justify-center"
+      style={{ background: "var(--bg-dark)", zIndex: 2, minHeight: "100vh" }}
     >
+      {/* Video background (temporary) */}
+      <video
+        src="/blackseal-demo.mp4"
+        autoPlay
+        muted
+        loop
+        playsInline
+        aria-hidden
+        style={{
+          position: "absolute",
+          inset: 0,
+          width: "100%",
+          height: "100%",
+          objectFit: "cover",
+          zIndex: 0,
+          opacity: 0.55,
+        }}
+      />
+      {/* Dark overlay to keep text legible */}
+      <div
+        aria-hidden
+        style={{
+          position: "absolute",
+          inset: 0,
+          background:
+            "linear-gradient(180deg, rgba(7,8,10,0.55) 0%, rgba(7,8,10,0.7) 50%, rgba(7,8,10,0.85) 100%)",
+          zIndex: 1,
+        }}
+      />
+
       <div
         className="landing-container relative text-center"
         style={{ zIndex: 2, paddingTop: "clamp(72px, 12vw, 120px)", paddingBottom: "clamp(72px, 12vw, 120px)" }}
