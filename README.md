@@ -1,8 +1,12 @@
-# Black Seal
+<p align="center">
+  <img src="app/public/blackseal-logo.png" alt="Black Seal" width="140" />
+</p>
+
+<h1 align="center">Black Seal</h1>
 
 > An offline hardware vault for passwords, seed phrases, secret notes, and the digital legacy you leave behind.
 
-Black Seal is a hardware device that holds your secrets the way a Ledger holds your crypto keys - locked inside a tamper-resistant chip, never on a server, never on the internet, never readable by anyone who hasn't held the device and entered the PIN. This repository is the public, browser-based simulation of that device, built for the Colosseum Frontier Hackathon (April 6 – May 11, 2026).
+Black Seal is a hardware device that holds your secrets the way a Ledger holds your crypto keys - locked inside a tamper-resistant chip, never on a server, never on the internet, never readable by anyone who hasn't held the device and entered the PIN. This repository is the public, browser-based simulation of that device, built for the Colosseum Frontier Hackathon.
 
 The simulation runs the same cryptography (AES-256-GCM, BIP-39, PBKDF2-HMAC-SHA512), exposes the same five-button OLED interface, and talks to the same Anchor program deployed on Solana devnet. Nothing is mocked. The point of the simulation is not to fake the device - it is to prove that the device's design works end-to-end before any silicon is ordered.
 
@@ -12,7 +16,7 @@ The simulation runs the same cryptography (AES-256-GCM, BIP-39, PBKDF2-HMAC-SHA5
 
 - [What Black Seal Is](#what-black-seal-is)
 - [Why It Exists](#why-it-exists)
-- [The Hardware Vault - How It Should Work](#the-hardware-vault---how-it-should-work)
+- [The Hardware Vault](#the-hardware-vault)
   - [The Device](#the-device)
   - [The Cryptographic Pipeline](#the-cryptographic-pipeline)
   - [The State Machine](#the-state-machine)
@@ -59,7 +63,7 @@ The pitch is not "another password manager." The pitch is **air-gapped sovereign
 
 ---
 
-## The Hardware Vault - How It Should Work
+## The Hardware Vault
 
 ### The Device
 
@@ -367,11 +371,6 @@ blackseal/
 │   ├── tests/                                 - anchor integration tests
 │   ├── migrations/
 │   └── Anchor.toml
-│
-├── docs/
-│   ├── BlackSeal_PRD (1).md                   - product requirements
-│   ├── BlackSeal_Hackathon_Plan.md            - week-by-week build plan
-│   └── BlackSeal_Physical_Device_Plan.md      - silicon-level engineering plan
 │
 └── README.md
 ```
