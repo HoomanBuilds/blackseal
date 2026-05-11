@@ -103,35 +103,6 @@ export function HeroSection() {
           className="w-full lg:w-1/2 shrink-0"
           style={{ paddingLeft: "max(24px, calc((100vw - 1440px) / 2 + 48px))", paddingRight: 24 }}
         >
-          {/* Eyebrow pill */}
-          <motion.div
-            custom={0}
-            variants={fadeUp}
-            className="inline-flex items-center gap-2"
-            style={{
-              padding: "6px 14px",
-              borderRadius: 100,
-              background: "rgba(255, 255, 255, 0.04)",
-              border: "1px solid rgba(255, 255, 255, 0.10)",
-              fontFamily: "var(--l-body)",
-              fontSize: 13,
-              fontWeight: 500,
-              color: "var(--ink-60)",
-              marginBottom: 32,
-            }}
-          >
-            <span
-              style={{
-                display: "inline-block",
-                width: 6,
-                height: 6,
-                borderRadius: "50%",
-                background: "var(--accent)",
-              }}
-            />
-            Colosseum Frontier Hackathon · Devnet live
-          </motion.div>
-
           {/* Title */}
           <motion.h1
             custom={1}
@@ -166,7 +137,7 @@ export function HeroSection() {
             }}
           >
             A hardware vault for your passwords, documents, private notes, and
-            final instructions — air-gapped and fully in your control.
+            final instructions. Air-gapped and fully in your control.
           </motion.p>
 
           {/* Badges */}

@@ -43,7 +43,7 @@ const FEATURES: Feature[] = [
       </svg>
     ),
     title: "Passwords",
-    desc: "Banking, social, crypto, work — all locked behind one 8-digit PIN, encrypted with AES-256-GCM on the device itself.",
+    desc: "Banking, social, crypto, work. All locked behind one 8-digit PIN, encrypted with AES-256-GCM on the device itself.",
   },
   {
     icon: (
@@ -86,7 +86,17 @@ const FEATURES: Feature[] = [
       </svg>
     ),
     title: "Wills & Legacy",
-    desc: "Digital legacy instructions for your family. Recovery phrases, account access, and final messages — sealed until needed.",
+    desc: "Digital legacy instructions for your family. Recovery phrases, account access, and final messages, sealed until needed.",
+  },
+  {
+    icon: (
+      <svg {...ICON_PROPS}>
+        <rect x="2" y="6" width="20" height="12" rx="2" />
+        <path d="M6 10h4M6 14h2M14 10h4M14 14h2" />
+      </svg>
+    ),
+    title: "Crypto & Wallets",
+    desc: "Seed phrases, private keys, and exchange credentials kept entirely offline. Air-gapped from every browser and hot wallet.",
   },
 ]
 
@@ -139,8 +149,8 @@ export function FeaturesSection() {
               maxWidth: 580,
             }}
           >
-            Passwords, secret notes, recovery instructions for your family —
-            all kept offline, encrypted, and entirely under your control.
+            Passwords, secret notes, and recovery instructions for your family.
+            All kept offline, encrypted, and entirely under your control.
           </motion.p>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 mt-16">

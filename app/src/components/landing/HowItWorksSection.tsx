@@ -42,7 +42,7 @@ const STEPS = [
     n: "04",
     label: "Backup, only if you want",
     primary: "Optional encrypted backup to a Solana PDA you control.",
-    secondary: "Lose the device? Enter your seed on a new one and restore — only you can decrypt it.",
+    secondary: "Lose the device? Enter your seed on a new one and restore. Only you can decrypt it.",
     visual: "chain",
   },
 ]
