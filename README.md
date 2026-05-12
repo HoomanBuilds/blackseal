@@ -28,7 +28,7 @@ The simulation runs the same cryptography (AES-256-GCM, BIP-39, PBKDF2-HMAC-SHA5
   - [The Device Simulator](#the-device-simulator)
   - [The Companion App](#the-companion-app)
   - [The Anchor Program](#the-anchor-program)
-  - [How the Tabs Talk to Each Other](#how-the-tabs-talk-to-each-other)
+  - [How the Device and Companion Talk to Each Other](#how-the-device-and-companion-talk-to-each-other)
   - [Real Cryptography, No Mocks](#real-cryptography-no-mocks)
 - [Project Structure](#project-structure)
 - [Quick Start](#quick-start)
@@ -43,7 +43,7 @@ Black Seal is two things at once:
 
 1. **A physical device.** A pocket-sized, air-gapped vault with an OLED screen, five buttons, a USB-C port, and a secure element. No Wi-Fi, no Bluetooth, no radio of any kind. It generates a 24-word BIP-39 seed on first boot, derives a private key inside a tamper-resistant chip, and encrypts everything you save with AES-256-GCM. Three wrong PINs and it wipes itself. Two minutes idle and it locks. The data lives on the device and nowhere else - unless you opt in to encrypted backup on Solana.
 
-2. **This simulation.** A browser-based reproduction of the device that runs the same crypto, the same state machine, and the same backup protocol against the real Anchor program on Solana devnet. Open the simulator, generate a seed, set a PIN, store a password, back it up to the chain, wipe the device, restore it from the seed phrase on the same chain. Every step is real. The "USB cable" between the device tab and the companion tab is a `BroadcastChannel` - the data crossing it is encrypted with the same primitives the real device will use.
+2. **This simulation.** A browser-based reproduction of the device that runs the same crypto, the same state machine, and the same backup protocol against the real Anchor program on Solana devnet. Open the simulator, generate a seed, set a PIN, store a password, back it up to the chain, wipe the device, restore it from the seed phrase on the same chain. Every step is real. The device simulator and the companion app live side by side on a single page; the "USB cable" between them is a `BroadcastChannel` — the data crossing it is encrypted with the same primitives the real device will use.
 
 The simulation exists so that the design can be proven, reviewed, and demonstrated long before the hardware ships. The roadmap section at the end explains what gets built next.
 
@@ -287,9 +287,9 @@ The PDA seeds are deterministic: `[b"black_seal_vault", owner.key().as_ref()]`. 
 
 Constraints are enforced on chain: only the original `owner` can call `upload_backup` or `delete_vault`. The blob is capped at 8 KiB to keep account size predictable. The version counter monotonically increments and uses `checked_add` to refuse overflow. `delete_vault` closes the account and returns rent to the user - GDPR right-to-deletion baked into the protocol.
 
-### How the Tabs Talk to Each Other
+### How the Device and Companion Talk to Each Other
 
-In production this hop is a USB-C cable carrying a custom application-layer protocol over a CDC serial bridge. In the simulation it is the browser's `BroadcastChannel` API - two views in the same browser tab subscribe to the same channel name and exchange messages. The payloads are byte-identical to what the production firmware will push over the wire: AES-256-GCM ciphertext envelopes, never plaintext.
+In production this hop is a USB-C cable carrying a custom application-layer protocol over a CDC serial bridge. In the simulation it is the browser's `BroadcastChannel` API - the device simulator and the companion panel, living side by side on the same page, subscribe to the same channel and exchange messages. The payloads are byte-identical to what the production firmware will push over the wire: AES-256-GCM ciphertext envelopes, never plaintext.
 
 ```mermaid
 sequenceDiagram
@@ -415,7 +415,7 @@ Phase 0  - Hackathon submission   (now)
            • anchor program on solana devnet
            • demo video
 
-Phase 1  - Hardware prototype     (months 1–4 post-hackathon)
+Phase 1  - Hardware prototype     (months 1–4)
            • STM32L4 + ATECC608B + SSD1306 dev board
            • firmware port of the simulation FSM
            • custom USB device class for the companion link
