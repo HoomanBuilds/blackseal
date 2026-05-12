@@ -1,5 +1,6 @@
 "use client"
 
+import Image from "next/image"
 import Link from "next/link"
 import { DeviceShell } from "@/components/device/DeviceShell"
 import { ScreenRouter } from "@/components/screens/ScreenRouter"
@@ -26,24 +27,14 @@ export default function SimulatorPage() {
             letterSpacing: "-0.02em",
           }}
         >
-          <span
-            style={{
-              display: "inline-flex",
-              alignItems: "center",
-              justifyContent: "center",
-              width: 26,
-              height: 26,
-              borderRadius: 6,
-              background: "#171717",
-              color: "#FCFCFC",
-              fontSize: 13,
-              fontWeight: 700,
-              fontFamily: "var(--font-syne), system-ui, sans-serif",
-              letterSpacing: "-0.04em",
-            }}
-          >
-            B
-          </span>
+          <Image
+            src="/blackseal-logo.png"
+            alt="Black Seal"
+            width={26}
+            height={26}
+            priority
+            style={{ display: "block", width: 26, height: 26, objectFit: "contain" }}
+          />
           Black Seal
         </Link>
         <span
