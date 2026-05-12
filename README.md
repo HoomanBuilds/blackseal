@@ -23,7 +23,6 @@ The simulation runs the same cryptography (AES-256-GCM, BIP-39, PBKDF2-HMAC-SHA5
   - [PIN, Lock, Wipe](#pin-lock-wipe)
   - [Optional Cloud Backup on Solana](#optional-cloud-backup-on-solana)
   - [Security Model](#security-model)
-  - [Bill of Materials](#bill-of-materials)
 - [The Simulation - How It Actually Works](#the-simulation---how-it-actually-works)
   - [Three Systems, One Product](#three-systems-one-product)
   - [The Device Simulator](#the-device-simulator)
@@ -35,7 +34,6 @@ The simulation runs the same cryptography (AES-256-GCM, BIP-39, PBKDF2-HMAC-SHA5
 - [Quick Start](#quick-start)
 - [Tech Stack](#tech-stack)
 - [Roadmap - Simulation to Silicon](#roadmap---simulation-to-silicon)
-- [Credits](#credits)
 
 ---
 
@@ -206,24 +204,6 @@ Restore is the same flow in reverse - companion fetches the blob from the PDA, h
 | Firmware tampering                     | Secure boot chain, signed firmware, unsigned firmware does not execute            |
 | Physical key extraction                | Private key lives in ATECC608B. Tamper-resistant, certified, no software readout  |
 
-### Bill of Materials
-
-At production volume (post-prototype) the device is engineered for a sub-$25 BOM:
-
-| Component     | Part              | Unit cost (volume) |
-| ------------- | ----------------- | ------------------ |
-| Secure element| ATECC608B         | $1.50              |
-| MCU           | STM32L432KC       | $4.00              |
-| OLED display  | SSD1306 128×64    | $2.00              |
-| Flash         | W25Q128JV (16MB)  | $1.00              |
-| USB bridge    | CP2102N           | $0.80              |
-| Power         | MCP73831 + LiPo   | $3.00              |
-| Enclosure     | Aluminium / ABS   | $8.00              |
-| Misc passives | -                 | $2.00              |
-| **Total**     |                   | **~$22**           |
-
-Target retail: $79–129 one-time. No subscription. One-time Solana transaction (~$0.001 in SOL) to initialise the backup PDA. The economics work because the storage layer is a public chain and the company does not run servers.
-
 ---
 
 ## The Simulation - How It Actually Works
@@ -383,7 +363,7 @@ You need Node 20+, npm, and a modern browser. Solana / Anchor are only required 
 
 ```bash
 # clone
-git clone https://github.com/<your-org>/blackseal.git
+git clone https://github.com/HoomanBuilds/blackseal.git
 cd blackseal
 
 # front-end (device simulator + companion)
@@ -451,17 +431,7 @@ Phase 3  - Small-batch production (months 8–12)
            • public launch
 ```
 
-Open questions and post-launch ideas - Shamir's Secret Sharing for the seed phrase, image storage, multi-vault per device, social recovery - are tracked in `docs/BlackSeal_PRD (1).md` and `docs/BlackSeal_Physical_Device_Plan.md`.
-
----
-
-## Credits
-
-Built for the **Colosseum Frontier Hackathon** (April 6 – May 11, 2026).
-
-Inspired by Ledger and Trezor - they proved the model for crypto keys. Black Seal extends it to the rest of your digital life.
-
-The detailed PRD, week-by-week plan, and silicon-level engineering plan live in `docs/`. Read those for the parts the README leaves implicit.
+Open questions and post-launch ideas - Shamir's Secret Sharing for the seed phrase, image storage, multi-vault per device, social recovery - are on the roadmap for future revisions.
 
 ---
 
