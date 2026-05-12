@@ -4,7 +4,9 @@ export type ButtonAction = "up" | "down" | "left" | "right" | "confirm"
 
 export type DeviceScreen =
   | "BOOT_SCREEN"
+  | "SETUP_CHOICE"
   | "GENERATE_SEED"
+  | "RESTORE_SEED"
   | "VERIFY_SEED"
   | "SET_PIN"
   | "BACKUP_CHOICE"

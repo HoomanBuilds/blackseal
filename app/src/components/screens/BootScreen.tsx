@@ -38,7 +38,7 @@ export function BootScreen() {
         if (p >= 100) {
           clearInterval(interval)
           timeoutId = setTimeout(() => {
-            setScreen(isSetup ? "PIN_UNLOCK" : "GENERATE_SEED")
+            setScreen(isSetup ? "PIN_UNLOCK" : "SETUP_CHOICE")
           }, 300)
           return 100
         }

@@ -2,7 +2,9 @@
 
 import { useDeviceStore } from "@/lib/store/device-store"
 import { BootScreen } from "./BootScreen"
+import { SetupChoice } from "./SetupChoice"
 import { GenerateSeed } from "./GenerateSeed"
+import { RestoreSeed } from "./RestoreSeed"
 import { VerifySeed } from "./VerifySeed"
 import { SetPin } from "./SetPin"
 import { PinUnlock } from "./PinUnlock"
@@ -33,8 +35,12 @@ export function ScreenRouter() {
   switch (screen) {
     case "BOOT_SCREEN":
       return <BootScreen />
+    case "SETUP_CHOICE":
+      return <SetupChoice />
     case "GENERATE_SEED":
       return <GenerateSeed />
+    case "RESTORE_SEED":
+      return <RestoreSeed />
     case "VERIFY_SEED":
       return <VerifySeed />
     case "SET_PIN":

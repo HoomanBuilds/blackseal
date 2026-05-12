@@ -6,7 +6,6 @@ const NAV_LINKS = [
   { label: "Why Offline", href: "#features" },
   { label: "Security", href: "#specs" },
   { label: "How it works", href: "#how" },
-  { label: "FAQ", href: "#faq" },
 ]
 
 export function Navbar() {
