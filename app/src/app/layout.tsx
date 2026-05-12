@@ -31,7 +31,7 @@ const syne = Syne({
 });
 
 export const metadata: Metadata = {
-  title: "Black Seal — Offline Hardware Vault",
+  title: "Black Seal - Offline Hardware Vault",
   description: "A pocket-sized hardware vault for every password, secret note, and piece of your digital legacy. Air-gapped by design.",
 };
 

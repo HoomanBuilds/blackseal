@@ -1,7 +1,7 @@
 import type { Metadata } from "next"
 
 export const metadata: Metadata = {
-  title: "Simulator — Black Seal",
+  title: "Simulator - Black Seal",
   description: "Interactive hardware vault simulator with real cryptography.",
   robots: { index: false, follow: false },
 }
